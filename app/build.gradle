@@ -4,7 +4,6 @@ def gitTag = 'git describe --tags --always'.execute([], project.rootDir).text.tr
 def gitCommitCount =
         Integer.parseInt('git rev-list --count HEAD'.execute([], project.rootDir).text.trim())
 
-
 android {
     signingConfigs {
         release {
@@ -40,6 +39,8 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.android.support:design:25.3.0'
+    compile 'com.google.android.gms:play-services-nearby:10.2.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 
 // https://gist.github.com/curioustechizen/9f7d745f9f5f51355bd6
