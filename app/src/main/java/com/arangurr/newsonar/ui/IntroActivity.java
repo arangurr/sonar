@@ -3,21 +3,18 @@ package com.arangurr.newsonar.ui;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.R;
-
-import java.util.UUID;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 

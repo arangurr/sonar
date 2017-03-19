@@ -17,7 +17,7 @@
         <activity android:name=".ui.DashboardActivity"/>
         <activity
             android:name=".ui.IntroActivity"
-            android:theme="@style/Sonar.Dark"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".ui.HelperActivity">
             <intent-filter>
