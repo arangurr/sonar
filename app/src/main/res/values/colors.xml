@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Colors according to https://material.io/guidelines/style/color.html-->
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#795548</color>
+    <color name="colorPrimaryDark">#3e2723</color>
+    <color name="colorAccent">#00e676</color>
+    <color name="colorPrimaryText">#de000000</color>
+    <color name="colorSecondaryText">#89000000</color>
+    <color name="colorDisabledText">#61000000</color>
+    <color name="colorDivider">#1f000000</color>
+    <color name="colorPrimaryTextDark">#ffffff</color>
+    <color name="colorSecondaryTextDark">#b3ffffff</color>
+    <color name="colorDisabledTextDark">#80ffffff</color>
+    <color name="colorDividerDark">#1fffffff</color>
 </resources>
