@@ -1,4 +1,27 @@
 <resources>
     <string name="app_name">Sonar</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_editor">Editor</string>
+
+    <string-array name="array_publish_durations">
+        <item>10 seconds</item>
+        <item>30 seconds</item>
+        <item>45 seconds</item>
+        <item>1 minute</item>
+        <item>2 minutes</item>
+        <item>5 minutes</item>
+        <item>Unlimited</item>
+    </string-array>
+
+    <string-array name="array_privacy_intervals">
+        <item>Public</item>
+        <item>Anonymous</item>
+        <item>Secret</item>
+    </string-array>
+
+    <string-array name="array_privacy_explained">
+        <item>Votes will be public. You will be able to know if someone completed the questionnaire and the answers.</item>
+        <item>Votes will be anonymous. You will if someone did complete the questionnaire, but not the answers.</item>
+        <item>Votes will be secret. You will only be able to know how many completed the questionnaire.</item>
+    </string-array>
 </resources>

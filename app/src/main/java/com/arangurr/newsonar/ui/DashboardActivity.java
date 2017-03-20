@@ -1,11 +1,14 @@
 package com.arangurr.newsonar.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -139,15 +142,15 @@ public class DashboardActivity extends AppCompatActivity implements GoogleApiCli
                 .setResultCallback(new ResultCallback<Status>() {
 
 
-            @Override
-            public void onResult(@NonNull Status status) {
-                if (status.isSuccess()) {
-                    Log.d(TAG, "Published successfully");
-                } else {
-                    Log.d(TAG, "Couldn't publish due to status = " + status);
-                }
-            }
-        });
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        if (status.isSuccess()) {
+                            Log.d(TAG, "Published successfully");
+                        } else {
+                            Log.d(TAG, "Couldn't publish due to status = " + status);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -191,5 +194,27 @@ public class DashboardActivity extends AppCompatActivity implements GoogleApiCli
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.i(TAG, "Google Api connection failed");
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_dashboard, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // TODO: 20/03/2017 settings activity
+                return true;
+            case R.id.action_add:
+                Intent i = (new Intent(this, EditorActivity.class));
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

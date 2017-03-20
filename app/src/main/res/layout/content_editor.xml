@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="88dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.arangurr.newsonar.ui.EditorActivity"
+    tools:showIn="@layout/activity_editor">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/list_top_margin"
+        android:paddingEnd="@dimen/item_margin"
+        android:paddingStart="@dimen/item_margin"
+        android:paddingTop="@dimen/list_top_margin">
+
+        <LinearLayout
+            android:id="@+id/linearlayout_editor_header_settings"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:clickable="true"
+            android:foreground="?android:selectableItemBackground"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="12dp"
+                android:src="@drawable/ic_settings_24dp"
+                android:tint="@color/colorPrimaryIntermediate"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:text="Settings"
+                android:textAllCaps="true"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="12dp"
+                android:src="@drawable/ic_arrow_down_24dp"
+                android:tint="@color/colorPrimaryIntermediate"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearlayout_editor_content_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:gravity="center_vertical"
+                android:text="General settings"
+                android:textColor="@color/colorSecondaryText"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/item_height"
+
+                android:text="Every survey must have a title associated with it. Use a descriptive title so users can recognize it."
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/item_height"
+                app:errorEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edittext_editor_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Title"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorDivider"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/item_height"
+                android:text="You can restrict who can answer you sruvey by protecting it with a password. Only users who enter the password can submit their answer"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"/>
+
+            <Switch
+                android:id="@+id/switch_editor_password"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:text="Password protected"
+                android:textColor="@color/colorSecondaryText"/>
+
+            <EditText
+                android:id="@+id/edittext_editor_password"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:hint="Password"
+                android:inputType="textVisiblePassword"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
+            <!--TODO move all this -->
+            <!--<LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textview_editor_duration_header"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Duration"/>
+
+                <ImageView
+                    android:id="@+id/image_editor_warning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_warning_24dp"
+                    android:tint="#ffa000"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+            </LinearLayout>
+
+            <Spinner
+                android:id="@+id/spinner_editor_duration"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:entries="@array/array_publish_durations"
+                android:visibility="gone"/>
+
+            <SeekBar
+                android:id="@+id/seekbar_editor_duration"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:max="6"
+                tools:progress="3"/>-->
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorDivider"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:gravity="center_vertical"
+                android:text="Privacy"
+                android:textColor="@color/colorSecondaryText"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textview_editor_privacy_explanation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingEnd="8dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                    tools:text="Votes will be anonymous. You will if someone did complete the questionnaire, but not the answers."/>
+
+                <Spinner
+                    android:id="@+id/spinner_editor_privacy_selector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_gravity="top"
+                    android:entries="@array/array_privacy_intervals"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
