@@ -12,4 +12,8 @@ public class Constants {
 
     public static final String NAMESPACE = "sonar";
 
+    public static final int PRIVACY_PUBLIC = 0;
+    public static final int PRIVACY_PRIVATE = 1;
+    public static final int PRIVACY_SECRET = 2;
+
 }
