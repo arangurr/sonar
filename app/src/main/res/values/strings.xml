@@ -24,4 +24,11 @@
         <item>Votes will be anonymous. You will if someone did complete the questionnaire, but not the answers.</item>
         <item>Votes will be secret. You will only be able to know how many completed the questionnaire.</item>
     </string-array>
+
+    <string-array name="array_binaryquestion_modes">
+        <item>Yes / No</item>
+        <item>True / False</item>
+        <item>Upvote / Downvote</item>
+        <item>Custom</item>
+    </string-array>
 </resources>

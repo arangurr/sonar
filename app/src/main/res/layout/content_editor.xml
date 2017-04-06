@@ -11,6 +11,7 @@
     tools:showIn="@layout/activity_editor">
 
     <LinearLayout
+        android:id="@+id/linearlayout_editor_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
@@ -20,6 +21,14 @@
         android:paddingEnd="@dimen/item_margin"
         android:paddingStart="@dimen/item_margin"
         android:paddingTop="@dimen/list_top_margin">
+
+        <ImageButton
+            android:id="@+id/button_editor_add"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_add_24dp"
+            android:tint="@color/colorSecondaryText"/>
 
         <LinearLayout
             android:id="@+id/linearlayout_editor_header_settings"
@@ -34,6 +43,7 @@
                 android:layout_height="48dp"
                 android:padding="12dp"
                 android:src="@drawable/ic_settings_24dp"
+                android:stateListAnimator="@animator/animator_flip_slideout"
                 android:tint="@color/colorPrimaryIntermediate"/>
 
             <TextView

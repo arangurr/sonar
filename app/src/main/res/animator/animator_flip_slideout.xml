@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:state_activated="true">
+        <set>
+            <objectAnimator
+                android:duration="@android:integer/config_mediumAnimTime"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="rotation"
+                android:valueTo="-180"/>
+            <objectAnimator
+                android:duration="@android:integer/config_mediumAnimTime"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="translationX"
+                android:valueTo="-80"/>
+            <objectAnimator
+                android:duration="@android:integer/config_mediumAnimTime"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="alpha"
+                android:valueTo="0"/>
+        </set>
+
+    </item>
+
+    <item>
+        <set>
+            <objectAnimator
+                android:duration="@android:integer/config_mediumAnimTime"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="rotation"
+                android:valueTo="0"/>
+
+            <objectAnimator
+                android:duration="@android:integer/config_mediumAnimTime"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="translationX"
+                android:valueTo="0"/>
+
+            <objectAnimator
+                android:duration="@android:integer/config_mediumAnimTime"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="alpha"
+                android:valueTo="100"/>
+        </set>
+    </item>
+
+</selector>

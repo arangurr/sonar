@@ -1,22 +1,27 @@
 package com.arangurr.newsonar.ui;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.R;
+import com.arangurr.newsonar.data.BinaryQuestion;
+import com.arangurr.newsonar.data.Poll;
 
-public class EditorActivity extends AppCompatActivity {
+public class EditorActivity extends AppCompatActivity implements View.OnClickListener {
 
     //    private TextView mDurationHeader;
 //    private ImageView mWarningImage;
@@ -27,6 +32,10 @@ public class EditorActivity extends AppCompatActivity {
     private Spinner mPrivacySpinner;
     private LinearLayout mSettingsHeader;
     private LinearLayout mSettingsContent;
+    private ImageButton mAddButton;
+    private LinearLayout mContainer;
+
+    private Poll mPoll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +44,17 @@ public class EditorActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_editor);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
             }
         });
+
+        // If creating a new Poll.
+        mPoll = new Poll();
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 //        mDurationHeader = (TextView) findViewById(R.id.textview_editor_duration_header);
@@ -54,6 +66,10 @@ public class EditorActivity extends AppCompatActivity {
         mPrivacySpinner = (Spinner) findViewById(R.id.spinner_editor_privacy_selector);
         mSettingsHeader = (LinearLayout) findViewById(R.id.linearlayout_editor_header_settings);
         mSettingsContent = (LinearLayout) findViewById(R.id.linearlayout_editor_content_settings);
+        mAddButton = (ImageButton) findViewById(R.id.button_editor_add);
+        mContainer = (LinearLayout) findViewById(R.id.linearlayout_editor_container);
+
+        mAddButton.setOnClickListener(this);
 
 //        mDurationSeekBar.setProgress(3);
 //
@@ -99,15 +115,7 @@ public class EditorActivity extends AppCompatActivity {
             }
         });
 
-        mSettingsHeader.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean newState = !v.isActivated();
-                v.setActivated(newState);
-                mSettingsContent.setVisibility(newState ? View.GONE : View.VISIBLE);
-
-            }
-        });
+        mSettingsHeader.setOnClickListener(this);
 
         setDefaults();
     }
@@ -117,4 +125,47 @@ public class EditorActivity extends AppCompatActivity {
         mPrivacyTextView.setText(getResources().getStringArray(R.array.array_privacy_explained)[1]);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.linearlayout_editor_header_settings:
+                boolean newState = !v.isActivated();
+                v.setActivated(newState);
+                mSettingsContent.setVisibility(newState ? View.GONE : View.VISIBLE);
+                break;
+            case R.id.button_editor_add:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                final String[] array = getResources().getStringArray(R.array
+                        .array_binaryquestion_modes);
+                builder.setTitle("Binary Question").setItems(array, new DialogInterface
+                        .OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        BinaryQuestion q;
+                        switch (which) {
+                            case 0:
+                                q = new BinaryQuestion("Test Title",
+                                        Constants.BINARY_MODE_YESNO);
+                                break;
+                            case 1:
+                                q = new BinaryQuestion("Test Title",
+                                        Constants.BINARY_MODE_TRUEFALSE);
+                                break;
+                            case 2:
+                                q = new BinaryQuestion("Test Title",
+                                        Constants.BINARY_MODE_UPDOWNVOTE);
+                                break;
+                            case 3:
+                                q = new BinaryQuestion("Test Title",
+                                        Constants.BINARY_MODE_CUSTOM);
+                                // TODO: 05/04/2017 add custom options
+                                break;
+                        }
+                    }
+                });
+                builder.show();
+                break;
+            default:
+        }
+    }
 }

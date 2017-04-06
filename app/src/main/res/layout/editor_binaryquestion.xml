@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:gravity="center_vertical"
+        android:text="Question"
+        android:textColor="@color/colorSecondaryText"/>
+
+    <EditText
+        android:id="@+id/edittext_editor_"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:inputType="text"/>
+
+    <RadioGroup
+        android:id="@+id/radiogroup_binary"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radiobutton_option1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Yes"/>
+
+        <RadioButton
+            android:id="@+id/radiobutton_option2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="No"/>
+
+        <RadioButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Other..."/>
+    </RadioGroup>
+
+
+</LinearLayout>

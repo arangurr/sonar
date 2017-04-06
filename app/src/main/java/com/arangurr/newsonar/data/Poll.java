@@ -12,12 +12,12 @@ import java.util.UUID;
 
 public class Poll extends MessagePayload {
 
-    private boolean mPasswordProtected = false;
-    private String mPassword;
     private UUID mPollId;
     private UUID mOwnerId;
+    private boolean mPasswordProtected = false;
+    private String mPassword;
     private ArrayList<Question> mQuestionList;
-    private int mPrivacySetting;
+    private int mPrivacySetting = Constants.PRIVACY_PRIVATE;
 
     public Poll() {
         mPollId = UUID.randomUUID();
@@ -71,5 +71,9 @@ public class Poll extends MessagePayload {
 
     public void setPrivacySetting(int privacySetting) {
         mPrivacySetting = privacySetting;
+    }
+
+    public void addQuestion(Question newQuestion) {
+        mQuestionList.add(newQuestion);
     }
 }
