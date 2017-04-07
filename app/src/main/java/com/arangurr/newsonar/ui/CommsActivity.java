@@ -14,7 +14,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.arangurr.newsonar.Constants;
+import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
+import com.arangurr.newsonar.data.Poll;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -28,6 +30,7 @@ import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 public class CommsActivity extends AppCompatActivity implements View.OnClickListener,
     GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -45,9 +48,19 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
   private PublishOptions.Builder mPublishOptionsBuilder;
   private PublishOptions mPublishOptions;
 
+  private Poll mCurrentPoll;
+
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_comms);
+
+    Bundle extras = getIntent().getExtras();
+    if (extras != null) {
+      UUID pollId = (UUID) extras.getSerializable(Constants.EXTRA_POLL_ID);
+      mCurrentPoll = PersistenceUtils.fetchPollWithId(this, pollId);
+    } else {
+      Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+    }
 
     mStrategyBuilder = new Strategy.Builder()
         .setDistanceType(Strategy.DISTANCE_TYPE_EARSHOT)

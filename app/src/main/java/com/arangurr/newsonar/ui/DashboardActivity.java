@@ -10,12 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import com.arangurr.newsonar.Constants;
+import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.BinaryQuestion;
-import com.arangurr.newsonar.GsonUtils;
 import com.arangurr.newsonar.data.Poll;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -33,13 +32,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     toCommsButton.setOnClickListener(this);
     saveButon.setOnClickListener(this);
 
-    mPolls = new ArrayList<>();
-    Map<String, ?> entries = getSharedPreferences(Constants.PREFS_POLLS, MODE_PRIVATE).getAll();
-    if (!entries.isEmpty()) {
-      for (Map.Entry<String, ?> entry : entries.entrySet()) {
-        mPolls.add(GsonUtils.deserializeGson((String) entry.getValue(), Poll.class));
-      }
-    }
+    mPolls = PersistenceUtils.fetchAllPolls(this);
   }
 
   @Override
@@ -53,17 +46,14 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
         startActivity(i);
       case R.id.saveButton:
-        SharedPreferences pollPrefs = getSharedPreferences(Constants.PREFS_POLLS, MODE_PRIVATE);
-        SharedPreferences.Editor prefEditor = pollPrefs.edit();
         SharedPreferences defaultPrefs = PreferenceManager
             .getDefaultSharedPreferences(getApplicationContext());
         Poll poll = new Poll("Sample Poll Title");
         poll.setOwnerId(defaultPrefs.getString(Constants.KEY_UUID, null));
         poll.setOwnerName(defaultPrefs.getString(Constants.KEY_USERNAME, "username not defined"));
         poll.addQuestion(new BinaryQuestion("First Title", Constants.BINARY_MODE_TRUEFALSE));
-        String toSaveString = GsonUtils.serialize(poll);
-        prefEditor.putString(poll.getUuid().toString(), toSaveString);
-        prefEditor.apply();
+
+        PersistenceUtils.storePollInPreferences(this, poll);
     }
   }
 
