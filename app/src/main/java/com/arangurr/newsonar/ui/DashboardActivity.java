@@ -12,10 +12,15 @@ import android.widget.Button;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.BinaryQuestion;
+import com.arangurr.newsonar.GsonUtils;
 import com.arangurr.newsonar.data.Poll;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
+
+  ArrayList<Poll> mPolls;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +33,12 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     toCommsButton.setOnClickListener(this);
     saveButon.setOnClickListener(this);
 
+    mPolls = new ArrayList<>();
     Map<String, ?> entries = getSharedPreferences(Constants.PREFS_POLLS, MODE_PRIVATE).getAll();
-    for (Map.Entry<String, ?> entry : entries.entrySet()) {
-      // TODO: 06/04/2017
+    if (!entries.isEmpty()) {
+      for (Map.Entry<String, ?> entry : entries.entrySet()) {
+        mPolls.add(GsonUtils.deserializeGson((String) entry.getValue(), Poll.class));
+      }
     }
   }
 
@@ -38,21 +46,22 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.toCommsButton:
+        Poll p = mPolls.get(mPolls.size() - 1);
+
         Intent i = new Intent(getApplicationContext(), CommsActivity.class);
+        i.putExtra(Constants.EXTRA_POLL_ID, p.getUuid());
+
         startActivity(i);
       case R.id.saveButton:
-        SharedPreferences pollPrefs = getSharedPreferences(Constants.PREFS_POLLS,
-            MODE_PRIVATE);
+        SharedPreferences pollPrefs = getSharedPreferences(Constants.PREFS_POLLS, MODE_PRIVATE);
         SharedPreferences.Editor prefEditor = pollPrefs.edit();
         SharedPreferences defaultPrefs = PreferenceManager
             .getDefaultSharedPreferences(getApplicationContext());
         Poll poll = new Poll("Sample Poll Title");
         poll.setOwnerId(defaultPrefs.getString(Constants.KEY_UUID, null));
-        poll.setOwnerName(defaultPrefs.getString(Constants.KEY_USERNAME,
-            "username not defined"));
-        poll.addQuestion(new BinaryQuestion("First Title", Constants
-            .BINARY_MODE_TRUEFALSE));
-        String toSaveString = poll.toString();
+        poll.setOwnerName(defaultPrefs.getString(Constants.KEY_USERNAME, "username not defined"));
+        poll.addQuestion(new BinaryQuestion("First Title", Constants.BINARY_MODE_TRUEFALSE));
+        String toSaveString = GsonUtils.serialize(poll);
         prefEditor.putString(poll.getUuid().toString(), toSaveString);
         prefEditor.apply();
     }

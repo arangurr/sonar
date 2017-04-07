@@ -9,7 +9,7 @@ import java.util.UUID;
  * Created by Rodrigo on 20/03/2017.
  */
 
-public class Poll extends MessagePayload {
+public class Poll {
 
   private UUID mPollId;
   private String mOwnerId;
