@@ -1,8 +1,11 @@
 package com.arangurr.newsonar.ui;
 
+import static android.support.design.widget.Snackbar.LENGTH_LONG;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -55,6 +58,7 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
           @Override
           public void onExpired() {
             Toast.makeText(CommsActivity.this, "Expired!", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Publish expired");
             super.onExpired();
           }
         });
@@ -104,14 +108,14 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
       public void onFound(Message message) {
         super.onFound(message);
         String messageAsString = new String(message.getContent(), StandardCharsets.UTF_8);
-        Log.d(TAG, "onFound: " + messageAsString);
+        Log.d(TAG, "Found message" + messageAsString);
       }
 
       @Override
       public void onLost(Message message) {
         super.onLost(message);
         String messageAsString = new String(message.getContent());
-        Log.d(TAG, "onLost: " + messageAsString);
+        Log.d(TAG, "Message " + messageAsString + " was lost");
       }
     };
   }
@@ -121,12 +125,12 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
     switch (v.getId()) {
       case R.id.button_comms_publish:
         mPublishOptions = mPublishOptionsBuilder.build();
-        Toast.makeText(this, "Hey!", Toast.LENGTH_SHORT).show();
         publish("hey!");
         break;
       case R.id.textview_comms_duration_header:
-        Toast.makeText(CommsActivity.this, "Longer times drain battery faster. " +
-            "Please use accordingly.", Toast.LENGTH_SHORT).show();
+        Snackbar snackbar = Snackbar.make(v, "Longer times drain battery faster. " +
+            "Please use accordingly.", LENGTH_LONG);
+        snackbar.show();
         break;
 
       default:
@@ -169,7 +173,7 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
   }
 
   private void subscribe() {
-    Log.i(TAG, "subscribing");
+    Log.i(TAG, "Trying to subscribe");
 
     SubscribeOptions subscribeOptions = new SubscribeOptions.Builder()
         .setStrategy(new Strategy.Builder()
@@ -181,7 +185,7 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
           public void onExpired() {
             super.onExpired();
 
-            Log.d(TAG, "subscribe expired");
+            Log.d(TAG, "Subscription expired");
 
           }
         })
@@ -201,7 +205,7 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
   }
 
   private void publish(String message) {
-    Log.i(TAG, "publish: " + message);
+    Log.d(TAG, "Trying to publish " + message);
     mActiveMessage = new Message(message.getBytes(StandardCharsets.UTF_8));
 
     Nearby.Messages.publish(mGoogleApiClient, mActiveMessage, mPublishOptions)
@@ -223,13 +227,16 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
   }
 
   private void unpublish() {
-    Log.i(TAG, "unpublishing");
+    Log.i(TAG, "Unpublishing");
     if (mActiveMessage != null) {
-      Nearby.Messages.unpublish(mGoogleApiClient, mActiveMessage);
+      Nearby.Messages.unpublish(mGoogleApiClient, mActiveMessage).setResultCallback(
+          new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+
+            }
+          });
       mActiveMessage = null;
     }
-  }
-
-  public void test(View view) {
   }
 }
