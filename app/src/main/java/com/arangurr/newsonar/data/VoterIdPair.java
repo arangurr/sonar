@@ -8,23 +8,23 @@ import java.util.UUID;
 
 public class VoterIdPair {
 
-    private final UUID mUuid;
-    private String mUserName;
+  private final UUID mUuid;
+  private String mUserName;
 
-    public VoterIdPair(UUID id, String user) {
-        this.mUuid = id;
-        this.mUserName = user;
-    }
+  public VoterIdPair(UUID id, String user) {
+    this.mUuid = id;
+    this.mUserName = user;
+  }
 
-    public UUID getUuid() {
-        return mUuid;
-    }
+  public UUID getUuid() {
+    return mUuid;
+  }
 
-    public String getUserName() {
-        return mUserName;
-    }
+  public String getUserName() {
+    return mUserName;
+  }
 
-    public void setUserName(String newName) {
-        mUserName = newName;
-    }
+  public void setUserName(String newName) {
+    mUserName = newName;
+  }
 }

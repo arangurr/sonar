@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-
 import com.arangurr.newsonar.Constants;
 
 /**
@@ -14,26 +13,26 @@ import com.arangurr.newsonar.Constants;
 
 public class HelperActivity extends Activity {
 
-    private boolean isFirstLaunch() {
-        return (PreferenceManager.getDefaultSharedPreferences(this)
-                .getString(Constants.KEY_UUID, null) == null);
-    }
+  private boolean isFirstLaunch() {
+    return (PreferenceManager.getDefaultSharedPreferences(this)
+        .getString(Constants.KEY_UUID, null) == null);
+  }
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+  @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+  }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+  @Override
+  protected void onResume() {
+    super.onResume();
 
-        if (isFirstLaunch()) {
-            startActivity(new Intent(HelperActivity.this, IntroActivity.class));
-            finish();
-        } else {
-            startActivity(new Intent(HelperActivity.this, DashboardActivity.class));
-            finish();
-        }
+    if (isFirstLaunch()) {
+      startActivity(new Intent(HelperActivity.this, IntroActivity.class));
+      finish();
+    } else {
+      startActivity(new Intent(HelperActivity.this, DashboardActivity.class));
+      finish();
     }
+  }
 }

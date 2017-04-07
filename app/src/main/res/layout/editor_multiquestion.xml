@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <TextView
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="@dimen/item_height"
+    android:gravity="center_vertical"
+    android:text="Question 1"
+    android:textColor="@color/colorSecondaryText"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height"
-        android:gravity="center_vertical"
-        android:text="Question 1"
-        android:textColor="@color/colorSecondaryText"/>
-
-    <EditText
-        android:id="@+id/edittext_editor_"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height"
-        android:inputType="text"/>
+  <EditText
+    android:id="@+id/edittext_editor_"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/item_height"
+    android:inputType="text"/>
 
 </LinearLayout>

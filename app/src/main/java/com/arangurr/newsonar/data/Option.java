@@ -8,15 +8,15 @@ import java.util.ArrayList;
 
 public class Option {
 
-    private String mOptionName;
-    private ArrayList<VoterIdPair> mVoterList;
+  private String mOptionName;
+  private ArrayList<VoterIdPair> mVoterList;
 
-    public Option(String title) {
-        mOptionName = title;
-        mVoterList = new ArrayList<>();
-    }
+  public Option(String title) {
+    mOptionName = title;
+    mVoterList = new ArrayList<>();
+  }
 
-    public int getNumberOfVotes(){
-        return mVoterList.size();
-    }
+  public int getNumberOfVotes() {
+    return mVoterList.size();
+  }
 }
