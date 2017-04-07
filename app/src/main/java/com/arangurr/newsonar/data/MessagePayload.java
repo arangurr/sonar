@@ -19,8 +19,9 @@ public abstract class MessagePayload implements Serializable {
     public MessagePayload() {
     }
 
-    public static MessagePayload fromString(String string) throws JsonSyntaxException {
-        return gson.fromJson(string, MessagePayload.class);
+    public static <T extends MessagePayload> T fromString(String string, Class<T> type) throws
+            JsonSyntaxException {
+        return gson.fromJson(string, type);
     }
 
     @Override

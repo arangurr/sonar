@@ -5,26 +5,35 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <TextView
-        android:id="@+id/textView"
+    <Button
+        android:id="@+id/toCommsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:text="toComms"/>
 
     <Button
-        android:id="@+id/publishButton"
+        android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Publish"/>
+        android:text="Save Sample Poll"/>
 
     <TextView
         android:id="@+id/textview_received"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/publishButton"
+        android:layout_below="@+id/toCommsButton"
+        android:layout_centerHorizontal="true"
+        android:text="TextView"/>
+
+    <TextView
+        android:id="@+id/textview_savedpoll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/saveButton"
         android:layout_centerHorizontal="true"
         android:text="TextView"/>
 </RelativeLayout>

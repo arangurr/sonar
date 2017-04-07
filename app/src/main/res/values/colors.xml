@@ -13,4 +13,6 @@
     <color name="colorSecondaryTextDark">#b3ffffff</color>
     <color name="colorDisabledTextDark">#80ffffff</color>
     <color name="colorDividerDark">#1fffffff</color>
+
+    <color name="colorWarning">#ffa000</color>
 </resources>

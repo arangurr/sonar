@@ -13,7 +13,9 @@ import java.util.UUID;
 public class Poll extends MessagePayload {
 
     private UUID mPollId;
-    private UUID mOwnerId;
+    private String mOwnerId;
+    private String mOwnerName;
+    private String mPollTitle;
     private boolean mPasswordProtected = false;
     private String mPassword;
     private ArrayList<Question> mQuestionList;
@@ -23,6 +25,13 @@ public class Poll extends MessagePayload {
         mPollId = UUID.randomUUID();
         mQuestionList = new ArrayList<>();
         mPrivacySetting = Constants.PRIVACY_PRIVATE;
+    }
+
+    public Poll(String title) {
+        mPollId = UUID.randomUUID();
+        mQuestionList = new ArrayList<>();
+        mPrivacySetting = Constants.PRIVACY_PRIVATE;
+        mPollTitle = title;
     }
 
     public boolean isPasswordProtected() {
@@ -49,11 +58,7 @@ public class Poll extends MessagePayload {
         mPollId = id;
     }
 
-    public UUID getOwnerId() {
-        return mOwnerId;
-    }
-
-    public void setOwnerId(UUID ownerId) {
+    public void setOwnerId(String ownerId) {
         mOwnerId = ownerId;
     }
 
@@ -75,5 +80,21 @@ public class Poll extends MessagePayload {
 
     public void addQuestion(Question newQuestion) {
         mQuestionList.add(newQuestion);
+    }
+
+    public String getPollTitle() {
+        return mPollTitle;
+    }
+
+    public void setPollTitle(String pollTitle) {
+        mPollTitle = pollTitle;
+    }
+
+    public void setOwnerName(String ownerName) {
+        mOwnerName = ownerName;
+    }
+
+    public String getOwnerName() {
+        return mOwnerName;
     }
 }

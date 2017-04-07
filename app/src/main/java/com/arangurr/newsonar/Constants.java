@@ -21,4 +21,7 @@ public class Constants {
     public static final int BINARY_MODE_UPDOWNVOTE = 12;
     public static final int BINARY_MODE_CUSTOM = 13;
 
+    public static final String PREFS_POLLS = "preferences_polls";
+
+    public static final String EXTRA_POLL_ID = "poll_id";
 }
