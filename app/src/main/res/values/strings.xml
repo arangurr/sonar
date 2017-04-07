@@ -3,16 +3,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_editor">Editor</string>
 
-    <string-array name="array_publish_durations">
-        <item>10 seconds</item>
-        <item>30 seconds</item>
-        <item>45 seconds</item>
-        <item>1 minute</item>
-        <item>2 minutes</item>
-        <item>5 minutes</item>
-        <item>Unlimited</item>
-    </string-array>
-
     <string-array name="array_privacy_intervals">
         <item>Public</item>
         <item>Anonymous</item>
