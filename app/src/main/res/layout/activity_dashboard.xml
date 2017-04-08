@@ -1,39 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:fitsSystemWindows="true">
 
-  <Button
-    android:id="@+id/toCommsButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerHorizontal="true"
-    android:layout_centerVertical="true"
-    android:text="toComms"/>
+  <android.support.v7.widget.RecyclerView
+    android:id="@+id/recyclerview_dashboard_polls"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
 
-  <Button
-    android:id="@+id/saveButton"
+  <android.support.design.widget.FloatingActionButton
+    android:id="@+id/fab_dashboard_add"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_alignParentTop="true"
-    android:layout_centerHorizontal="true"
-    android:text="Save Sample Poll"/>
+    android:layout_margin="@dimen/fab_margin"
+    android:layout_gravity="bottom|end"
+    android:onClick="onClick"
+    android:src="@drawable/ic_add_24dp"
+    android:tint="@color/colorPrimaryText"/>
 
-  <TextView
-    android:id="@+id/textview_received"
+  <android.support.design.widget.FloatingActionButton
+    android:id="@+id/fab_dashboard_add_debug"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/toCommsButton"
-    android:layout_centerHorizontal="true"
-    android:text="TextView"/>
+    android:layout_margin="@dimen/fab_margin"
+    android:layout_gravity="bottom|center"
+    android:onClick="onClick"
+    android:src="@drawable/ic_add_24dp"
+    android:tint="@color/colorPrimaryText"/>
 
-  <TextView
-    android:id="@+id/textview_savedpoll"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/saveButton"
-    android:layout_centerHorizontal="true"
-    android:text="TextView"/>
-</RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>
