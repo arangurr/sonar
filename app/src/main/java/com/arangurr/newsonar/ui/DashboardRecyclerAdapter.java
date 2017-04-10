@@ -9,6 +9,9 @@ import android.widget.TextView;
 import com.arangurr.newsonar.data.Poll;
 import com.arangurr.newsonar.ui.widget.OnItemClickListener;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Created by Rodrigo on 08/04/2017.
@@ -17,10 +20,16 @@ import java.util.ArrayList;
 public class DashboardRecyclerAdapter extends
     RecyclerView.Adapter<DashboardRecyclerAdapter.ViewHolder> {
 
-  private ArrayList<Poll> mPolls;
+  private List<Poll> mPolls;
   private com.arangurr.newsonar.ui.widget.OnItemClickListener mItemClickListener;
 
-  public DashboardRecyclerAdapter(ArrayList<Poll> polls) {
+  public DashboardRecyclerAdapter(List<Poll> polls) {
+    Collections.sort(polls, new Comparator<Poll>() {
+      @Override
+      public int compare(Poll o1, Poll o2) {
+        return (int) (o1.getStartDate() - o2.getStartDate());
+      }
+    });
     mPolls = polls;
   }
 

@@ -2,6 +2,7 @@ package com.arangurr.newsonar.data;
 
 import com.arangurr.newsonar.Constants;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 public class Poll {
 
+  private final long mStartDate;
   private UUID mPollId;
   private String mOwnerId;
   private String mOwnerName;
@@ -24,6 +26,7 @@ public class Poll {
     mPollId = UUID.randomUUID();
     mQuestionList = new ArrayList<>();
     mPrivacySetting = Constants.PRIVACY_PRIVATE;
+    mStartDate = new Date().getTime();
   }
 
   public Poll(String title) {
@@ -31,6 +34,7 @@ public class Poll {
     mQuestionList = new ArrayList<>();
     mPrivacySetting = Constants.PRIVACY_PRIVATE;
     mPollTitle = title;
+    mStartDate = new Date().getTime();
   }
 
   public boolean isPasswordProtected() {
@@ -89,11 +93,15 @@ public class Poll {
     mPollTitle = pollTitle;
   }
 
+  public String getOwnerName() {
+    return mOwnerName;
+  }
+
   public void setOwnerName(String ownerName) {
     mOwnerName = ownerName;
   }
 
-  public String getOwnerName() {
-    return mOwnerName;
+  public long getStartDate() {
+    return mStartDate;
   }
 }
