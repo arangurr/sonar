@@ -6,11 +6,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.Poll;
 import com.arangurr.newsonar.ui.widget.OnItemClickListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,14 +49,16 @@ public class DashboardRecyclerAdapter extends
   @Override
   public DashboardRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
     View inflatedView = LayoutInflater.from(viewGroup.getContext())
-        .inflate(android.R.layout.simple_list_item_1, viewGroup, false);
+        .inflate(R.layout.item_dashboard, viewGroup, false);
     return new ViewHolder(inflatedView);
   }
 
   @Override
   public void onBindViewHolder(DashboardRecyclerAdapter.ViewHolder viewHolder, int i) {
-    viewHolder.mTextView.setText(mPolls.get(i).getUuid().toString());
-
+    viewHolder.mTitle.setText(mPolls.get(i).getUuid().toString());
+    Date date = new Date(mPolls.get(i).getStartDate());
+    viewHolder.mSubtitle.setText(date.toString());
+    viewHolder.mCircle.setText(String.valueOf(i));
   }
 
   @Override
@@ -68,12 +72,16 @@ public class DashboardRecyclerAdapter extends
 
   public class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
-    private TextView mTextView;
+    private TextView mTitle;
+    private TextView mSubtitle;
+    private TextView mCircle;
 
     public ViewHolder(View itemView) {
       super(itemView);
 
-      mTextView = (TextView) itemView.findViewById(android.R.id.text1);
+      mTitle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_title);
+      mSubtitle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_subtitle);
+      mCircle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_circle);
 
       itemView.setOnClickListener(this);
 

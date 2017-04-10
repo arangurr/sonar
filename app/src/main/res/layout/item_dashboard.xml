@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:paddingBottom="8dp"
+  android:background="?selectableItemBackground"
+  android:minHeight="@dimen/item_height"
+  tools:layout_editor_absoluteX="0dp"
+  tools:layout_editor_absoluteY="81dp">
+
+  <TextView
+    android:id="@+id/textview_dashboard_item_circle"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="16dp"
+    android:background="@drawable/shape_circle"
+    android:gravity="center"
+    android:textAppearance="?android:attr/textAppearanceLargeInverse"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="1"/>
+
+  <TextView
+    android:id="@+id/textview_dashboard_item_title"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintLeft_toRightOf="@+id/textview_dashboard_item_circle"
+    app:layout_constraintTop_toTopOf="@+id/textview_dashboard_item_circle"
+    tools:text="This is the poll title but it can become a really long string but I don't care because this wraps in the end, leaving a lot of space trololol. This sentence continues."/>
+
+  <TextView
+    android:id="@+id/textview_dashboard_item_subtitle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="0dp"
+    android:gravity="end"
+    android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+    app:layout_constraintRight_toRightOf="@+id/textview_dashboard_item_title"
+    app:layout_constraintTop_toBottomOf="@+id/textview_dashboard_item_title"
+    tools:text="Created 10/04/2017"/>
+</android.support.constraint.ConstraintLayout>
