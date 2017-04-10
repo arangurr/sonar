@@ -24,6 +24,16 @@ public class DashboardRecyclerAdapter extends
     mPolls = polls;
   }
 
+  public void swapArray(ArrayList<Poll> newArray) {
+    mPolls.clear();
+    mPolls.addAll(newArray);
+    notifyDataSetChanged();
+  }
+
+  public void add(Poll poll) {
+    mPolls.add(poll);
+    notifyItemInserted(mPolls.size() - 1);
+  }
 
   @Override
   public DashboardRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {

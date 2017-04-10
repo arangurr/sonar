@@ -2,6 +2,7 @@ package com.arangurr.newsonar.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
@@ -16,27 +17,26 @@ import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.BinaryQuestion;
 import com.arangurr.newsonar.data.Poll;
 import com.arangurr.newsonar.ui.widget.OnItemClickListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
 
-  ArrayList<Poll> mPolls;
-  RecyclerView mPollRecyclerView;
-  DashboardRecyclerAdapter mAdapter;
+  private SharedPreferences.OnSharedPreferenceChangeListener mPreferenceChangeListener;
+
+  private DashboardRecyclerAdapter mAdapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_dashboard);
 
-    mPolls = PersistenceUtils.fetchAllPolls(this);
-    List<String> strings = new ArrayList<>();
-    for (Poll p : mPolls) {
-      strings.add(p.getUuid().toString());
-    }
+    mPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
+      @Override
+      public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        mAdapter.add(PersistenceUtils.fetchPollWithId(getApplicationContext(), key));
+      }
+    };
 
-    mPollRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_dashboard_polls);
+    RecyclerView pollRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_dashboard_polls);
 
     mAdapter = new DashboardRecyclerAdapter(PersistenceUtils.fetchAllPolls(this));
     mAdapter.setOnItemClickListener(new OnItemClickListener() {
@@ -46,13 +46,21 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
       }
     });
-    mPollRecyclerView.setAdapter(mAdapter);
+    pollRecyclerView.setAdapter(mAdapter);
   }
 
   @Override
-  protected void onStart() {
-    super.onStart();
-    mPolls = PersistenceUtils.fetchAllPolls(this);
+  protected void onResume() {
+    super.onResume();
+    getSharedPreferences(Constants.PREFS_POLLS, MODE_PRIVATE)
+        .registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    getSharedPreferences(Constants.PREFS_POLLS, MODE_PRIVATE)
+        .unregisterOnSharedPreferenceChangeListener(mPreferenceChangeListener);
   }
 
   @Override
@@ -71,7 +79,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         poll.addQuestion(new BinaryQuestion("First Title", Constants.BINARY_MODE_TRUEFALSE));
 
         PersistenceUtils.storePollInPreferences(this, poll);
-        mAdapter.notifyDataSetChanged();
         break;
 
       /*case R.id.toCommsButton:
