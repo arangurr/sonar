@@ -1,14 +1,16 @@
 package com.arangurr.newsonar.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.Poll;
-import com.arangurr.newsonar.ui.widget.OnItemClickListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -55,7 +57,7 @@ public class DashboardRecyclerAdapter extends
 
   @Override
   public void onBindViewHolder(DashboardRecyclerAdapter.ViewHolder viewHolder, int i) {
-    viewHolder.mTitle.setText(mPolls.get(i).getUuid().toString());
+    viewHolder.mTitle.setText(mPolls.get(i).getPollTitle());
     Date date = new Date(mPolls.get(i).getStartDate());
     viewHolder.mSubtitle.setText(date.toString());
     viewHolder.mCircle.setText(String.valueOf(i));
@@ -64,10 +66,6 @@ public class DashboardRecyclerAdapter extends
   @Override
   public int getItemCount() {
     return mPolls.size();
-  }
-
-  public void setOnItemClickListener(final OnItemClickListener itemClickListener) {
-    mItemClickListener = itemClickListener;
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
@@ -84,14 +82,13 @@ public class DashboardRecyclerAdapter extends
       mCircle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_circle);
 
       itemView.setOnClickListener(this);
-
     }
 
     @Override
     public void onClick(View v) {
-      if (mItemClickListener != null) {
-        mItemClickListener.onItemClick(v, getAdapterPosition());
-      }
+      Intent i = new Intent(v.getContext(), CommsActivity.class);
+      i.putExtra(Constants.EXTRA_POLL_ID, mPolls.get(getAdapterPosition()).getUuid());
+      ((Activity) v.getContext()).startActivity(i);
     }
   }
 }

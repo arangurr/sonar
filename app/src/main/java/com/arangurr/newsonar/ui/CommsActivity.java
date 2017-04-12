@@ -62,6 +62,8 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
       Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
     }
 
+    getSupportActionBar().setTitle(mCurrentPoll.getPollTitle());
+
     mStrategyBuilder = new Strategy.Builder()
         .setDistanceType(Strategy.DISTANCE_TYPE_EARSHOT)
         .setDiscoveryMode(Strategy.DISCOVERY_MODE_BROADCAST);

@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -16,7 +15,6 @@ import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.BinaryQuestion;
 import com.arangurr.newsonar.data.Poll;
-import com.arangurr.newsonar.ui.widget.OnItemClickListener;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -39,13 +37,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     RecyclerView pollRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_dashboard_polls);
 
     mAdapter = new DashboardRecyclerAdapter(PersistenceUtils.fetchAllPolls(this));
-    mAdapter.setOnItemClickListener(new OnItemClickListener() {
-      @Override
-      public void onItemClick(View view, int position) {
-        Snackbar.make(view, position + " clicked", Snackbar.LENGTH_SHORT).show();
-
-      }
-    });
     pollRecyclerView.setAdapter(mAdapter);
   }
 
