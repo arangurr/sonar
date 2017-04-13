@@ -99,6 +99,12 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       case R.id.fab_editor_add:
         fabTransform();
         break;
+      case R.id.textview_card_binary:
+      case R.id.textview_card_multiple:
+      case R.id.textview_card_rate:
+      case R.id.textview_card_close:
+        reverseFabTransform();
+        break;
       case R.id.linearlayout_editor_header_settings:
         boolean newState = !v.isActivated();
         v.setActivated(newState);

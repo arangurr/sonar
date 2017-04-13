@@ -23,6 +23,7 @@
       android:layout_height="?android:attr/listPreferredItemHeight"
       android:paddingStart="8dp"
       android:paddingEnd="8dp"
+      android:background="?android:attr/selectableItemBackground"
       android:drawableLeft="@drawable/ic_binary_24dp"
       android:drawablePadding="8dp"
       android:gravity="center_vertical"
@@ -36,6 +37,7 @@
       android:layout_height="?android:attr/listPreferredItemHeight"
       android:paddingStart="8dp"
       android:paddingEnd="8dp"
+      android:background="?android:attr/selectableItemBackground"
       android:drawablePadding="8dp"
       android:drawableStart="@drawable/ic_multiple_24dp"
       android:gravity="center_vertical"
@@ -49,6 +51,7 @@
       android:layout_height="?android:attr/listPreferredItemHeight"
       android:paddingStart="8dp"
       android:paddingEnd="8dp"
+      android:background="?android:attr/selectableItemBackground"
       android:drawableLeft="@drawable/ic_thumbs_24dp"
       android:drawablePadding="8dp"
       android:gravity="center_vertical"
@@ -62,7 +65,7 @@
       android:background="@color/colorAccent"
       android:clipToPadding="false">
       <TextView
-        android:id="@+id/text4"
+        android:id="@+id/textview_card_close"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/listPreferredItemHeight"
         android:paddingStart="8dp"
