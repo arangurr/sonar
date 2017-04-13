@@ -21,15 +21,23 @@
 
   </android.support.design.widget.AppBarLayout>
 
-  <include layout="@layout/content_editor"/>
+  <include
+    android:id="@+id/include"
+    layout="@layout/content_editor"/>
+
+  <include
+    android:id="@+id/card_editor"
+    layout="@layout/editor_card"/>
 
   <android.support.design.widget.FloatingActionButton
-    android:id="@+id/fab_editor"
+    android:id="@+id/fab_editor_add"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="bottom|end"
     android:layout_margin="@dimen/fab_margin"
+    android:layout_gravity="center_vertical|center_horizontal"
     android:tint="@color/colorPrimaryText"
+    app:layout_anchor="@+id/include"
+    app:layout_anchorGravity="bottom|right"
     app:srcCompat="@drawable/ic_done_24dp"/>
 
 </android.support.design.widget.CoordinatorLayout>
