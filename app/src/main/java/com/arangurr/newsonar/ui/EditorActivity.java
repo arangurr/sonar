@@ -36,6 +36,8 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   private CardView mFabCard;
   private CardView mConfigCard;
 
+  private boolean mIsCardAnimating = false;
+
   private Poll mPoll;
   private FloatingActionButton mFab;
 
@@ -149,11 +151,14 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       case R.id.action_config:
         boolean isCardShown = mConfigCard.getVisibility() == View.VISIBLE;
         Drawable icon = item.getIcon();
-        rotateIcon(icon, isCardShown);
-        if (isCardShown) {
-          reverseRevealSettingsCard();
-        } else {
-          revealSettingsCard();
+        if (!mIsCardAnimating) {
+          rotateIcon(icon, isCardShown);
+          if (isCardShown) {
+            reverseRevealSettingsCard();
+          } else {
+            revealSettingsCard();
+          }
+          mIsCardAnimating = true;
         }
         return true;
       default:
@@ -288,32 +293,51 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   }
 
   private void revealSettingsCard() {
-    int cx = mConfigCard.getRight();
+    View action = findViewById(R.id.action_config);
+    int[] location = new int[2];
+    action.getLocationOnScreen(location);
+
+    int cx = (int) (mConfigCard.getX() + location[0] + action.getWidth() / 2);
     int cy = 0;
+
+    float radius = (float) Math.hypot(cx, mConfigCard.getHeight());
 
     Animator reveal = ViewAnimationUtils.createCircularReveal(
         mConfigCard,
         cx,
         cy,
         0,
-        (float) Math.hypot(mConfigCard.getWidth(), mConfigCard.getHeight()));
+        radius);
 
     reveal.setInterpolator(
         AnimationUtils.loadInterpolator(this, android.R.interpolator.fast_out_slow_in));
     reveal.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
+    reveal.addListener(new AnimatorListenerAdapter() {
+      @Override
+      public void onAnimationEnd(Animator animation) {
+        mIsCardAnimating = false;
+        super.onAnimationEnd(animation);
+      }
+    });
     reveal.start();
     mConfigCard.setVisibility(View.VISIBLE);
   }
 
   private void reverseRevealSettingsCard() {
-    int cx = mConfigCard.getRight();
+    View action = findViewById(R.id.action_config);
+    int[] location = new int[2];
+    action.getLocationOnScreen(location);
+
+    int cx = (int) (mConfigCard.getX() + location[0] + action.getWidth() / 2);
     int cy = 0;
+
+    float radius = (float) Math.hypot(cx, mConfigCard.getHeight());
 
     Animator reveal = ViewAnimationUtils.createCircularReveal(
         mConfigCard,
         cx,
         cy,
-        (float) Math.hypot(mConfigCard.getWidth(), mConfigCard.getHeight()),
+        radius,
         0);
 
     reveal.setInterpolator(
@@ -323,6 +347,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       @Override
       public void onAnimationEnd(Animator animation) {
         mConfigCard.setVisibility(View.INVISIBLE);
+        mIsCardAnimating = false;
         super.onAnimationEnd(animation);
       }
     });
