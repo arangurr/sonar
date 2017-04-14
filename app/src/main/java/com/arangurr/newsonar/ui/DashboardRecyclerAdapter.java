@@ -25,7 +25,6 @@ public class DashboardRecyclerAdapter extends
     RecyclerView.Adapter<DashboardRecyclerAdapter.ViewHolder> {
 
   private List<Poll> mPolls;
-  private com.arangurr.newsonar.ui.widget.OnItemClickListener mItemClickListener;
 
   public DashboardRecyclerAdapter(List<Poll> polls) {
     Collections.sort(polls, new Comparator<Poll>() {
