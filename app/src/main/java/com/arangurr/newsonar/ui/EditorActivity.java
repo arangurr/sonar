@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.graphics.Path;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -12,13 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.transition.ArcMotion;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -31,9 +33,8 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   private EditText mPasswordEditText;
   private TextView mPrivacyTextView;
   private Spinner mPrivacySpinner;
-  private LinearLayout mSettingsHeader;
-  private LinearLayout mSettingsContent;
-  private CardView mCard;
+  private CardView mFabCard;
+  private CardView mConfigCard;
 
   private Poll mPoll;
   private FloatingActionButton mFab;
@@ -42,23 +43,21 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_editor);
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_editor);
     setSupportActionBar(toolbar);
-
 
     // If creating a new Poll.
     mPoll = new Poll();
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    mPasswordSwitch = (Switch) findViewById(R.id.switch_editor_password);
-    mPasswordEditText = (EditText) findViewById(R.id.edittext_editor_password);
-    mPrivacyTextView = (TextView) findViewById(R.id.textview_editor_privacy_explanation);
-    mPrivacySpinner = (Spinner) findViewById(R.id.spinner_editor_privacy_selector);
-    mSettingsHeader = (LinearLayout) findViewById(R.id.linearlayout_editor_header_settings);
-    mSettingsContent = (LinearLayout) findViewById(R.id.linearlayout_editor_content_settings);
+    mPasswordSwitch = (Switch) findViewById(R.id.switch_card_config_password);
+    mPasswordEditText = (EditText) findViewById(R.id.edittext_card_config_password);
+    mPrivacyTextView = (TextView) findViewById(R.id.textview_card_config_privacy_description);
+    mPrivacySpinner = (Spinner) findViewById(R.id.spinner_card_config_privacy);
     mFab = (FloatingActionButton) findViewById(R.id.fab_editor_add);
-    mCard = (CardView) findViewById(R.id.card_editor);
+    mFabCard = (CardView) findViewById(R.id.card_editor_fab);
+    mConfigCard = (CardView) findViewById(R.id.card_editor_config);
 
     mPasswordSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
       @Override
@@ -82,15 +81,9 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       }
     });
 
-    mSettingsHeader.setOnClickListener(this);
     mFab.setOnClickListener(this);
 
-    setDefaults();
-  }
-
-  private void setDefaults() {
-    mPrivacySpinner.setSelection(1); // By default all votes will be anonymous
-    mPrivacyTextView.setText(getResources().getStringArray(R.array.array_privacy_explained)[1]);
+    setDefaultCardConfig();
   }
 
   @Override
@@ -104,11 +97,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       case R.id.textview_card_rate:
       case R.id.textview_card_close:
         reverseFabTransform();
-        break;
-      case R.id.linearlayout_editor_header_settings:
-        boolean newState = !v.isActivated();
-        v.setActivated(newState);
-        mSettingsContent.setVisibility(newState ? View.GONE : View.VISIBLE);
         break;
       /*case R.id.button_editor_add:
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -142,28 +130,67 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         });
         builder.show();
         break;*/
+      case R.id.button_card_config_ok:
+        reverseRevealSettingsCard();
+        break;
       default:
     }
   }
 
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_editor, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.action_config:
+        boolean isCardShown = mConfigCard.getVisibility() == View.VISIBLE;
+        Drawable icon = item.getIcon();
+        rotateIcon(icon, isCardShown);
+        if (isCardShown) {
+          reverseRevealSettingsCard();
+        } else {
+          revealSettingsCard();
+        }
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
+  }
+
+  private void rotateIcon(Drawable icon, boolean reverse) {
+    ObjectAnimator animator = ObjectAnimator.ofInt(
+        icon,
+        "level",
+        reverse ? 0 : 10000,
+        reverse ? 10000 : 0);
+    animator.setInterpolator(AnimationUtils
+        .loadInterpolator(getApplicationContext(), android.R.interpolator.fast_out_slow_in));
+    animator.setDuration(getApplicationContext().getResources()
+        .getInteger(android.R.integer.config_mediumAnimTime));
+    animator.start();
+  }
 
   private void fabTransform() {
     int fabCenterX = (mFab.getLeft() + mFab.getRight()) / 2;
     int fabCenterY = ((mFab.getTop() + mFab.getBottom()) / 2);
-    int translateX = fabCenterX - (mCard.getLeft() + mCard.getWidth() / 2);
-    int translateY = fabCenterY - (mCard.getTop() + mCard.getHeight() / 2);
+    int translateX = fabCenterX - (mFabCard.getLeft() + mFabCard.getWidth() / 2);
+    int translateY = fabCenterY - (mFabCard.getTop() + mFabCard.getHeight() / 2);
 
-    mCard.setTranslationX(translateX);
-    mCard.setTranslationY(translateY);
+    mFabCard.setTranslationX(translateX);
+    mFabCard.setTranslationY(translateY);
 
-    mCard.setVisibility(View.VISIBLE);
+    mFabCard.setVisibility(View.VISIBLE);
 
     Animator reveal = ViewAnimationUtils.createCircularReveal(
-        mCard,
-        mCard.getWidth() / 2,
-        mCard.getHeight() / 2,
+        mFabCard,
+        mFabCard.getWidth() / 2,
+        mFabCard.getHeight() / 2,
         mFab.getWidth() / 2,
-        (float) Math.hypot(mCard.getWidth() / 2, mCard.getHeight() / 2))
+        (float) Math.hypot(mFabCard.getWidth() / 2, mFabCard.getHeight() / 2))
         .setDuration(360);
 
     ArcMotion arcMotion = new ArcMotion();
@@ -173,12 +200,12 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     Path motionPath = arcMotion.getPath(translateX, translateY, 0, 0);
 
     Animator move = ObjectAnimator
-        .ofFloat(mCard, View.TRANSLATION_X, View.TRANSLATION_Y, motionPath);
+        .ofFloat(mFabCard, View.TRANSLATION_X, View.TRANSLATION_Y, motionPath);
 
     Animator fadeOut = ObjectAnimator.ofFloat(mFab, View.ALPHA, 0f)
         .setDuration(60);
 
-    Animator color = ObjectAnimator.ofArgb(mCard, "backgroundColor",
+    Animator color = ObjectAnimator.ofArgb(mFabCard, "backgroundColor",
         ContextCompat.getColor(this, R.color.colorAccent),
         ContextCompat.getColor(this, android.R.color.white))
         .setDuration(360);
@@ -201,8 +228,8 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   }
 
   private void reverseFabTransform() {
-    int cardCenterX = (mCard.getLeft() + mCard.getRight()) / 2;
-    int cardCenterY = (mCard.getTop() + mCard.getBottom()) / 2;
+    int cardCenterX = (mFabCard.getLeft() + mFabCard.getRight()) / 2;
+    int cardCenterY = (mFabCard.getTop() + mFabCard.getBottom()) / 2;
 
     int translateX = cardCenterX - (mFab.getLeft() + mFab.getWidth() / 2);
     int translateY = cardCenterY - (mFab.getTop() + mFab.getHeight() / 2);
@@ -210,10 +237,10 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     mFab.setVisibility(View.VISIBLE);
 
     Animator inverseReveal = ViewAnimationUtils.createCircularReveal(
-        mCard,
-        mCard.getWidth() / 2,
-        mCard.getHeight() / 2,
-        (float) Math.hypot(mCard.getWidth() / 2, mCard.getHeight() / 2),
+        mFabCard,
+        mFabCard.getWidth() / 2,
+        mFabCard.getHeight() / 2,
+        (float) Math.hypot(mFabCard.getWidth() / 2, mFabCard.getHeight() / 2),
         mFab.getWidth() / 2)
         .setDuration(360);
 
@@ -224,16 +251,16 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     Path motionPath = arcMotion.getPath(0, 0, -translateX, -translateY);
 
     Animator move = ObjectAnimator.ofFloat(
-        mCard,
+        mFabCard,
         View.TRANSLATION_X,
         View.TRANSLATION_Y,
         motionPath);
 
-    Animator fadeOut = ObjectAnimator.ofFloat(mCard, View.ALPHA, 0f);
+    Animator fadeOut = ObjectAnimator.ofFloat(mFabCard, View.ALPHA, 0f);
     Animator fadeIn = ObjectAnimator.ofFloat(mFab, View.ALPHA, 1f);
 
     Animator color = ObjectAnimator.ofArgb(
-        mCard,
+        mFabCard,
         "backgroundColor",
         ContextCompat.getColor(this, android.R.color.white),
         ContextCompat.getColor(this, R.color.colorAccent))
@@ -241,7 +268,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
     AnimatorSet animation = new AnimatorSet();
     animation.setInterpolator(AnimationUtils.loadInterpolator(
-        mCard.getContext(),
+        mFabCard.getContext(),
         android.R.interpolator.fast_out_slow_in));
     animation.addListener(new AnimatorListenerAdapter() {
 
@@ -249,8 +276,8 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       @Override
       public void onAnimationEnd(Animator animation) {
         super.onAnimationEnd(animation);
-        mCard.setVisibility(View.INVISIBLE);
-        mCard.setAlpha(1f);
+        mFabCard.setVisibility(View.INVISIBLE);
+        mFabCard.setAlpha(1f);
       }
     });
 
@@ -258,5 +285,52 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
     animation.start();
 
+  }
+
+  private void revealSettingsCard() {
+    int cx = mConfigCard.getRight();
+    int cy = 0;
+
+    Animator reveal = ViewAnimationUtils.createCircularReveal(
+        mConfigCard,
+        cx,
+        cy,
+        0,
+        (float) Math.hypot(mConfigCard.getWidth(), mConfigCard.getHeight()));
+
+    reveal.setInterpolator(
+        AnimationUtils.loadInterpolator(this, android.R.interpolator.fast_out_slow_in));
+    reveal.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
+    reveal.start();
+    mConfigCard.setVisibility(View.VISIBLE);
+  }
+
+  private void reverseRevealSettingsCard() {
+    int cx = mConfigCard.getRight();
+    int cy = 0;
+
+    Animator reveal = ViewAnimationUtils.createCircularReveal(
+        mConfigCard,
+        cx,
+        cy,
+        (float) Math.hypot(mConfigCard.getWidth(), mConfigCard.getHeight()),
+        0);
+
+    reveal.setInterpolator(
+        AnimationUtils.loadInterpolator(this, android.R.interpolator.fast_out_slow_in));
+    reveal.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
+    reveal.addListener(new AnimatorListenerAdapter() {
+      @Override
+      public void onAnimationEnd(Animator animation) {
+        mConfigCard.setVisibility(View.INVISIBLE);
+        super.onAnimationEnd(animation);
+      }
+    });
+    reveal.start();
+  }
+
+  private void setDefaultCardConfig() {
+    mPrivacySpinner.setSelection(1); // By default all votes will be anonymous
+    mPrivacyTextView.setText(getResources().getStringArray(R.array.array_privacy_explained)[1]);
   }
 }

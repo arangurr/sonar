@@ -5,4 +5,5 @@
   <dimen name="item_end_margin">16dp</dimen>
   <dimen name="item_margin">16dp</dimen>
   <dimen name="list_top_margin">8dp</dimen>
+  <dimen name="item_height_small">48dp</dimen>
 </resources>

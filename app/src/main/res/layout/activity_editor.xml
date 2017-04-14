@@ -8,12 +8,13 @@
   tools:context="com.arangurr.newsonar.ui.EditorActivity">
 
   <android.support.design.widget.AppBarLayout
+    android:id="@+id/appbarlayout_editor"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:theme="@style/AppTheme.AppBarOverlay">
 
     <android.support.v7.widget.Toolbar
-      android:id="@+id/toolbar"
+      android:id="@+id/toolbar_editor"
       android:layout_width="match_parent"
       android:layout_height="?attr/actionBarSize"
       android:background="?attr/colorPrimary"
@@ -22,22 +23,23 @@
   </android.support.design.widget.AppBarLayout>
 
   <include
-    android:id="@+id/include"
     layout="@layout/content_editor"/>
-
-  <include
-    android:id="@+id/card_editor"
-    layout="@layout/editor_card"/>
 
   <android.support.design.widget.FloatingActionButton
     android:id="@+id/fab_editor_add"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/fab_margin"
-    android:layout_gravity="center_vertical|center_horizontal"
+    android:layout_gravity="bottom|end"
     android:tint="@color/colorPrimaryText"
-    app:layout_anchor="@+id/include"
-    app:layout_anchorGravity="bottom|right"
     app:srcCompat="@drawable/ic_done_24dp"/>
+
+  <include
+    android:id="@+id/card_editor_config"
+    layout="@layout/editor_card_config"/>
+
+  <include
+    android:id="@+id/card_editor_fab"
+    layout="@layout/editor_card_fab"/>
 
 </android.support.design.widget.CoordinatorLayout>
