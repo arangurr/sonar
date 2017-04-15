@@ -4,15 +4,22 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AlertDialog.Builder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.transition.ArcMotion;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,10 +28,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.R;
+import com.arangurr.newsonar.data.BinaryQuestion;
+import com.arangurr.newsonar.data.Option;
 import com.arangurr.newsonar.data.Poll;
 
 public class EditorActivity extends AppCompatActivity implements View.OnClickListener {
@@ -95,43 +107,12 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         fabTransform();
         break;
       case R.id.textview_card_binary:
+        showBinaryDialog(v.getContext());
       case R.id.textview_card_multiple:
       case R.id.textview_card_rate:
       case R.id.textview_card_close:
         reverseFabTransform();
         break;
-      /*case R.id.button_editor_add:
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final String[] array = getResources().getStringArray(R.array
-            .array_binaryquestion_modes);
-        builder.setTitle("Binary Question").setItems(array, new DialogInterface
-            .OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            BinaryQuestion q;
-            switch (which) {
-              case 0:
-                q = new BinaryQuestion("Test Title",
-                    Constants.BINARY_MODE_YESNO);
-                break;
-              case 1:
-                q = new BinaryQuestion("Test Title",
-                    Constants.BINARY_MODE_TRUEFALSE);
-                break;
-              case 2:
-                q = new BinaryQuestion("Test Title",
-                    Constants.BINARY_MODE_UPDOWNVOTE);
-                break;
-              case 3:
-                q = new BinaryQuestion("Test Title",
-                    Constants.BINARY_MODE_CUSTOM);
-                // TODO: 05/04/2017 add custom options
-                break;
-            }
-          }
-        });
-        builder.show();
-        break;*/
       case R.id.button_card_config_ok:
         reverseRevealSettingsCard();
         break;
@@ -164,6 +145,57 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       default:
         return super.onOptionsItemSelected(item);
     }
+  }
+
+  private void showBinaryDialog(Context context) {
+    LayoutInflater inflater = getLayoutInflater();
+    View dialogView = inflater.inflate(R.layout.editor_dialog_binary, null);
+
+    final EditText title = (EditText) dialogView.findViewById(R.id.edittext_binary_title);
+    final EditText option1 = (EditText) dialogView.findViewById(R.id.edittext_binary_option1);
+    final EditText option2 = (EditText) dialogView.findViewById(R.id.edittext_binary_option2);
+    final RadioGroup radiogroup = (RadioGroup) dialogView.findViewById(R.id.radiogroup_binary);
+
+    radiogroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+        boolean custom = (checkedId == R.id.radiobutton_binary_custom);
+        option1.setVisibility(custom ? View.VISIBLE : View.GONE);
+        option2.setVisibility(custom ? View.VISIBLE : View.GONE);
+      }
+    });
+
+    AlertDialog.Builder dialogBuilder = new Builder(context);
+    dialogBuilder
+        .setPositiveButton(android.R.string.ok, new OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            BinaryQuestion question;
+            switch (radiogroup.getCheckedRadioButtonId()) {
+              case R.id.radiobutton_binary_yesno:
+                question = new BinaryQuestion(
+                    title.getText().toString(),
+                    Constants.BINARY_MODE_YESNO);
+                break;
+              case R.id.radiobutton_binary_truefalse:
+                question = new BinaryQuestion(
+                    title.getText().toString(),
+                    Constants.BINARY_MODE_TRUEFALSE);
+                break;
+              default:
+                question = new BinaryQuestion(
+                    title.getText().toString(),
+                    Constants.BINARY_MODE_CUSTOM);
+                question.addOption(new Option(option1.getText().toString()));
+                question.addOption(new Option(option2.getText().toString()));
+            }
+            mPoll.addQuestion(question);
+          }
+        })
+        .setNegativeButton(android.R.string.cancel, null)
+        .setView(dialogView)
+        .setTitle("BinaryQuestion");
+    dialogBuilder.show();
   }
 
   private void rotateIcon(Drawable icon, boolean reverse) {
@@ -358,4 +390,5 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     mPrivacySpinner.setSelection(1); // By default all votes will be anonymous
     mPrivacyTextView.setText(getResources().getStringArray(R.array.array_privacy_explained)[1]);
   }
+
 }
