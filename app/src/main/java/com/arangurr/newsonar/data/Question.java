@@ -13,7 +13,6 @@ public class Question {
   private String mTitle;
   private ArrayList<Option> mOptions;
   private int mQuestionMode;
-
   public Question() {
     mUuid = UUID.randomUUID();
     mOptions = new ArrayList<>();
@@ -23,6 +22,10 @@ public class Question {
     mUuid = UUID.randomUUID();
     mOptions = new ArrayList<>();
     mTitle = title;
+  }
+
+  public ArrayList<Option> getAllOptions() {
+    return mOptions;
   }
 
   public UUID getUuid() {
@@ -47,5 +50,9 @@ public class Question {
 
   public void setQuestionMode(int questionMode) {
     mQuestionMode = questionMode;
+  }
+
+  public Option getOption(int position) {
+    return mOptions.get(position);
   }
 }

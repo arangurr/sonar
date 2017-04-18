@@ -11,7 +11,7 @@
   android:visibility="invisible"
   app:cardElevation="2dp"
   app:contentPadding="8dp"
-  tools:visibility="visible">
+  tools:visibility="gone">
 
   <android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"

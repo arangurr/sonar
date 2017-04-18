@@ -19,4 +19,8 @@ public class Option {
   public int getNumberOfVotes() {
     return mVoterList.size();
   }
+
+  public String getOptionName() {
+    return mOptionName;
+  }
 }

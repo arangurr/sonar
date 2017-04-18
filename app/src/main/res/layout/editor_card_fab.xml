@@ -9,7 +9,7 @@
   android:layout_gravity="bottom|end"
   android:visibility="invisible"
   app:cardElevation="4dp"
-  tools:visibility="visible">
+  tools:visibility="gone">
 
   <LinearLayout
     android:layout_width="wrap_content"

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_margin="8dp">
+
+  <android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="8dp"
+    android:orientation="vertical"
+    tools:layout_editor_absoluteX="8dp"
+    tools:layout_editor_absoluteY="8dp">
+
+    <include layout="@layout/item_editor_header"/>
+
+    <TextView
+      android:id="@+id/textview_editor_item_binary_option1"
+      style="@android:style/TextAppearance.Material.Medium"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:layout_marginLeft="8dp"
+      android:gravity="center_vertical"
+      android:minHeight="@dimen/item_height_small"
+      app:layout_constraintEnd_toStartOf="@+id/textview_editor_item_binary_option2"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/textview_editor_item_header_title"
+      tools:text="option1"/>
+    <TextView
+      android:id="@+id/textview_editor_item_binary_option2"
+      style="@android:style/TextAppearance.Material.Medium"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="0dp"
+      android:layout_marginRight="8dp"
+      android:gravity="center_vertical"
+      android:minHeight="@dimen/item_height_small"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/textview_editor_item_binary_option1"
+      app:layout_constraintTop_toTopOf="@+id/textview_editor_item_binary_option1"
+      tools:text="option2"/>
+
+  </android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>

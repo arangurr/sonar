@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:paddingTop="@dimen/list_top_margin"
+  android:paddingBottom="@dimen/list_top_margin"
+  android:paddingStart="@dimen/item_start_margin"
+  android:paddingEnd="@dimen/item_end_margin"
+  android:orientation="vertical">
+
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:text="Title"
+    android:textAppearance="@android:style/TextAppearance.Material.Widget.TabWidget"
+    android:textColor="@color/colorPrimaryDark"
+    />
+
+  <EditText
+    android:id="@+id/edittext_editor_title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:inputType="textCapSentences|textMultiLine"
+    android:maxLines="3"
+    android:minHeight="@dimen/item_height_small"
+    android:selectAllOnFocus="true"
+    android:text="Untitled Poll"
+    tools:text="This is a very long title that should not fit in a single line. Blablabla. "/>
+
+</LinearLayout>

@@ -7,6 +7,9 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnDismissListener;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -17,6 +20,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AlertDialog.Builder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.ArcMotion;
 import android.view.LayoutInflater;
@@ -34,12 +38,15 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import com.arangurr.newsonar.Constants;
+import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.BinaryQuestion;
 import com.arangurr.newsonar.data.Option;
 import com.arangurr.newsonar.data.Poll;
+import java.util.UUID;
 
-public class EditorActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditorActivity extends AppCompatActivity implements View.OnClickListener,
+    OnDismissListener {
 
   private Switch mPasswordSwitch;
   private EditText mPasswordEditText;
@@ -47,11 +54,13 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   private Spinner mPrivacySpinner;
   private CardView mFabCard;
   private CardView mConfigCard;
+  private EditorRecyclerAdapter mAdapter;
 
   private boolean mIsCardAnimating = false;
 
   private Poll mPoll;
   private FloatingActionButton mFab;
+  private OnSharedPreferenceChangeListener mPreferenceChangeListener;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +69,15 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_editor);
     setSupportActionBar(toolbar);
 
-    // If creating a new Poll.
-    mPoll = new Poll();
+    if (savedInstanceState == null
+        || savedInstanceState.getSerializable(Constants.EXTRA_POLL_ID) == null) {
+      mPoll = new Poll();
+    } else {
+      UUID possibleId = (UUID) savedInstanceState.getSerializable(Constants.EXTRA_POLL_ID);
+      if (possibleId != null) {
+        mPoll = PersistenceUtils.fetchPollWithId(this, possibleId);
+      }
+    }
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -72,6 +88,10 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     mFab = (FloatingActionButton) findViewById(R.id.fab_editor_add);
     mFabCard = (CardView) findViewById(R.id.card_editor_fab);
     mConfigCard = (CardView) findViewById(R.id.card_editor_config);
+    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_editor);
+
+    mAdapter = new EditorRecyclerAdapter(mPoll);
+    recyclerView.setAdapter(mAdapter);
 
     mPasswordSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
       @Override
@@ -97,7 +117,35 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
     mFab.setOnClickListener(this);
 
+    mPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
+      @Override
+      public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        mAdapter.notifyDataSetChanged();
+      }
+    };
+
     setDefaultCardConfig();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    getSharedPreferences(Constants.PREFS_POLLS, MODE_PRIVATE)
+        .registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    getSharedPreferences(Constants.PREFS_POLLS, MODE_PRIVATE)
+        .unregisterOnSharedPreferenceChangeListener(mPreferenceChangeListener);
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    PersistenceUtils.storePollInPreferences(this, mPoll);
+    outState.putSerializable(Constants.EXTRA_POLL_ID, mPoll.getUuid());
+    super.onSaveInstanceState(outState);
   }
 
   @Override
@@ -190,11 +238,13 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
                 question.addOption(new Option(option2.getText().toString()));
             }
             mPoll.addQuestion(question);
+            mAdapter.notifyDataSetChanged();
           }
         })
         .setNegativeButton(android.R.string.cancel, null)
         .setView(dialogView)
-        .setTitle("BinaryQuestion");
+        .setTitle("BinaryQuestion")
+        .setOnDismissListener(this);
     dialogBuilder.show();
   }
 
@@ -391,4 +441,8 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     mPrivacyTextView.setText(getResources().getStringArray(R.array.array_privacy_explained)[1]);
   }
 
+  @Override
+  public void onDismiss(DialogInterface dialog) {
+
+  }
 }
