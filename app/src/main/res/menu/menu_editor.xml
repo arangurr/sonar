@@ -10,4 +10,10 @@
     android:icon="@drawable/action_config"
     android:title="More Settings"
     app:showAsAction="always"/>
+
+  <item
+    android:id="@+id/action_done"
+    android:icon="@drawable/ic_done_24dp"
+    android:title="Done"
+    app:showAsAction="ifRoom"/>
 </menu>

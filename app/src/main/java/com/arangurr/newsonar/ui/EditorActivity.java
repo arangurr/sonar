@@ -80,6 +80,9 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    Drawable cancelDrawable = getDrawable(R.drawable.ic_clear_24dp);
+    cancelDrawable.setTint(ContextCompat.getColor(this, R.color.colorPrimaryTextDark));
+    getSupportActionBar().setHomeAsUpIndicator(cancelDrawable);
 
     mPasswordSwitch = (Switch) findViewById(R.id.switch_card_config_password);
     mPasswordEditText = (EditText) findViewById(R.id.edittext_card_config_password);
@@ -190,6 +193,13 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
           mIsCardAnimating = true;
         }
         return true;
+      case android.R.id.home:
+        PersistenceUtils.deletePoll(this, mPoll.getUuid());
+        finish();
+        return true;
+      case R.id.action_done:
+        PersistenceUtils.storePollInPreferences(this, mPoll);
+        finish();
       default:
         return super.onOptionsItemSelected(item);
     }

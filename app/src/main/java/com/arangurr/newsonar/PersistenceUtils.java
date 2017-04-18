@@ -46,4 +46,16 @@ public class PersistenceUtils {
     return array;
   }
 
+  public static void deletePoll(Context context, UUID uuid) {
+    deletePoll(context, uuid.toString());
+  }
+
+  public static void deletePoll(Context context, String uuid) {
+    SharedPreferences.Editor editor = context
+        .getSharedPreferences(Constants.PREFS_POLLS, Context.MODE_PRIVATE)
+        .edit();
+
+    editor.remove(uuid);
+    editor.apply();
+  }
 }
