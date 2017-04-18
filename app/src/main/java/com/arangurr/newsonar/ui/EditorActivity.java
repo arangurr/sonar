@@ -80,9 +80,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    Drawable cancelDrawable = getDrawable(R.drawable.ic_clear_24dp);
-    cancelDrawable.setTint(ContextCompat.getColor(this, R.color.colorPrimaryTextDark));
-    getSupportActionBar().setHomeAsUpIndicator(cancelDrawable);
+    getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_24dp);
 
     mPasswordSwitch = (Switch) findViewById(R.id.switch_card_config_password);
     mPasswordEditText = (EditText) findViewById(R.id.edittext_card_config_password);
