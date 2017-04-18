@@ -13,6 +13,7 @@ public class Question {
   private String mTitle;
   private ArrayList<Option> mOptions;
   private int mQuestionMode;
+
   public Question() {
     mUuid = UUID.randomUUID();
     mOptions = new ArrayList<>();

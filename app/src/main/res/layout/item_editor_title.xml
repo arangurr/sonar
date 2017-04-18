@@ -23,6 +23,7 @@
     android:id="@+id/edittext_editor_title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:imeOptions="flagNoExtractUi"
     android:inputType="textCapSentences|textMultiLine"
     android:maxLines="3"
     android:minHeight="@dimen/item_height_small"

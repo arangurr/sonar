@@ -10,6 +10,7 @@
   android:orientation="vertical">
 
   <EditText
+    android:imeOptions="flagNoExtractUi"
     android:id="@+id/edittext_binary_title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -46,6 +47,7 @@
   </RadioGroup>
 
   <EditText
+    android:imeOptions="flagNoExtractUi"
     android:id="@+id/edittext_binary_option1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -53,6 +55,7 @@
     android:visibility="gone"/>
 
   <EditText
+    android:imeOptions="flagNoExtractUi"
     android:id="@+id/edittext_binary_option2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
