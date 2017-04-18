@@ -10,7 +10,9 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.graphics.Color;
 import android.graphics.Path;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -81,6 +83,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_24dp);
+    toolbar.getNavigationIcon().mutate().setColorFilter(Color.WHITE, Mode.SRC_IN);
 
     mPasswordSwitch = (Switch) findViewById(R.id.switch_card_config_password);
     mPasswordEditText = (EditText) findViewById(R.id.edittext_card_config_password);
