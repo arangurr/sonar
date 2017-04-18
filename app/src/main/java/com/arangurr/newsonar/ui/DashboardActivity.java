@@ -45,6 +45,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     super.onResume();
     getSharedPreferences(Constants.PREFS_POLLS, MODE_PRIVATE)
         .registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
+    mAdapter.swapArray(PersistenceUtils.fetchAllPolls(this));
   }
 
   @Override

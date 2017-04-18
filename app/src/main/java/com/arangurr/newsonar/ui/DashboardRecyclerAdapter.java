@@ -59,7 +59,7 @@ public class DashboardRecyclerAdapter extends
     viewHolder.mTitle.setText(mPolls.get(i).getPollTitle());
     Date date = new Date(mPolls.get(i).getStartDate());
     viewHolder.mSubtitle.setText(date.toString());
-    viewHolder.mCircle.setText(String.valueOf(i));
+    viewHolder.mCircle.setText(String.valueOf(i + 1));
   }
 
   @Override
