@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.arangurr.newsonar.Constants;
+import com.arangurr.newsonar.GsonUtils;
 import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.Poll;
@@ -60,13 +61,14 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
       mCurrentPoll = PersistenceUtils.fetchPollWithId(this, pollId);
     } else {
       Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+      finish();
     }
 
     getSupportActionBar().setTitle(mCurrentPoll.getPollTitle());
 
     mStrategyBuilder = new Strategy.Builder()
         .setDistanceType(Strategy.DISTANCE_TYPE_EARSHOT)
-        .setDiscoveryMode(Strategy.DISCOVERY_MODE_BROADCAST);
+        .setDiscoveryMode(Strategy.DISCOVERY_MODE_DEFAULT);
 
     mPublishOptionsBuilder = new PublishOptions.Builder()
         .setCallback(new PublishCallback() {
@@ -140,7 +142,7 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
     switch (v.getId()) {
       case R.id.button_comms_publish:
         mPublishOptions = mPublishOptionsBuilder.build();
-        publish("hey!");
+        publish();
         break;
       case R.id.textview_comms_duration_header:
         Snackbar snackbar = Snackbar.make(v, "Longer times drain battery faster. " +
@@ -219,8 +221,8 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
         });
   }
 
-  private void publish(String message) {
-    Log.d(TAG, "Trying to publish " + message);
+  private void publish() {
+    String message = GsonUtils.serialize(mCurrentPoll);
     mActiveMessage = new Message(message.getBytes(StandardCharsets.UTF_8));
 
     Nearby.Messages.publish(mGoogleApiClient, mActiveMessage, mPublishOptions)
@@ -234,6 +236,7 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
             }
           }
         });
+    Log.d(TAG, "Trying to publish");
   }
 
   private void unsubscribe() {
