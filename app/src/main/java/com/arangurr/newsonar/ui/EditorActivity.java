@@ -17,7 +17,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AlertDialog.Builder;
 import android.support.v7.app.AppCompatActivity;
@@ -59,6 +58,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   private EditorRecyclerAdapter mAdapter;
 
   private boolean mIsCardAnimating = false;
+  private boolean mIsFabAnimating = false;
 
   private Poll mPoll;
   private FloatingActionButton mFab;
@@ -156,14 +156,18 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.fab_editor_add:
-        fabTransform();
+        if (!mIsFabAnimating) {
+          fabTransform();
+        }
         break;
       case R.id.textview_card_binary:
         showBinaryDialog(v.getContext());
       case R.id.textview_card_multiple:
       case R.id.textview_card_rate:
       case R.id.textview_card_close:
-        reverseFabTransform();
+        if (!mIsFabAnimating) {
+          reverseFabTransform();
+        }
         break;
       case R.id.button_card_config_ok:
         reverseRevealSettingsCard();
@@ -273,6 +277,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   }
 
   private void fabTransform() {
+    mIsFabAnimating = true;
     int fabCenterX = (mFab.getLeft() + mFab.getRight()) / 2;
     int fabCenterY = ((mFab.getTop() + mFab.getBottom()) / 2);
     int translateX = fabCenterX - (mFabCard.getLeft() + mFabCard.getWidth() / 2);
@@ -303,10 +308,13 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     Animator fadeOut = ObjectAnimator.ofFloat(mFab, View.ALPHA, 0f)
         .setDuration(60);
 
-    Animator color = ObjectAnimator.ofArgb(mFabCard, "backgroundColor",
+    Animator fadeIn = ObjectAnimator.ofInt(mFabCard.getForeground(), "alpha", 255, 0)
+        .setDuration(400);
+
+    /*Animator color = ObjectAnimator.ofArgb(mFabCard, "backgroundColor",
         ContextCompat.getColor(this, R.color.colorAccent),
         ContextCompat.getColor(this, android.R.color.white))
-        .setDuration(360);
+        .setDuration(360);*/
 
     AnimatorSet show = new AnimatorSet();
     show.setInterpolator(AnimationUtils.loadInterpolator(
@@ -317,15 +325,17 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       public void onAnimationEnd(Animator animation) {
         super.onAnimationEnd(animation);
         mFab.setVisibility(View.INVISIBLE);
+        mIsFabAnimating = false;
       }
     });
 
-    show.playTogether(move, color, reveal, fadeOut);
+    show.playTogether(move, reveal, fadeOut, fadeIn);
 
     show.start();
   }
 
   private void reverseFabTransform() {
+    mIsFabAnimating = true;
     int cardCenterX = (mFabCard.getLeft() + mFabCard.getRight()) / 2;
     int cardCenterY = (mFabCard.getTop() + mFabCard.getBottom()) / 2;
 
@@ -354,15 +364,18 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         View.TRANSLATION_Y,
         motionPath);
 
-    Animator fadeOut = ObjectAnimator.ofFloat(mFabCard, View.ALPHA, 0f);
-    Animator fadeIn = ObjectAnimator.ofFloat(mFab, View.ALPHA, 1f);
+    Animator fadeIn = ObjectAnimator.ofFloat(mFab, View.ALPHA, 1f)
+        .setDuration(300);
 
-    Animator color = ObjectAnimator.ofArgb(
+    Animator fadeOut = ObjectAnimator.ofInt(mFabCard.getForeground(), "alpha", 0, 255)
+        .setDuration(200);
+
+    /*Animator color = ObjectAnimator.ofArgb(
         mFabCard,
         "backgroundColor",
         ContextCompat.getColor(this, android.R.color.white),
         ContextCompat.getColor(this, R.color.colorAccent))
-        .setDuration(200);
+        .setDuration(200);*/
 
     AnimatorSet animation = new AnimatorSet();
     animation.setInterpolator(AnimationUtils.loadInterpolator(
@@ -376,10 +389,11 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         super.onAnimationEnd(animation);
         mFabCard.setVisibility(View.INVISIBLE);
         mFabCard.setAlpha(1f);
+        mIsFabAnimating = false;
       }
     });
 
-    animation.playTogether(move, inverseReveal, color, fadeIn);
+    animation.playTogether(move, inverseReveal, fadeIn, fadeOut);
 
     animation.start();
 
