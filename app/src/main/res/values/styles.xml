@@ -13,6 +13,12 @@
     <item name="windowNoTitle">true</item>
   </style>
 
+  <style name="AppTheme.Translucent" >
+    <item name="android:windowBackground">@color/colorBackgroundTranslucent</item>
+    <item name="android:colorBackgroundCacheHint">@null</item>
+    <item name="android:windowIsTranslucent">true</item>
+  </style>
+
   <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
     <item name="android:textColorPrimary">@color/colorPrimaryTextDark</item>
     <item name="android:textColorSecondary">@color/colorSecondaryTextDark</item>
@@ -22,6 +28,5 @@
     <item name="android:textColorPrimary">@color/colorPrimaryTextDark</item>
     <item name="android:textColorSecondary">@color/colorSecondaryTextDark</item>
   </style>
-
 
 </resources>

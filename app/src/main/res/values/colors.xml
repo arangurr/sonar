@@ -15,4 +15,6 @@
   <color name="colorDividerDark">#1fffffff</color>
 
   <color name="colorWarning">#ffa000</color>
+
+  <color name="colorBackgroundTranslucent">#99323232</color>
 </resources>

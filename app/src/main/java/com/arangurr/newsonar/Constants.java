@@ -24,4 +24,7 @@ public class Constants {
   public static final String PREFS_POLLS = "preferences_polls";
 
   public static final String EXTRA_POLL_ID = "poll_id";
+  public static final String EXTRA_SERIALIZED_POLL = "serialized_poll";
+
+  public static final int VOTE_REQUEST = 100;
 }

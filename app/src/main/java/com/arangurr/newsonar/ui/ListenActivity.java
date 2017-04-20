@@ -3,6 +3,7 @@ package com.arangurr.newsonar.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,8 +18,11 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
+import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.GsonUtils;
 import com.arangurr.newsonar.R;
+import com.arangurr.newsonar.data.BinaryQuestion;
+import com.arangurr.newsonar.data.Option;
 import com.arangurr.newsonar.data.Poll;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -223,5 +227,24 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
         .addConnectionCallbacks(this)
         .enableAutoManage(this, this)
         .build();
+  }
+
+  public void launchVotingUi(View view) {
+    // Sample Poll
+    Poll p = new Poll("Sample Poll title");
+    p.addQuestion(new BinaryQuestion("Question 1, yesno", Constants.BINARY_MODE_YESNO));
+    p.addQuestion(new BinaryQuestion("Question 2, truefalse", Constants.BINARY_MODE_TRUEFALSE));
+    BinaryQuestion question = new BinaryQuestion("Question 3, red v Blue",
+        Constants.BINARY_MODE_CUSTOM);
+    question.addOption(new Option("Red"));
+    question.addOption(new Option("Blue"));
+    p.addQuestion(question);
+
+    String serialized = GsonUtils.serialize(p);
+
+    Intent voteIntent = new Intent(this, VotingActivity.class);
+    voteIntent.putExtra(Constants.EXTRA_SERIALIZED_POLL, serialized);
+    startActivityForResult(voteIntent, Constants.VOTE_REQUEST);
+
   }
 }
