@@ -97,8 +97,12 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         // TODO: 20/03/2017 settings activity
         return true;
       case R.id.action_add:
-        Intent i = (new Intent(this, EditorActivity.class));
-        startActivity(i);
+        Intent editor = (new Intent(this, EditorActivity.class));
+        startActivity(editor);
+        return true;
+      case R.id.action_listen:
+        Intent listen = (new Intent(this, ListenActivity.class));
+        startActivity(listen);
         return true;
       default:
         return super.onOptionsItemSelected(item);

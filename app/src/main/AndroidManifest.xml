@@ -35,6 +35,8 @@
     </activity>
     <activity android:name=".ui.CommsActivity">
     </activity>
+    <activity android:name=".ui.ListenActivity">
+    </activity>
   </application>
 
 </manifest>

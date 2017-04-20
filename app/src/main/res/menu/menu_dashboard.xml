@@ -4,9 +4,15 @@
   xmlns:tools="http://schemas.android.com/tools"
   tools:context="com.arangurr.newsonar.ui.DashboardActivity">
   <item
+    android:id="@+id/action_listen"
+    android:icon="@drawable/ic_hearing_24dp"
+    android:orderInCategory="100"
+    android:title="Search for new Polls"
+    app:showAsAction="ifRoom"/>
+  <item
     android:id="@+id/action_add"
     android:icon="@drawable/ic_add_24dp"
-    android:orderInCategory="100"
+    android:orderInCategory="101"
     android:title="Create poll"
     app:showAsAction="ifRoom"/>
   <item
