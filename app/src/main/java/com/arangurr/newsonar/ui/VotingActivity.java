@@ -43,6 +43,8 @@ public class VotingActivity extends AppCompatActivity {
 
 //    setSupportActionBar(toolbar);
     mViewPager.setAdapter(questionPagerAdapter);
+    int pagerMarginInPixels = getResources().getDimensionPixelSize(R.dimen.pager_margin);
+    mViewPager.setPageMargin(pagerMarginInPixels);
   }
 
   public void onClick(View view) {
@@ -71,19 +73,21 @@ public class VotingActivity extends AppCompatActivity {
       View view = LayoutInflater.from(container.getContext())
           .inflate(R.layout.card_vote_binary, container, false);
       container.addView(view);
-      bindQuestion(mQuestionList.get(position), view);
+      bindQuestion(mQuestionList.get(position), view, position);
 
       return view;
 
     }
 
-    private void bindQuestion(Question question, View view) {
-      TextView tv = (TextView) view.findViewById(R.id.textView);
+    private void bindQuestion(Question question, View view, int position) {
+      TextView header = (TextView) view.findViewById(R.id.textview_card_binary_vote_title);
+      TextView content = (TextView) view.findViewById(R.id.textview_card_binary_vote_content);
       RadioButton rb1 = (RadioButton) view.findViewById(R.id.radiobutton1_card_binary_vote);
       RadioButton rb2 = (RadioButton) view.findViewById(R.id.radiobutton2_card_binary_vote);
       RadioGroup rg = (RadioGroup) view.findViewById(R.id.radiogroup_card_binary_vote);
 
-      tv.setText(question.getTitle());
+      header.setText(String.format("Question %d of %d", position + 1, mQuestionList.size()));
+      content.setText(question.getTitle());
       rb1.setText(question.getOption(0).getOptionName());
       rb2.setText(question.getOption(1).getOptionName());
 
