@@ -11,11 +11,13 @@ import android.widget.TextView;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.Poll;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Rodrigo on 08/04/2017.
@@ -58,7 +60,8 @@ public class DashboardRecyclerAdapter extends
   public void onBindViewHolder(DashboardRecyclerAdapter.ViewHolder viewHolder, int i) {
     viewHolder.mTitle.setText(mPolls.get(i).getPollTitle());
     Date date = new Date(mPolls.get(i).getStartDate());
-    viewHolder.mSubtitle.setText(date.toString());
+    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM HH:mm", Locale.getDefault());
+    viewHolder.mSubtitle.setText(sdf.format(date));
     viewHolder.mCircle.setText(String.valueOf(i + 1));
   }
 
