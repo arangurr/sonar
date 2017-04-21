@@ -37,9 +37,9 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/fab_margin"
     android:layout_gravity="bottom|start"
-    android:onClick="onClick"
     android:src="@drawable/ic_navigate_before_24dp"
-    android:text="Previous"/>
+    android:text="Previous"
+    android:visibility="invisible"/>
 
   <android.support.design.widget.FloatingActionButton
     android:id="@+id/button_voting_next"
@@ -47,7 +47,6 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/fab_margin"
     android:layout_gravity="bottom|end"
-    android:onClick="onClick"
     android:src="@drawable/ic_navigate_next_24dp"
     android:text="Next"/>
 </android.support.design.widget.CoordinatorLayout>

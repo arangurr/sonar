@@ -2,11 +2,14 @@ package com.arangurr.newsonar.ui;
 
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -19,11 +22,15 @@ import com.arangurr.newsonar.data.Poll;
 import com.arangurr.newsonar.data.Question;
 import java.util.List;
 
-public class VotingActivity extends AppCompatActivity {
+public class VotingActivity extends AppCompatActivity implements OnClickListener {
 
   private Poll mPoll;
   private List<Question> mQuestionList;
   private ViewPager mViewPager;
+  private QuestionPagerAdapter mQuestionPagerAdapter;
+  private FloatingActionButton mNextFab;
+  private FloatingActionButton mPrevFab;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -34,15 +41,40 @@ public class VotingActivity extends AppCompatActivity {
     mPoll = GsonUtils
         .deserializeGson(extras.getString(Constants.EXTRA_SERIALIZED_POLL), Poll.class);
 
-    mQuestionList = mPoll.getQuestionList();
-
-    QuestionPagerAdapter questionPagerAdapter = new QuestionPagerAdapter();
-
-//    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_voting);
+    //    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_voting);
     mViewPager = (ViewPager) findViewById(R.id.viewpager_voting);
+    mNextFab = (FloatingActionButton) findViewById(R.id.button_voting_next);
+    mPrevFab = (FloatingActionButton) findViewById(R.id.button_voting_previous);
+
+    mQuestionList = mPoll.getQuestionList();
+    mQuestionPagerAdapter = new QuestionPagerAdapter();
+
+    mViewPager.addOnPageChangeListener(new SimpleOnPageChangeListener() {
+      @Override
+      public void onPageSelected(int position) {
+        super.onPageSelected(position);
+        if (position != mQuestionList.size() - 1) {
+          if (mNextFab.getVisibility() == View.GONE || mPrevFab.getVisibility() == View.INVISIBLE) {
+            mNextFab.show();
+          }
+        } else {
+          mNextFab.hide();
+        }
+        if (position != 0) {
+          if (mPrevFab.getVisibility() == View.GONE || mPrevFab.getVisibility() == View.INVISIBLE) {
+            mPrevFab.show();
+          }
+        } else {
+          mPrevFab.hide();
+        }
+      }
+    });
+
+    mNextFab.setOnClickListener(this);
+    mPrevFab.setOnClickListener(this);
 
 //    setSupportActionBar(toolbar);
-    mViewPager.setAdapter(questionPagerAdapter);
+    mViewPager.setAdapter(mQuestionPagerAdapter);
     int pagerMarginInPixels = getResources().getDimensionPixelSize(R.dimen.pager_margin);
     mViewPager.setPageMargin(pagerMarginInPixels);
   }
