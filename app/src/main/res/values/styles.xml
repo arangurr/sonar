@@ -13,7 +13,8 @@
     <item name="windowNoTitle">true</item>
   </style>
 
-  <style name="AppTheme.Translucent" >
+  <style name="AppTheme.NoActionBar.Translucent">
+    <item name="android:windowTranslucentStatus">true</item>
     <item name="android:windowBackground">@color/colorBackgroundTranslucent</item>
     <item name="android:colorBackgroundCacheHint">@null</item>
     <item name="android:windowIsTranslucent">true</item>

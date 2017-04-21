@@ -40,7 +40,7 @@
     <activity
       android:name=".ui.VotingActivity"
       android:parentActivityName=".ui.ListenActivity"
-      android:theme="@style/AppTheme.Translucent">
+      android:theme="@style/AppTheme.NoActionBar.Translucent">
       <meta-data
         android:name="android.support.PARENT_ACTIVITY"
         android:value="com.arangurr.newsonar.ui.ListenActivity"/>

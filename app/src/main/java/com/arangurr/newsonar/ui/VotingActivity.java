@@ -1,13 +1,18 @@
 package com.arangurr.newsonar.ui;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -41,7 +46,8 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
     mPoll = GsonUtils
         .deserializeGson(extras.getString(Constants.EXTRA_SERIALIZED_POLL), Poll.class);
 
-    //    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_voting);
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_voting);
+    AppBarLayout appbar = (AppBarLayout) findViewById(R.id.appbarlayout_voting);
     mViewPager = (ViewPager) findViewById(R.id.viewpager_voting);
     mNextFab = (FloatingActionButton) findViewById(R.id.button_voting_next);
     mPrevFab = (FloatingActionButton) findViewById(R.id.button_voting_previous);
@@ -73,10 +79,27 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
     mNextFab.setOnClickListener(this);
     mPrevFab.setOnClickListener(this);
 
-//    setSupportActionBar(toolbar);
+    setSupportActionBar(toolbar);
+    Drawable cancelDrawable = getDrawable(R.drawable.ic_clear_24dp);
+    cancelDrawable.setTint(ContextCompat.getColor(this, R.color.colorPrimaryTextDark));
+    getSupportActionBar().setHomeAsUpIndicator(cancelDrawable);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    getSupportActionBar().setTitle(mPoll.getPollTitle());
+
     mViewPager.setAdapter(mQuestionPagerAdapter);
     int pagerMarginInPixels = getResources().getDimensionPixelSize(R.dimen.pager_margin);
     mViewPager.setPageMargin(pagerMarginInPixels);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        finish();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
 
   public void onClick(View view) {
