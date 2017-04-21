@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import com.arangurr.newsonar.BuildConfig;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
@@ -35,6 +36,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     };
 
     RecyclerView pollRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_dashboard_polls);
+
+    if (BuildConfig.DEBUG) {
+      findViewById(R.id.fab_dashboard_add_debug).setVisibility(View.VISIBLE);
+    }
 
     mAdapter = new DashboardRecyclerAdapter(PersistenceUtils.fetchAllPolls(this));
     pollRecyclerView.setAdapter(mAdapter);

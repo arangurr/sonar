@@ -32,8 +32,9 @@
     android:layout_margin="@dimen/fab_margin"
     android:layout_gravity="bottom|center"
     android:onClick="onClick"
-    android:src="@drawable/ic_add_24dp"
-    android:tint="@color/colorPrimaryText"/>
+    android:src="@drawable/ic_bug_report_24dp"
+    android:tint="@color/colorPrimaryText"
+    android:visibility="gone"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

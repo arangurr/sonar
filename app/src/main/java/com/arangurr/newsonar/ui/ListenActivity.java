@@ -18,6 +18,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
+import com.arangurr.newsonar.BuildConfig;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.GsonUtils;
 import com.arangurr.newsonar.R;
@@ -105,6 +106,10 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
         .build();
 
     mSwitch = (Switch) findViewById(R.id.switch_listen_subscribe);
+
+    if (BuildConfig.DEBUG) {
+      findViewById(R.id.testButton).setVisibility(View.VISIBLE);
+    }
 
     final List<Poll> nearbyPolls = new ArrayList<>();
     mNearbyPollsAdapter = new ArrayAdapter<>(
