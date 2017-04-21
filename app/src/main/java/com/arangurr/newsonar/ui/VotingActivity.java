@@ -118,7 +118,10 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
       RadioButton rb2 = (RadioButton) view.findViewById(R.id.radiobutton2_card_binary_vote);
       RadioGroup rg = (RadioGroup) view.findViewById(R.id.radiogroup_card_binary_vote);
 
-      header.setText(String.format("Question %d of %d", position + 1, mQuestionList.size()));
+      header.setText(String.format(
+          getString(R.string.voting_card_title),
+          position + 1,
+          mQuestionList.size()));
       content.setText(question.getTitle());
       rb1.setText(question.getOption(0).getOptionName());
       rb2.setText(question.getOption(1).getOptionName());
