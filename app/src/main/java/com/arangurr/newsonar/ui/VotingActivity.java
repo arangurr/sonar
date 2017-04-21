@@ -126,7 +126,13 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
       rg.setOnCheckedChangeListener(new OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
-          moveNext();
+          mViewPager.postDelayed(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                     moveNext();
+                                   }
+                                 },
+              getResources().getInteger(android.R.integer.config_longAnimTime));
         }
       });
     }
