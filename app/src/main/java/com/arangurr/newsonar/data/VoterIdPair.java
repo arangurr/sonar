@@ -1,22 +1,20 @@
 package com.arangurr.newsonar.data;
 
-import java.util.UUID;
-
 /**
  * Created by Rodrigo on 01/04/2017.
  */
 
 public class VoterIdPair {
 
-  private final UUID mUuid;
+  private final String mUuid;
   private String mUserName;
 
-  public VoterIdPair(UUID id, String user) {
+  public VoterIdPair(String id, String user) {
     this.mUuid = id;
     this.mUserName = user;
   }
 
-  public UUID getUuid() {
+  public String getUuid() {
     return mUuid;
   }
 

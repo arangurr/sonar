@@ -1,9 +1,10 @@
 package com.arangurr.newsonar.ui;
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
@@ -22,14 +23,17 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.GsonUtils;
+import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.Poll;
 import com.arangurr.newsonar.data.Question;
+import com.arangurr.newsonar.data.Vote;
 import java.util.List;
 
 public class VotingActivity extends AppCompatActivity implements OnClickListener {
 
   private Poll mPoll;
+  private Vote mVote;
   private List<Question> mQuestionList;
   private ViewPager mViewPager;
   private QuestionPagerAdapter mQuestionPagerAdapter;
@@ -45,9 +49,15 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
     Bundle extras = getIntent().getExtras();
     mPoll = GsonUtils
         .deserializeGson(extras.getString(Constants.EXTRA_SERIALIZED_POLL), Poll.class);
+    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    mVote = PersistenceUtils.fetchVote(this);
+    if (mVote == null) {
+      mVote = new Vote(mPoll.getUuid(),
+          prefs.getString(Constants.KEY_UUID, null),
+          prefs.getString(Constants.KEY_USERNAME, null));
+    }
 
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_voting);
-    AppBarLayout appbar = (AppBarLayout) findViewById(R.id.appbarlayout_voting);
     mViewPager = (ViewPager) findViewById(R.id.viewpager_voting);
     mNextFab = (FloatingActionButton) findViewById(R.id.button_voting_next);
     mPrevFab = (FloatingActionButton) findViewById(R.id.button_voting_previous);
@@ -134,7 +144,7 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
 
     }
 
-    private void bindQuestion(Question question, View view, int position) {
+    private void bindQuestion(final Question question, View view, final int position) {
       TextView header = (TextView) view.findViewById(R.id.textview_card_binary_vote_title);
       TextView content = (TextView) view.findViewById(R.id.textview_card_binary_vote_content);
       RadioButton rb1 = (RadioButton) view.findViewById(R.id.radiobutton1_card_binary_vote);
@@ -152,6 +162,16 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
       rg.setOnCheckedChangeListener(new OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
+          switch (i) {
+            case R.id.radiobutton1_card_binary_vote:
+              mVote.attachResponse(mQuestionList.get(position), question.getOption(0));
+              PersistenceUtils.storeVoteInPreferences(getApplicationContext(), mVote);
+              break;
+            case R.id.radiobutton2_card_binary_vote:
+              mVote.attachResponse(mQuestionList.get(position), question.getOption(1));
+              PersistenceUtils.storeVoteInPreferences(getApplicationContext(), mVote);
+              break;
+          }
           mViewPager.postDelayed(new Runnable() {
                                    @Override
                                    public void run() {

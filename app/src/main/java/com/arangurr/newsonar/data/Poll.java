@@ -14,7 +14,7 @@ public class Poll {
 
   private final long mStartDate;
   private UUID mPollId;
-  private String mOwnerId;
+  private String mOwnerId; // Not UUID, coming from Secure.ID
   private String mOwnerName;
   private String mPollTitle;
   private boolean mPasswordProtected = false;

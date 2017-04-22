@@ -22,9 +22,11 @@ public class Constants {
   public static final int BINARY_MODE_CUSTOM = 13;
 
   public static final String PREFS_POLLS = "preferences_polls";
+  public static final String PREFS_VOTE = "preferences_vote";
 
   public static final String EXTRA_POLL_ID = "poll_id";
   public static final String EXTRA_SERIALIZED_POLL = "serialized_poll";
+  public static final String EXTRA_SERIALIZED_VOTE = "serialized_vote";
 
   public static final int VOTE_REQUEST = 100;
 }
