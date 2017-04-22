@@ -9,6 +9,8 @@ import java.util.UUID;
 
 public class Vote {
 
+  public static final String TYPE = "vote";
+
   private UUID mPollId;
   private VoterIdPair mVoterIdPair;
   private ArrayList<QuestionSelection> mSelectionList;

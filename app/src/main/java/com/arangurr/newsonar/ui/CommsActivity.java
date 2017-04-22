@@ -223,7 +223,9 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
 
   private void publish() {
     String message = GsonUtils.serialize(mCurrentPoll);
-    mActiveMessage = new Message(message.getBytes(StandardCharsets.UTF_8));
+    mActiveMessage = new Message(message.getBytes(StandardCharsets.UTF_8),  // Not documented
+        Constants.NAMESPACE,                                                // Namespace
+        Poll.TYPE);                                                         // Type of message
 
     Nearby.Messages.publish(mGoogleApiClient, mActiveMessage, mPublishOptions)
         .setResultCallback(new ResultCallback<Status>() {

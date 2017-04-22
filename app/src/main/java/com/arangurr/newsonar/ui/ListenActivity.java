@@ -33,6 +33,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
+import com.google.android.gms.nearby.messages.MessageFilter;
 import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
@@ -103,6 +104,9 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
             mSwitch.setChecked(false);
           }
         })
+        .setFilter(new MessageFilter.Builder()
+            .includeNamespacedType(Constants.NAMESPACE, Poll.TYPE)
+            .build())
         .build();
 
     mSwitch = (Switch) findViewById(R.id.switch_listen_subscribe);

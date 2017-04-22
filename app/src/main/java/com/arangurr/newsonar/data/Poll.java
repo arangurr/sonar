@@ -12,6 +12,8 @@ import java.util.UUID;
 
 public class Poll {
 
+  public static final String TYPE = "poll";
+
   private final long mStartDate;
   private UUID mPollId;
   private String mOwnerId; // Not UUID, coming from Secure.ID
@@ -61,10 +63,6 @@ public class Poll {
     mPollId = id;
   }
 
-  public void setOwnerId(String ownerId) {
-    mOwnerId = ownerId;
-  }
-
   public List<Question> getQuestionList() {
     return mQuestionList;
   }
@@ -103,5 +101,13 @@ public class Poll {
 
   public long getStartDate() {
     return mStartDate;
+  }
+
+  public String getOwnerId() {
+    return mOwnerId;
+  }
+
+  public void setOwnerId(String ownerId) {
+    mOwnerId = ownerId;
   }
 }
