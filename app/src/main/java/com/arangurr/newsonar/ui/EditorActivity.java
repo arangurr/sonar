@@ -13,10 +13,12 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AlertDialog.Builder;
 import android.support.v7.app.AppCompatActivity;
@@ -277,6 +279,8 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   }
 
   private void fabTransform() {
+    int duration = getResources().getInteger(android.R.integer.config_mediumAnimTime);
+
     mIsFabAnimating = true;
     int fabCenterX = (mFab.getLeft() + mFab.getRight()) / 2;
     int fabCenterY = ((mFab.getTop() + mFab.getBottom()) / 2);
@@ -288,14 +292,16 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
     mFabCard.setVisibility(View.VISIBLE);
 
+    // Reveal Card
     Animator reveal = ViewAnimationUtils.createCircularReveal(
         mFabCard,
         mFabCard.getWidth() / 2,
         mFabCard.getHeight() / 2,
         mFab.getWidth() / 2,
         (float) Math.hypot(mFabCard.getWidth() / 2, mFabCard.getHeight() / 2))
-        .setDuration(360);
+        .setDuration(duration);
 
+    // Move Card in curved Motion
     ArcMotion arcMotion = new ArcMotion();
     arcMotion.setMaximumAngle(90f);
     arcMotion.setMinimumVerticalAngle(0);
@@ -303,38 +309,54 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     Path motionPath = arcMotion.getPath(translateX, translateY, 0, 0);
 
     Animator move = ObjectAnimator
-        .ofFloat(mFabCard, View.TRANSLATION_X, View.TRANSLATION_Y, motionPath);
+        .ofFloat(mFabCard, View.TRANSLATION_X, View.TRANSLATION_Y, motionPath)
+        .setDuration(duration);
 
+    // Fade Out Fab
     Animator fadeOut = ObjectAnimator.ofFloat(mFab, View.ALPHA, 0f)
-        .setDuration(60);
+        .setDuration(duration / 3);
 
-    Animator fadeIn = ObjectAnimator.ofInt(mFabCard.getForeground(), "alpha", 255, 0)
-        .setDuration(400);
+    // Color Overlay
+    ColorDrawable fabColor = new ColorDrawable(
+        ContextCompat.getColor(this, R.color.colorAccent));
+    fabColor.setBounds(0, 0, mFabCard.getWidth(), mFabCard.getHeight());
+    mFabCard.getOverlay().add(fabColor);
 
-    /*Animator color = ObjectAnimator.ofArgb(mFabCard, "backgroundColor",
-        ContextCompat.getColor(this, R.color.colorAccent),
-        ContextCompat.getColor(this, android.R.color.white))
-        .setDuration(360);*/
+    // Icon Overlay
+    Drawable fabIcon = ContextCompat.getDrawable(this, R.drawable.ic_add_24dp).mutate();
+    fabIcon.setTint(ContextCompat.getColor(this, R.color.colorPrimaryText));
+    int iconLeft = (mFabCard.getWidth() - fabIcon.getIntrinsicWidth()) / 2;
+    int iconTop = (mFabCard.getHeight() - fabIcon.getIntrinsicHeight()) / 2;
+    fabIcon.setBounds(iconLeft, iconTop,
+        iconLeft + fabIcon.getIntrinsicWidth(),
+        iconTop + fabIcon.getIntrinsicHeight());
+    mFabCard.getOverlay().add(fabIcon);
+
+    Animator fadeOutColor = ObjectAnimator.ofInt(fabColor, "alpha", 0).setDuration(duration);
+    Animator fadeOutIcon = ObjectAnimator.ofInt(fabIcon, "alpha", 0).setDuration(duration);
 
     AnimatorSet show = new AnimatorSet();
     show.setInterpolator(AnimationUtils.loadInterpolator(
         mFab.getContext(),
         android.R.interpolator.fast_out_slow_in));
+
+    show.playTogether(move, reveal, fadeOut, fadeOutColor, fadeOutIcon);
     show.addListener(new AnimatorListenerAdapter() {
       @Override
       public void onAnimationEnd(Animator animation) {
         super.onAnimationEnd(animation);
         mFab.setVisibility(View.INVISIBLE);
         mIsFabAnimating = false;
+        mFabCard.getOverlay().clear();
       }
     });
-
-    show.playTogether(move, reveal, fadeOut, fadeIn);
 
     show.start();
   }
 
   private void reverseFabTransform() {
+    int duration = getResources().getInteger(android.R.integer.config_mediumAnimTime);
+
     mIsFabAnimating = true;
     int cardCenterX = (mFabCard.getLeft() + mFabCard.getRight()) / 2;
     int cardCenterY = (mFabCard.getTop() + mFabCard.getBottom()) / 2;
@@ -350,7 +372,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         mFabCard.getHeight() / 2,
         (float) Math.hypot(mFabCard.getWidth() / 2, mFabCard.getHeight() / 2),
         mFab.getWidth() / 2)
-        .setDuration(360);
+        .setDuration(duration);
 
     ArcMotion arcMotion = new ArcMotion();
     arcMotion.setMaximumAngle(90f);
@@ -362,20 +384,35 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         mFabCard,
         View.TRANSLATION_X,
         View.TRANSLATION_Y,
-        motionPath);
+        motionPath)
+        .setDuration(duration);
 
-    Animator fadeIn = ObjectAnimator.ofFloat(mFab, View.ALPHA, 1f)
-        .setDuration(300);
+    // Color Overlay
+    ColorDrawable fabColor = new ColorDrawable(
+        ContextCompat.getColor(this, R.color.colorAccent));
+    fabColor.setBounds(0, 0, mFabCard.getWidth(), mFabCard.getHeight());
+    fabColor.setAlpha(0);
+    mFabCard.getOverlay().add(fabColor);
 
-    Animator fadeOut = ObjectAnimator.ofInt(mFabCard.getForeground(), "alpha", 0, 255)
-        .setDuration(200);
+    // Icon Overlay
+    Drawable fabIcon = ContextCompat.getDrawable(this, R.drawable.ic_add_24dp).mutate();
+    fabIcon.setTint(ContextCompat.getColor(this, R.color.colorPrimaryText));
+    int iconLeft = (mFabCard.getWidth() - fabIcon.getIntrinsicWidth()) / 2;
+    int iconTop = (mFabCard.getHeight() - fabIcon.getIntrinsicHeight()) / 2;
+    fabIcon.setBounds(iconLeft, iconTop,
+        iconLeft + fabIcon.getIntrinsicWidth(),
+        iconTop + fabIcon.getIntrinsicHeight());
+    fabIcon.setAlpha(0);
+    mFabCard.getOverlay().add(fabIcon);
 
-    /*Animator color = ObjectAnimator.ofArgb(
-        mFabCard,
-        "backgroundColor",
-        ContextCompat.getColor(this, android.R.color.white),
-        ContextCompat.getColor(this, R.color.colorAccent))
-        .setDuration(200);*/
+    Animator fadeInColor = ObjectAnimator.ofInt(fabColor, "alpha", 255).setDuration(duration);
+    Animator fadeInIcon = ObjectAnimator.ofInt(fabIcon, "alpha", 255).setDuration(duration);
+
+    fadeInColor.setDuration(duration / 2);
+    fadeInIcon.setDuration(duration / 2);
+
+    fadeInColor.setStartDelay(duration / 2);
+    fadeInIcon.setStartDelay(duration / 2);
 
     AnimatorSet animation = new AnimatorSet();
     animation.setInterpolator(AnimationUtils.loadInterpolator(
@@ -389,11 +426,13 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         super.onAnimationEnd(animation);
         mFabCard.setVisibility(View.INVISIBLE);
         mFabCard.setAlpha(1f);
+        mFab.setAlpha(1f);
+        mFabCard.getOverlay().clear();
         mIsFabAnimating = false;
       }
     });
 
-    animation.playTogether(move, inverseReveal, fadeIn, fadeOut);
+    animation.playTogether(move, inverseReveal, fadeInColor, fadeInIcon);
 
     animation.start();
 
