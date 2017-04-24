@@ -1,15 +1,11 @@
 package com.arangurr.newsonar.ui;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.arangurr.newsonar.Constants;
-import com.arangurr.newsonar.GsonUtils;
 import com.arangurr.newsonar.data.Poll;
 import java.util.List;
 
@@ -20,6 +16,7 @@ import java.util.List;
 public class ListenRecyclerAdapter extends RecyclerView.Adapter<ListenRecyclerAdapter.ViewHolder> {
 
   private List<Poll> mFoundPolls;
+  private OnItemClickListener mItemClickListener;
 
   public ListenRecyclerAdapter(List<Poll> foundPolls) {
     mFoundPolls = foundPolls;
@@ -49,6 +46,10 @@ public class ListenRecyclerAdapter extends RecyclerView.Adapter<ListenRecyclerAd
     notifyDataSetChanged();
   }
 
+  public void setItemClickListener(OnItemClickListener listener) {
+    mItemClickListener = listener;
+  }
+
   @Override
   public ListenRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -68,6 +69,11 @@ public class ListenRecyclerAdapter extends RecyclerView.Adapter<ListenRecyclerAd
     return mFoundPolls.size();
   }
 
+  public interface OnItemClickListener {
+
+    void onItemClick(View view, Poll poll);
+  }
+
   public class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
     private final TextView mText1;
@@ -84,11 +90,9 @@ public class ListenRecyclerAdapter extends RecyclerView.Adapter<ListenRecyclerAd
 
     @Override
     public void onClick(View v) {
-      String serialized = GsonUtils.serialize(mFoundPolls.get(getAdapterPosition()));
-
-      Intent voteIntent = new Intent(v.getContext(), VotingActivity.class);
-      voteIntent.putExtra(Constants.EXTRA_SERIALIZED_POLL, serialized);
-      ((Activity) v.getContext()).startActivityForResult(voteIntent, Constants.VOTE_REQUEST);
+      if (mItemClickListener != null) {
+        mItemClickListener.onItemClick(v, mFoundPolls.get(getAdapterPosition()));
+      }
     }
   }
 }

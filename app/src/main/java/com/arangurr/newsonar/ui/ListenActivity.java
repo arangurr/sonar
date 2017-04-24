@@ -24,6 +24,7 @@ import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.BinaryQuestion;
 import com.arangurr.newsonar.data.Option;
 import com.arangurr.newsonar.data.Poll;
+import com.arangurr.newsonar.ui.ListenRecyclerAdapter.OnItemClickListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -116,6 +117,15 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
 
     final List<Poll> nearbyPolls = new ArrayList<>();
     mNearbyPollsAdapter = new ListenRecyclerAdapter(nearbyPolls);
+    mNearbyPollsAdapter.setItemClickListener(new OnItemClickListener() {
+      @Override
+      public void onItemClick(View view, Poll poll) {
+        String serialized = GsonUtils.serialize(poll);
+        Intent voteIntent = new Intent(view.getContext(), VotingActivity.class);
+        voteIntent.putExtra(Constants.EXTRA_SERIALIZED_POLL, serialized);
+        getActivity().startActivityForResult(voteIntent, Constants.VOTE_REQUEST);
+      }
+    });
     RecyclerView nearbyDevicesRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_listen);
 
     nearbyDevicesRecyclerView.setAdapter(mNearbyPollsAdapter);
@@ -211,7 +221,12 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
 */
 
   private Activity getActivity() {
-    Context context = this.getBaseContext();
+    Context context = this;
+    if (context instanceof Activity) {
+      return this;
+    } else {
+      context = this.getBaseContext();
+    }
     while (context instanceof ContextWrapper) {
       if (context instanceof Activity) {
         return (Activity) context;
