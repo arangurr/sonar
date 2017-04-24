@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.arangurr.newsonar.BuildConfig;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.GsonUtils;
+import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.BinaryQuestion;
 import com.arangurr.newsonar.data.Option;
@@ -148,6 +149,22 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
   }
 
   @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == Constants.VOTE_REQUEST){
+      switch (resultCode){
+        case RESULT_CANCELED:
+          PersistenceUtils.deleteVote(this);
+          break;
+        case RESULT_OK:
+          Toast.makeText(this, "gotem", Toast.LENGTH_SHORT).show();
+          // TODO: 24/04/2017 Send vote.
+          break;
+      }
+    }
+  }
+
+  @Override
   public void onConnected(@Nullable Bundle bundle) {
     Log.d(TAG, "Google API connected");
     if (mSwitch.isChecked()) {
@@ -259,6 +276,8 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
     p.addQuestion(question);
 
     String serialized = GsonUtils.serialize(p);
+
+    PersistenceUtils.deleteVote(this);
 
     Intent voteIntent = new Intent(this, VotingActivity.class);
     voteIntent.putExtra(Constants.EXTRA_SERIALIZED_POLL, serialized);

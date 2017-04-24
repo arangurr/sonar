@@ -1,5 +1,6 @@
 package com.arangurr.newsonar.ui;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
   private QuestionPagerAdapter mQuestionPagerAdapter;
   private FloatingActionButton mNextFab;
   private FloatingActionButton mPrevFab;
+  private FloatingActionButton mSendFab;
 
 
   @Override
@@ -61,6 +63,7 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
     mViewPager = (ViewPager) findViewById(R.id.viewpager_voting);
     mNextFab = (FloatingActionButton) findViewById(R.id.button_voting_next);
     mPrevFab = (FloatingActionButton) findViewById(R.id.button_voting_previous);
+    mSendFab = (FloatingActionButton) findViewById(R.id.button_voting_send);
 
     mQuestionList = mPoll.getQuestionList();
     mQuestionPagerAdapter = new QuestionPagerAdapter();
@@ -89,6 +92,7 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
 
     mNextFab.setOnClickListener(this);
     mPrevFab.setOnClickListener(this);
+    mSendFab.setOnClickListener(this);
 
     setSupportActionBar(toolbar);
     Drawable cancelDrawable = getDrawable(R.drawable.ic_clear_24dp);
@@ -115,6 +119,12 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
 
   public void onClick(View view) {
     switch (view.getId()) {
+      case R.id.button_voting_send:
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(Constants.EXTRA_SERIALIZED_VOTE, GsonUtils.serialize(mVote));
+        setResult(RESULT_OK, resultIntent);
+        finish();
+        break;
       case R.id.button_voting_next:
         moveNext();
         break;
@@ -173,13 +183,17 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
               PersistenceUtils.storeVoteInPreferences(getApplicationContext(), mVote);
               break;
           }
-          mViewPager.postDelayed(new Runnable() {
-                                   @Override
-                                   public void run() {
-                                     moveNext();
-                                   }
-                                 },
-              getResources().getInteger(android.R.integer.config_longAnimTime));
+          if (mVote.getSelectionList().size() == mQuestionList.size()) {
+            mSendFab.show();
+          } else {
+            mViewPager.postDelayed(new Runnable() {
+                                     @Override
+                                     public void run() {
+                                       moveNext();
+                                     }
+                                   },
+                getResources().getInteger(android.R.integer.config_longAnimTime));
+          }
         }
       });
     }

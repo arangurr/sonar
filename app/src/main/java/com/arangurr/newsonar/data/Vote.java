@@ -22,6 +22,10 @@ public class Vote {
     mSelectionList = new ArrayList<>();
   }
 
+  public ArrayList<QuestionSelection> getSelectionList() {
+    return mSelectionList;
+  }
+
   public void attachResponse(Question question, Option... options) {
     ArrayList<UUID> ids = new ArrayList<>(options.length);
     for (Option o : options) {

@@ -38,7 +38,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/fab_margin"
-    android:layout_gravity="bottom|start"
+    android:layout_gravity="center|start"
     android:src="@drawable/ic_navigate_before_24dp"
     android:text="Previous"
     android:visibility="invisible"/>
@@ -48,7 +48,17 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/fab_margin"
-    android:layout_gravity="bottom|end"
+    android:layout_gravity="center|end"
     android:src="@drawable/ic_navigate_next_24dp"
     android:text="Next"/>
+
+  <android.support.design.widget.FloatingActionButton
+    android:id="@+id/button_voting_send"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/fab_margin"
+    android:layout_gravity="center|bottom"
+    android:src="@drawable/ic_send_24dp"
+    android:text="Send"
+    android:visibility="gone"/>
 </android.support.design.widget.CoordinatorLayout>
