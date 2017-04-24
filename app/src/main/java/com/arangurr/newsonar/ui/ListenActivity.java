@@ -9,13 +9,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 import com.arangurr.newsonar.BuildConfig;
@@ -55,7 +54,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
 
   private Switch mSwitch;
 
-  private ArrayAdapter mNearbyPollsAdapter;
+  private ListenRecyclerAdapter mNearbyPollsAdapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -116,15 +115,10 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
     }
 
     final List<Poll> nearbyPolls = new ArrayList<>();
-    mNearbyPollsAdapter = new ArrayAdapter<>(
-        this,
-        android.R.layout.simple_list_item_1,
-        nearbyPolls);
-    final ListView nearbyDevicesListView = (ListView) findViewById(
-        R.id.listview_listen);
-    if (nearbyDevicesListView != null) {
-      nearbyDevicesListView.setAdapter(mNearbyPollsAdapter);
-    }
+    mNearbyPollsAdapter = new ListenRecyclerAdapter(nearbyPolls);
+    RecyclerView nearbyDevicesRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_listen);
+
+    nearbyDevicesRecyclerView.setAdapter(mNearbyPollsAdapter);
 
     mSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
       @Override
