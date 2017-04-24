@@ -85,6 +85,7 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
         }
       }
     });
+    mViewPager.setOffscreenPageLimit(mPoll.getQuestionList().size());
 
     mNextFab.setOnClickListener(this);
     mPrevFab.setOnClickListener(this);
