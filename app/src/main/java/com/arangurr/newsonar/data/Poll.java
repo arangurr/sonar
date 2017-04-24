@@ -1,5 +1,8 @@
 package com.arangurr.newsonar.data;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import com.arangurr.newsonar.Constants;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,8 +18,8 @@ public class Poll {
   public static final String TYPE = "poll";
 
   private final long mStartDate;
-  private UUID mPollId;
-  private String mOwnerId; // Not UUID, coming from Secure.ID
+  private final UUID mPollId;
+  private final String mOwnerId; // Not UUID, coming from Secure.ID
   private String mOwnerName;
   private String mPollTitle;
   private boolean mPasswordProtected = false;
@@ -24,19 +27,25 @@ public class Poll {
   private ArrayList<Question> mQuestionList;
   private int mPrivacySetting = Constants.PRIVACY_PRIVATE;
 
-  public Poll() {
+  public Poll(Context context) {
     mPollId = UUID.randomUUID();
     mQuestionList = new ArrayList<>();
     mPrivacySetting = Constants.PRIVACY_PRIVATE;
     mStartDate = new Date().getTime();
+    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+    mOwnerId = prefs.getString(Constants.KEY_UUID, null);
+    mOwnerName = prefs.getString(Constants.KEY_USERNAME, null);
   }
 
-  public Poll(String title) {
+  public Poll(Context context, String title) {
     mPollId = UUID.randomUUID();
     mQuestionList = new ArrayList<>();
     mPrivacySetting = Constants.PRIVACY_PRIVATE;
     mPollTitle = title;
     mStartDate = new Date().getTime();
+    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+    mOwnerId = prefs.getString(Constants.KEY_UUID, null);
+    mOwnerName = prefs.getString(Constants.KEY_USERNAME, null);
   }
 
   public boolean isPasswordProtected() {
@@ -57,10 +66,6 @@ public class Poll {
 
   public UUID getUuid() {
     return mPollId;
-  }
-
-  public void setUuid(UUID id) {
-    mPollId = id;
   }
 
   public List<Question> getQuestionList() {
@@ -107,7 +112,4 @@ public class Poll {
     return mOwnerId;
   }
 
-  public void setOwnerId(String ownerId) {
-    mOwnerId = ownerId;
-  }
 }

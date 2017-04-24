@@ -73,7 +73,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
     if (savedInstanceState == null
         || savedInstanceState.getSerializable(Constants.EXTRA_POLL_ID) == null) {
-      mPoll = new Poll();
+      mPoll = new Poll(this);
     } else {
       UUID possibleId = (UUID) savedInstanceState.getSerializable(Constants.EXTRA_POLL_ID);
       if (possibleId != null) {

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -68,23 +67,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         startActivity(i);
         break;
       case R.id.fab_dashboard_add_debug:
-        SharedPreferences defaultPrefs = PreferenceManager
-            .getDefaultSharedPreferences(getApplicationContext());
-        Poll poll = new Poll("Sample Poll Title");
-        poll.setOwnerId(defaultPrefs.getString(Constants.KEY_UUID, null));
-        poll.setOwnerName(defaultPrefs.getString(Constants.KEY_USERNAME, "username not defined"));
+        Poll poll = new Poll(this, "Sample Poll Title");
         poll.addQuestion(new BinaryQuestion("First Title", Constants.BINARY_MODE_TRUEFALSE));
-
         PersistenceUtils.storePollInPreferences(this, poll);
         break;
-
-      /*case R.id.toCommsButton:
-        Poll p = mPolls.get(mPolls.size() - 1);
-
-        Intent i = new Intent(getApplicationContext(), CommsActivity.class);
-        i.putExtra(Constants.EXTRA_POLL_ID, p.getUuid());
-
-        startActivity(i);*/
     }
   }
 

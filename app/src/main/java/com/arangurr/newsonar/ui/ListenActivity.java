@@ -240,7 +240,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
 
   public void launchVotingUi(View view) {
     // Sample Poll
-    Poll p = new Poll("Sample Poll title");
+    Poll p = new Poll(this, "Sample Poll title");
     p.addQuestion(new BinaryQuestion("Question 1, yesno", Constants.BINARY_MODE_YESNO));
     p.addQuestion(new BinaryQuestion("Question 2, truefalse", Constants.BINARY_MODE_TRUEFALSE));
     BinaryQuestion question = new BinaryQuestion("Question 3, red v Blue",
