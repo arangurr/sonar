@@ -10,20 +10,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.GsonUtils;
 import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.Poll;
+import com.arangurr.newsonar.data.Vote;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
+import com.google.android.gms.nearby.messages.MessageFilter;
 import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.nearby.messages.PublishCallback;
 import com.google.android.gms.nearby.messages.PublishOptions;
@@ -42,7 +48,10 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
   private Message mActiveMessage;
   private MessageListener mMessageListener;
 
-  private TextView mDurationHeader;
+  private TextView mDurationTextView;
+  private TextView mStatusTextView;
+  private ProgressBar mStatusProgressBar;
+  private ToggleButton mToggleButton;
 
   private Strategy.Builder mStrategyBuilder;
 
@@ -50,6 +59,7 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
   private PublishOptions mPublishOptions;
 
   private Poll mCurrentPoll;
+  private Spinner mDurationSpinner;
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -74,18 +84,40 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
         .setCallback(new PublishCallback() {
           @Override
           public void onExpired() {
-            Toast.makeText(CommsActivity.this, "Expired!", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "Publish expired");
+            mStatusTextView.setText("Poll no longer available.\nWaiting for votes a little longer...");
             super.onExpired();
           }
         });
 
-    mDurationHeader = (TextView) findViewById(R.id.textview_comms_duration_header);
-    Spinner durationSpinner = (Spinner) findViewById(R.id.spinner_comms_duration);
+    mDurationTextView = (TextView) findViewById(R.id.textview_comms_duration);
+    mStatusTextView = (TextView) findViewById(R.id.textview_comms_status);
+    mStatusProgressBar = (ProgressBar) findViewById(R.id.progressbar_comms_status);
+    mToggleButton = (ToggleButton) findViewById(R.id.toggle_comms);
+    mDurationSpinner = (Spinner) findViewById(R.id.spinner_comms_duration);
 
-    mDurationHeader.setOnClickListener(this);
+    mToggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (mGoogleApiClient.isConnected()) {
+          if (isChecked) {
+            mPublishOptions = mPublishOptionsBuilder.build();
+            mStatusProgressBar.setVisibility(View.VISIBLE);
+            publish();
+            subscribe();
+            mDurationSpinner.setEnabled(false);
+          } else {
+            unpublish();
+            unsubscribe();
+            mDurationSpinner.setEnabled(true);
+          }
+        }
+      }
+    });
 
-    durationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    mDurationTextView.setOnClickListener(this);
+
+    mDurationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Strategy strategy;
@@ -93,13 +125,13 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
           int[] ttlValues = getResources()
               .getIntArray(R.array.array_publish_durations_values);
           strategy = mStrategyBuilder.setTtlSeconds(ttlValues[position]).build();
-          mDurationHeader.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-          mDurationHeader.setClickable(false);
+          mDurationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+          mDurationTextView.setClickable(false);
         } else {
           strategy = mStrategyBuilder.setTtlSeconds(Strategy.TTL_SECONDS_MAX).build();
-          mDurationHeader.setCompoundDrawablesWithIntrinsicBounds(
+          mDurationTextView.setCompoundDrawablesWithIntrinsicBounds(
               0, 0, R.drawable.ic_warning_24dp, 0);
-          mDurationHeader.setClickable(true);
+          mDurationTextView.setClickable(true);
 
         }
 
@@ -112,19 +144,13 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
       }
     });
 
-    durationSpinner.setSelection(3);
-
-    mGoogleApiClient = new GoogleApiClient.Builder(this)
-        .addApi(Nearby.MESSAGES_API)
-        .addConnectionCallbacks(this)
-        .enableAutoManage(this, this)
-        .build();
+    mDurationSpinner.setSelection(3);
 
     mMessageListener = new MessageListener() {
       @Override
       public void onFound(Message message) {
         super.onFound(message);
-        String messageAsString = new String(message.getContent(), StandardCharsets.UTF_8);
+        final String messageAsString = new String(message.getContent(), StandardCharsets.UTF_8);
         Log.d(TAG, "Found message" + messageAsString);
       }
 
@@ -135,16 +161,14 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
         Log.d(TAG, "Message " + messageAsString + " was lost");
       }
     };
+
+    buildGoogleApiClient();
   }
 
   @Override
   public void onClick(View v) {
     switch (v.getId()) {
-      case R.id.button_comms_publish:
-        mPublishOptions = mPublishOptionsBuilder.build();
-        publish();
-        break;
-      case R.id.textview_comms_duration_header:
+      case R.id.textview_comms_duration:
         Snackbar snackbar = Snackbar.make(v, "Longer times drain battery faster. " +
             "Please use accordingly.", LENGTH_LONG);
         snackbar.show();
@@ -159,22 +183,15 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
   @Override
   public void onConnected(@Nullable Bundle bundle) {
     Log.d(TAG, "Connected");
+    if (mToggleButton.isChecked()) {
+      publish();
+      subscribe();
+    }
   }
 
   @Override
   public void onConnectionSuspended(int i) {
-    String cause;
-    switch (i) {
-      case CAUSE_SERVICE_DISCONNECTED:
-        cause = "Service disconnected";
-        break;
-      case CAUSE_NETWORK_LOST:
-        cause = "Network lost";
-        break;
-      default:
-        cause = "Unknown" + i;
-    }
-    Log.i(TAG, "Google API connection suspended: " + cause);
+    Log.e(TAG, "Google API connection suspended: " + i);
   }
 
   @Override
@@ -182,30 +199,30 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
     Log.i(TAG, "Google Api connection failed");
   }
 
-  @Override
-  protected void onStop() {
-    super.onStop();
-    //unpublish();
-    //unsubscribe();
-  }
-
   private void subscribe() {
-    Log.i(TAG, "Trying to subscribe");
+    // Subscribe for 30 seconds more than the currently set publication
+    int[] ttlValues = getResources()
+        .getIntArray(R.array.array_publish_durations_values);
+    int currentTtl = ttlValues[mDurationSpinner.getSelectedItemPosition()];
 
     SubscribeOptions subscribeOptions = new SubscribeOptions.Builder()
         .setStrategy(new Strategy.Builder()
-            .setTtlSeconds(Constants.TTL_SECONDS)
+            .setTtlSeconds(currentTtl + Constants.TTL_SECONDS)
             .setDistanceType(Strategy.DISTANCE_TYPE_EARSHOT)
             .build())
         .setCallback(new SubscribeCallback() {
           @Override
           public void onExpired() {
             super.onExpired();
-
             Log.d(TAG, "Subscription expired");
-
+            mToggleButton.setChecked(false);
+            mStatusProgressBar.setVisibility(View.GONE);
+            mStatusTextView.setText("");
           }
         })
+        .setFilter(new MessageFilter.Builder()
+            .includeNamespacedType(Constants.NAMESPACE, Vote.TYPE)
+            .build())
         .build();
 
     Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener, subscribeOptions)
@@ -214,11 +231,15 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
           public void onResult(@NonNull Status status) {
             if (status.isSuccess()) {
               Log.d(TAG, "Subscribed successfully");
+              mStatusTextView.append("\nNow listening for votes");
             } else {
               Log.d(TAG, "Couldn't subscribe due to status = " + status);
             }
           }
         });
+
+    Log.d(TAG, "Trying to subscribe");
+    mStatusTextView.append("\nStarting to listen for votes");
   }
 
   private void publish() {
@@ -233,30 +254,59 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
           public void onResult(@NonNull Status status) {
             if (status.isSuccess()) {
               Log.d(TAG, "Published successfully");
+              mStatusTextView.append("\nPoll is available");
             } else {
               Log.d(TAG, "Couldn't publish due to status = " + status);
             }
           }
         });
     Log.d(TAG, "Trying to publish");
+    mStatusTextView.setText("Making poll available");
   }
 
   private void unsubscribe() {
-    Log.i(TAG, "unsubscribing");
-    Nearby.Messages.unsubscribe(mGoogleApiClient, mMessageListener);
+    Log.d(TAG, "Unsubscribing");
+    Nearby.Messages.unsubscribe(mGoogleApiClient, mMessageListener).
+        setResultCallback(new ResultCallback<Status>() {
+          @Override
+          public void onResult(@NonNull Status status) {
+            if (status.isSuccess()) {
+              Log.d(TAG, "Unsubscribed successfully");
+              mStatusTextView.setText("");
+              mStatusProgressBar.setVisibility(View.GONE);
+            } else {
+              Log.d(TAG, "Could not unsubscribe due to status " + status);
+            }
+          }
+        });
   }
 
   private void unpublish() {
-    Log.i(TAG, "Unpublishing");
-    if (mActiveMessage != null) {
-      Nearby.Messages.unpublish(mGoogleApiClient, mActiveMessage).setResultCallback(
-          new ResultCallback<Status>() {
-            @Override
-            public void onResult(@NonNull Status status) {
+    Nearby.Messages.unpublish(mGoogleApiClient, mActiveMessage)
+        .setResultCallback(
+            new ResultCallback<Status>() {
+              @Override
+              public void onResult(@NonNull Status status) {
+                if (status.isSuccess()) {
+                  Log.d(TAG, "Poll unpublished successfully");
+                  mStatusTextView.setText("");
+                } else {
+                  Log.d(TAG, "Couldn't unpublish due to status = " + status);
+                }
+              }
+            });
+    mActiveMessage = null;
+    Log.d(TAG, "Unpublishing poll");
+  }
 
-            }
-          });
-      mActiveMessage = null;
+  private void buildGoogleApiClient() {
+    if (mGoogleApiClient != null) {
+      return;
     }
+    mGoogleApiClient = new GoogleApiClient.Builder(this)
+        .addApi(Nearby.MESSAGES_API)
+        .addConnectionCallbacks(this)
+        .enableAutoManage(this, this)
+        .build();
   }
 }
