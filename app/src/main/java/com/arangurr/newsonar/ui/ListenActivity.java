@@ -25,6 +25,7 @@ import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.BinaryQuestion;
 import com.arangurr.newsonar.data.Option;
 import com.arangurr.newsonar.data.Poll;
+import com.arangurr.newsonar.data.Vote;
 import com.arangurr.newsonar.ui.ListenRecyclerAdapter.OnItemClickListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -36,6 +37,8 @@ import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageFilter;
 import com.google.android.gms.nearby.messages.MessageListener;
+import com.google.android.gms.nearby.messages.PublishCallback;
+import com.google.android.gms.nearby.messages.PublishOptions;
 import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
@@ -52,11 +55,14 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
   private GoogleApiClient mGoogleApiClient;
   private MessageListener mMessageListener;
 
+  private Vote mCurrentVote;
+
   private SubscribeOptions mSubscribeOptions;
 
   private Switch mSwitch;
 
   private ListenRecyclerAdapter mNearbyPollsAdapter;
+  private Message mCurrentMessage;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -151,14 +157,14 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == Constants.VOTE_REQUEST){
-      switch (resultCode){
+    if (requestCode == Constants.VOTE_REQUEST) {
+      switch (resultCode) {
         case RESULT_CANCELED:
           PersistenceUtils.deleteVote(this);
           break;
         case RESULT_OK:
-          Toast.makeText(this, "gotem", Toast.LENGTH_SHORT).show();
-          // TODO: 24/04/2017 Send vote.
+          mCurrentVote = PersistenceUtils.fetchVote(this);
+          publish();
           break;
       }
     }
@@ -194,6 +200,67 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
     Log.d(TAG, "Unsubscribing");
   }
 
+  private void publish() {
+    String messageAsString = GsonUtils.serialize(mCurrentVote);
+
+    mCurrentMessage = new Message(messageAsString.getBytes(StandardCharsets.UTF_8),
+        Constants.NAMESPACE,
+        Vote.TYPE);
+
+    PublishOptions options = new PublishOptions.Builder()
+        .setStrategy(
+            new Strategy.Builder()
+                .setTtlSeconds(Constants.TTL_SECONDS)
+                .build())
+        .setCallback(
+            new PublishCallback() {
+              @Override
+              public void onExpired() {
+                super.onExpired();
+                Log.d(TAG, "Vote publication expired");
+              }
+            })
+        .build();
+
+    Nearby.Messages.publish(mGoogleApiClient, mCurrentMessage, options)
+        .setResultCallback(new ResultCallback<Status>() {
+          @Override
+          public void onResult(@NonNull Status status) {
+            if (status.isSuccess()) {
+              Log.d(TAG, "Vote published successfully");
+            } else {
+              Log.d(TAG, "Couldn't publish vote due to status = " + status);
+            }
+          }
+        });
+    Log.d(TAG, "Trying to publish");
+  }
+
+  private void unpublish() {
+    if (mCurrentMessage != null) {
+      Nearby.Messages.unpublish(mGoogleApiClient, mCurrentMessage)
+          .setResultCallback(
+              new ResultCallback<Status>() {
+                @Override
+                public void onResult(@NonNull Status status) {
+                  if (status.isSuccess()) {
+                    Log.d(TAG, "Vote unpublished successfully");
+                  } else {
+                    Log.d(TAG, "Couldn't unpublish due to status = " + status);
+                  }
+                }
+              });
+      mCurrentMessage = null;
+    }
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    unpublish();
+    unsubscribe();
+  }
+
   @Override
   public void onResult(@NonNull Status status) {
     if (status.isSuccess()) {
@@ -213,29 +280,6 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
           .show();
     }
   }
-
-  /*
-  private void dealWithStatus(Status status) {
-    switch (status.getStatusCode()) {
-      case NearbyMessagesStatusCodes.APP_NOT_OPTED_IN:
-        try {
-          status.startResolutionForResult(this, Constants.REQUEST_RESOLVE_ERROR);
-        } catch (SendIntentException e) {
-          e.printStackTrace();
-        }
-        break;
-      case CommonStatusCodes.NETWORK_ERROR:
-        Snackbar.make(findViewById(R.id.switch_listen_subscribe),
-            "No connectivity. Please connect to the Internet",
-            Snackbar.LENGTH_LONG)
-            .show();
-        mSwitch.setChecked(false);
-        break;
-      default:
-        Log.d(TAG, "Status code unknown");
-    }
-  }
-*/
 
   private Activity getActivity() {
     Context context = this;
