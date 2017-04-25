@@ -13,8 +13,6 @@ import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.Poll;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -29,12 +27,6 @@ public class DashboardRecyclerAdapter extends
   private List<Poll> mPolls;
 
   public DashboardRecyclerAdapter(List<Poll> polls) {
-    Collections.sort(polls, new Comparator<Poll>() {
-      @Override
-      public int compare(Poll o1, Poll o2) {
-        return (int) (o1.getStartDate() - o2.getStartDate());
-      }
-    });
     mPolls = polls;
   }
 

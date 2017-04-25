@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import com.arangurr.newsonar.data.Poll;
 import com.arangurr.newsonar.data.Vote;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -45,6 +47,13 @@ public class PersistenceUtils {
         array.add(GsonUtils.deserializeGson((String) entry.getValue(), Poll.class));
       }
     }
+
+    Collections.sort(array, new Comparator<Poll>() {
+      @Override
+      public int compare(Poll o1, Poll o2) {
+        return (int) (o1.getStartDate() - o2.getStartDate());
+      }
+    });
     return array;
   }
 
