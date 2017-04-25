@@ -30,4 +30,17 @@ public class Option {
   public UUID getOptionUUID() {
     return mOptionUUID;
   }
+
+  public boolean isVotedBy(VoterIdPair voter) {
+    for (VoterIdPair voterInOption : mVoterList) {
+      if (voterInOption.getUuid().equals(voter.getUuid())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public void addVoter(VoterIdPair voter){
+    mVoterList.add(voter);
+  }
 }

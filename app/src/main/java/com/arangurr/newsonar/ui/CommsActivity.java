@@ -85,7 +85,8 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
           @Override
           public void onExpired() {
             Log.d(TAG, "Publish expired");
-            mStatusTextView.setText("Poll no longer available.\nWaiting for votes a little longer...");
+            mStatusTextView
+                .setText("Poll no longer available.\nWaiting for votes a little longer...");
             super.onExpired();
           }
         });
@@ -151,7 +152,14 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
       public void onFound(Message message) {
         super.onFound(message);
         final String messageAsString = new String(message.getContent(), StandardCharsets.UTF_8);
-        Log.d(TAG, "Found message" + messageAsString);
+        Vote v = GsonUtils.deserializeGson(messageAsString, Vote.class);
+        if (v != null) {
+          Log.d(TAG, "Trying to update Poll with found Vote");
+          mCurrentPoll.updateWithVote(v);
+          PersistenceUtils.storePollInPreferences(getBaseContext(), mCurrentPoll);
+        } else {
+          Log.d(TAG, "Could not update Poll with found Vote");
+        }
       }
 
       @Override
@@ -261,7 +269,7 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
           }
         });
     Log.d(TAG, "Trying to publish");
-    mStatusTextView.setText("Making poll available");
+    mStatusTextView.setText("Trying to make poll available");
   }
 
   private void unsubscribe() {

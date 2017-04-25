@@ -112,4 +112,25 @@ public class Poll {
     return mOwnerId;
   }
 
+  public void updateWithVote(Vote vote) {
+    if (!hasVoted(vote.getVoterIdPair())){
+      for(QuestionSelection questionSelection : vote.getSelectionList()){
+        for (Question q : mQuestionList){
+          if (q.getUuid().equals(questionSelection.getQuestionId())){
+            q.addSelection(questionSelection, vote.getVoterIdPair());
+          }
+        }
+      }
+    }
+  }
+
+  private boolean hasVoted(VoterIdPair voter) {
+    for (Question question : mQuestionList) {
+      if (question.isVotedBy(voter)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 }

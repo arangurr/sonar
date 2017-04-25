@@ -7,12 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
@@ -261,14 +259,14 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
       Log.d(TAG, "Operation unsuccessful due to " + status.getStatusMessage());
       Toast.makeText(this, status.getStatusMessage(), Toast.LENGTH_SHORT).show();
       mSwitch.setEnabled(false);
-      Snackbar.make(mSwitch, "test", Snackbar.LENGTH_INDEFINITE)
-          .setAction("No Internet connection", new OnClickListener() {
+      /*Snackbar.make(mSwitch, "No Internet connection", Snackbar.LENGTH_INDEFINITE)
+          .setAction("Retry", new OnClickListener() {
             @Override
             public void onClick(View v) {
               subscribe();
             }
           })
-          .show();
+          .show();*/
     }
   }
 

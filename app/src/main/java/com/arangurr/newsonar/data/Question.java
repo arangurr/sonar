@@ -56,4 +56,23 @@ public class Question {
   public Option getOption(int position) {
     return mOptions.get(position);
   }
+
+  public boolean isVotedBy(VoterIdPair voter) {
+    for (Option option : mOptions) {
+      if (option.isVotedBy(voter)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public void addSelection(QuestionSelection questionSelection, VoterIdPair voterIdPair) {
+    for (Option option : mOptions) {
+      for (UUID optionIdInQS : questionSelection.getSelections()) {
+        if (optionIdInQS.equals(option.getOptionUUID())) {
+          option.addVoter(voterIdPair);
+        }
+      }
+    }
+  }
 }

@@ -23,6 +23,10 @@ public class QuestionSelection {
     mSelections.add(optionUUID);
   }
 
+  public ArrayList<UUID> getSelections() {
+    return mSelections;
+  }
+
   public UUID getQuestionId() {
     return mQuestionId;
   }
