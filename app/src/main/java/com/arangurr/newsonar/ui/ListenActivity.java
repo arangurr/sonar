@@ -253,13 +253,6 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
   }
 
   @Override
-  protected void onStop() {
-    super.onStop();
-    unpublish();
-    unsubscribe();
-  }
-
-  @Override
   public void onResult(@NonNull Status status) {
     if (status.isSuccess()) {
       Log.d(TAG, "Operation successful");
