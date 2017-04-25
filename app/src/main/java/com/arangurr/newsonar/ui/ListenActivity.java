@@ -57,8 +57,6 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
 
   private Vote mCurrentVote;
 
-  private SubscribeOptions mSubscribeOptions;
-
   private Switch mSwitch;
 
   private ListenRecyclerAdapter mNearbyPollsAdapter;
@@ -96,25 +94,6 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
         Log.d(TAG, "Message " + messageAsString + " was lost");
       }
     };
-
-    mSubscribeOptions = new Builder()
-        .setStrategy(new Strategy.Builder()
-            .setTtlSeconds(Strategy.TTL_SECONDS_DEFAULT)
-            .setDiscoveryMode(Strategy.DISCOVERY_MODE_DEFAULT)
-            .setDistanceType(Strategy.DISCOVERY_MODE_DEFAULT)
-            .build())
-        .setCallback(new SubscribeCallback() {
-          @Override
-          public void onExpired() {
-            super.onExpired();
-            Log.d(TAG, "Suscription expired");
-            mSwitch.setChecked(false);
-          }
-        })
-        .setFilter(new MessageFilter.Builder()
-            .includeNamespacedType(Constants.NAMESPACE, Poll.TYPE)
-            .build())
-        .build();
 
     mSwitch = (Switch) findViewById(R.id.switch_listen_subscribe);
 
@@ -190,7 +169,26 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
   }
 
   private void subscribe() {
-    Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener, mSubscribeOptions)
+    SubscribeOptions subscribeOptions = new Builder()
+        .setStrategy(new Strategy.Builder()
+            .setTtlSeconds(Strategy.TTL_SECONDS_INFINITE)
+            .setDiscoveryMode(Strategy.DISCOVERY_MODE_DEFAULT)
+            .setDistanceType(Strategy.DISCOVERY_MODE_DEFAULT)
+            .build())
+        .setCallback(new SubscribeCallback() {
+          @Override
+          public void onExpired() {
+            super.onExpired();
+            Log.d(TAG, "Subscription expired");
+            mSwitch.setChecked(false);
+          }
+        })
+        .setFilter(new MessageFilter.Builder()
+            .includeNamespacedType(Constants.NAMESPACE, Poll.TYPE)
+            .build())
+        .build();
+
+    Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener, subscribeOptions)
         .setResultCallback(this);
     Log.d(TAG, "Trying to subscribe");
   }
