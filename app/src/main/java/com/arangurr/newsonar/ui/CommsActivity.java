@@ -155,8 +155,10 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
         Vote v = GsonUtils.deserializeGson(messageAsString, Vote.class);
         if (v != null) {
           Log.d(TAG, "Trying to update Poll with found Vote");
-          mCurrentPoll.updateWithVote(v);
-          PersistenceUtils.storePollInPreferences(getBaseContext(), mCurrentPoll);
+          if (v.getPollId().equals(mCurrentPoll.getUuid())) {
+            mCurrentPoll.updateWithVote(v);
+            PersistenceUtils.storePollInPreferences(getBaseContext(), mCurrentPoll);
+          }
         } else {
           Log.d(TAG, "Could not update Poll with found Vote");
         }
