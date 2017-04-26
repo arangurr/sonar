@@ -240,7 +240,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
     PublishOptions options = new PublishOptions.Builder()
         .setStrategy(
             new Strategy.Builder()
-                .setTtlSeconds(Constants.TTL_SECONDS)
+                .setTtlSeconds(Constants.TTL_30SEC)
                 .build())
         .setCallback(
             new PublishCallback() {

@@ -217,7 +217,7 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
 
     SubscribeOptions subscribeOptions = new SubscribeOptions.Builder()
         .setStrategy(new Strategy.Builder()
-            .setTtlSeconds(currentTtl + Constants.TTL_SECONDS)
+            .setTtlSeconds(currentTtl + Constants.TTL_30SEC)
             .setDistanceType(Strategy.DISTANCE_TYPE_EARSHOT)
             .build())
         .setCallback(new SubscribeCallback() {
