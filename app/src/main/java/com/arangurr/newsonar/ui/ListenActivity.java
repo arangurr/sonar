@@ -170,7 +170,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
   private void subscribe() {
     SubscribeOptions subscribeOptions = new Builder()
         .setStrategy(new Strategy.Builder()
-            .setTtlSeconds(Strategy.TTL_SECONDS_INFINITE)
+            .setTtlSeconds(Constants.TTL_10MIN)
             .setDiscoveryMode(Strategy.DISCOVERY_MODE_DEFAULT)
             .setDistanceType(Strategy.DISCOVERY_MODE_DEFAULT)
             .build())
