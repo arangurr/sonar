@@ -13,7 +13,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ProgressBar;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.arangurr.newsonar.BuildConfig;
 import com.arangurr.newsonar.Constants;
@@ -46,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListenActivity extends AppCompatActivity implements ConnectionCallbacks,
-    OnConnectionFailedListener, ResultCallback<Status> {
+    OnConnectionFailedListener {
 
   private static final String TAG = "ListenActivity";
 
@@ -56,9 +58,12 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
   private Vote mCurrentVote;
 
   private Switch mSwitch;
+  private ProgressBar mStatusProgressBar;
+  private TextView mStatusTextView;
 
   private ListenRecyclerAdapter mNearbyPollsAdapter;
   private Message mCurrentMessage;
+  private RecyclerView mNearbyDevicesRecyclerView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +99,9 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
     };
 
     mSwitch = (Switch) findViewById(R.id.switch_listen_subscribe);
+    mStatusProgressBar = (ProgressBar) findViewById(R.id.progressbar_listen_status);
+    mStatusTextView = (TextView) findViewById(R.id.textview_listen_status);
+    mNearbyDevicesRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_listen);
 
     if (BuildConfig.DEBUG) {
       findViewById(R.id.testButton).setVisibility(View.VISIBLE);
@@ -110,9 +118,8 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
         getActivity().startActivityForResult(voteIntent, Constants.VOTE_REQUEST);
       }
     });
-    RecyclerView nearbyDevicesRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_listen);
 
-    nearbyDevicesRecyclerView.setAdapter(mNearbyPollsAdapter);
+    mNearbyDevicesRecyclerView.setAdapter(mNearbyPollsAdapter);
 
     mSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
       @Override
@@ -180,6 +187,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
             super.onExpired();
             Log.d(TAG, "Subscription expired");
             mSwitch.setChecked(false);
+            setStatus(null);
           }
         })
         .setFilter(new MessageFilter.Builder()
@@ -188,13 +196,38 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
         .build();
 
     Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener, subscribeOptions)
-        .setResultCallback(this);
+        .setResultCallback(new ResultCallback<Status>() {
+          @Override
+          public void onResult(@NonNull Status status) {
+            if (status.isSuccess()) {
+              Log.d(TAG, "Operation successful");
+              mSwitch.setEnabled(true);
+              setStatus("Searching for nearby polls...");
+            } else {
+              Log.d(TAG, "Operation unsuccessful due to " + status.getStatusMessage());
+              Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT)
+                  .show();
+              mSwitch.setEnabled(false);
+
+            }
+          }
+        });
     Log.d(TAG, "Trying to subscribe");
   }
 
   private void unsubscribe() {
-    Nearby.Messages.unsubscribe(mGoogleApiClient, mMessageListener);
+    Nearby.Messages.unsubscribe(mGoogleApiClient, mMessageListener).setResultCallback(
+        new ResultCallback<Status>() {
+          @Override
+          public void onResult(@NonNull Status status) {
+            if (status.isSuccess()) {
+              setStatus(null);
+            }
+          }
+        }
+    );
     Log.d(TAG, "Unsubscribing");
+    setStatus("Cancelling");
   }
 
   private void publish() {
@@ -216,6 +249,13 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
                 super.onExpired();
                 mSwitch.setChecked(false);
                 Log.d(TAG, "Vote publication expired");
+                setStatus("Vote sent. You can exit now.");
+                mStatusTextView.postDelayed(new Runnable() {
+                  @Override
+                  public void run() {
+                    setStatus(null);
+                  }
+                }, 2000);
               }
             })
         .build();
@@ -226,12 +266,15 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
           public void onResult(@NonNull Status status) {
             if (status.isSuccess()) {
               Log.d(TAG, "Vote published successfully");
+              mStatusTextView.setText("Sending answers. They might be lost if you close the app.");
             } else {
               Log.d(TAG, "Couldn't publish vote due to status = " + status);
+              mStatusTextView.setText("Could not send answers");
             }
           }
         });
     Log.d(TAG, "Trying to publish");
+    setStatus("Trying to send your answers");
   }
 
   private void unpublish() {
@@ -249,26 +292,6 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
                 }
               });
       mCurrentMessage = null;
-    }
-  }
-
-  @Override
-  public void onResult(@NonNull Status status) {
-    if (status.isSuccess()) {
-      Log.d(TAG, "Operation successful");
-      mSwitch.setEnabled(true);
-    } else {
-      Log.d(TAG, "Operation unsuccessful due to " + status.getStatusMessage());
-      Toast.makeText(this, status.getStatusMessage(), Toast.LENGTH_SHORT).show();
-      mSwitch.setEnabled(false);
-      /*Snackbar.make(mSwitch, "No Internet connection", Snackbar.LENGTH_INDEFINITE)
-          .setAction("Retry", new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              subscribe();
-            }
-          })
-          .show();*/
     }
   }
 
@@ -317,6 +340,20 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
     Intent voteIntent = new Intent(this, VotingActivity.class);
     voteIntent.putExtra(Constants.EXTRA_SERIALIZED_POLL, serialized);
     startActivityForResult(voteIntent, Constants.VOTE_REQUEST);
+
+  }
+
+  private void setStatus(@Nullable String status) {
+    mStatusTextView.setText(status);
+    if (status == null) {
+      mStatusProgressBar.setVisibility(View.INVISIBLE);
+      mStatusTextView.setVisibility(View.INVISIBLE);
+      mNearbyDevicesRecyclerView.setVisibility(View.INVISIBLE);
+    } else {
+      mStatusProgressBar.setVisibility(View.VISIBLE);
+      mStatusTextView.setVisibility(View.VISIBLE);
+      mNearbyDevicesRecyclerView.setVisibility(View.VISIBLE);
+    }
 
   }
 }
