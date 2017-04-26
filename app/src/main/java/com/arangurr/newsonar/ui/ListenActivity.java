@@ -122,6 +122,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
             subscribe();
           } else {
             unsubscribe();
+            unpublish();
             mNearbyPollsAdapter.clear();
           }
         }
@@ -213,6 +214,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
               @Override
               public void onExpired() {
                 super.onExpired();
+                mSwitch.setChecked(false);
                 Log.d(TAG, "Vote publication expired");
               }
             })
