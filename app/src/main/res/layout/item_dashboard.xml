@@ -8,12 +8,12 @@
   android:background="@drawable/background_selectable"
   android:clipToPadding="false"
   android:foreground="?selectableItemBackground"
+  android:minHeight="?listPreferredItemHeight"
   android:stateListAnimator="@animator/raise">
 
   <android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="?listPreferredItemHeight">
+    android:layout_height="wrap_content">
 
     <TextView
       android:id="@+id/textview_dashboard_item_circle"
@@ -54,8 +54,6 @@
       android:id="@+id/button_dashboard_item_delete"
       android:layout_width="wrap_content"
       android:layout_height="40dp"
-      android:layout_marginTop="0dp"
-      android:layout_marginRight="0dp"
       android:padding="8dp"
       android:background="?android:attr/selectableItemBackgroundBorderless"
       android:visibility="gone"
