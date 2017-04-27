@@ -1,6 +1,5 @@
 package com.arangurr.newsonar.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -13,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import com.arangurr.newsonar.BuildConfig;
 import com.arangurr.newsonar.Constants;
@@ -31,6 +31,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
   private SharedPreferences.OnSharedPreferenceChangeListener mPreferenceChangeListener;
 
   private DashboardRecyclerAdapter mAdapter;
+  private RecyclerView mPollRecyclerView;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +46,14 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
       }
     };
 
-    RecyclerView pollRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_dashboard_polls);
+    mPollRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_dashboard_polls);
 
     if (BuildConfig.DEBUG) {
       findViewById(R.id.fab_dashboard_add_debug).setVisibility(View.VISIBLE);
     }
 
     mAdapter = new DashboardRecyclerAdapter(PersistenceUtils.fetchAllPolls(this));
-    pollRecyclerView.setAdapter(mAdapter);
+    mPollRecyclerView.setAdapter(mAdapter);
   }
 
   @Override
@@ -110,10 +112,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
   }
 
-  class DashboardRecyclerAdapter extends
-      RecyclerView.Adapter<DashboardRecyclerAdapter.ViewHolder> {
+  class DashboardRecyclerAdapter extends RecyclerView.Adapter<DashboardRecyclerAdapter.ViewHolder> {
 
     private List<Poll> mPolls;
+    private int mExpandedPosition = RecyclerView.NO_POSITION;
 
     public DashboardRecyclerAdapter(List<Poll> polls) {
       mPolls = polls;
@@ -134,16 +136,50 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public DashboardRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
       View inflatedView = LayoutInflater.from(viewGroup.getContext())
           .inflate(R.layout.item_dashboard, viewGroup, false);
-      return new ViewHolder(inflatedView);
+
+      final ViewHolder holder = new ViewHolder(inflatedView);
+
+      return holder;
     }
 
     @Override
-    public void onBindViewHolder(DashboardRecyclerAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final DashboardRecyclerAdapter.ViewHolder viewHolder, int i) {
+      final int position = viewHolder.getAdapterPosition();
+
       viewHolder.mTitle.setText(mPolls.get(i).getPollTitle());
       Date date = new Date(mPolls.get(i).getStartDate());
       SimpleDateFormat sdf = new SimpleDateFormat("dd MMM HH:mm", Locale.getDefault());
       viewHolder.mSubtitle.setText(sdf.format(date));
       viewHolder.mCircle.setText(String.valueOf(i + 1));
+
+      if (position == mExpandedPosition) {
+        viewHolder.itemView.setActivated(true);
+        viewHolder.mDeleteButton.setVisibility(View.VISIBLE);
+      } else {
+        viewHolder.itemView.setActivated(false);
+        viewHolder.mDeleteButton.setVisibility(View.GONE);
+      }
+
+      viewHolder.itemView.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+          //TransitionManager.beginDelayedTransition(mPollRecyclerView);
+
+          // There is an expanded item
+          if (mExpandedPosition != RecyclerView.NO_POSITION) {
+            int prev = mExpandedPosition;
+            notifyItemChanged(prev);
+
+          }
+          if (mExpandedPosition != viewHolder.getAdapterPosition()) {
+            mExpandedPosition = viewHolder.getAdapterPosition();
+            notifyItemChanged(mExpandedPosition);
+          } else {
+            mExpandedPosition = RecyclerView.NO_POSITION;
+          }
+        }
+      });
     }
 
     @Override
@@ -156,6 +192,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
       private TextView mTitle;
       private TextView mSubtitle;
       private TextView mCircle;
+      private ImageButton mDeleteButton;
 
       public ViewHolder(View itemView) {
         super(itemView);
@@ -163,15 +200,16 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         mTitle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_title);
         mSubtitle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_subtitle);
         mCircle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_circle);
+        mDeleteButton = (ImageButton) itemView.findViewById(R.id.button_dashboard_item_delete);
 
-        itemView.setOnClickListener(this);
+        //itemView.setOnClickListener(this);
       }
 
       @Override
       public void onClick(View v) {
         Intent i = new Intent(v.getContext(), CommsActivity.class);
         i.putExtra(Constants.EXTRA_POLL_ID, mPolls.get(getAdapterPosition()).getUuid());
-        ((Activity) v.getContext()).startActivity(i);
+        v.getContext().startActivity(i);
       }
     }
   }
