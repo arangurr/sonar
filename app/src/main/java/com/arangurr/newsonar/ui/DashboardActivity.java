@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -42,7 +43,20 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     mPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
       @Override
       public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        mAdapter.add(PersistenceUtils.fetchPollWithId(getApplicationContext(), key));
+        Poll p = PersistenceUtils.fetchPollWithId(getApplicationContext(), key);
+        if (p != null) {
+          // Has been added or changed
+          if (mAdapter.containsWithId(p.getUuid())) {
+            // Has changed
+            // TODO: 27/04/2017 update polls 
+            //mAdapter.updatePoll(p);
+          }
+          // It's a new one.
+          mAdapter.add(p);
+        } else {
+          // Has been removed
+          mAdapter.removePoll(UUID.fromString(key));
+        }
       }
     };
 
@@ -134,6 +148,27 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
       notifyItemInserted(mPolls.size() - 1);
     }
 
+    private boolean containsWithId(UUID uuid) {
+      for (Poll p : mPolls) {
+        if (p.getUuid().equals(uuid)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    private void removePoll(UUID key) {
+      for (Poll p : mPolls) {
+        if (p.getUuid().equals(key)) {
+          int index = mPolls.indexOf(p);
+          mPolls.remove(index);
+          mAdapter.notifyItemRemoved(index);
+          //mAdapter.notifyItemRangeChanged(index, mPolls.size() - index);
+          break;
+        }
+      }
+    }
+
     @Override
     public DashboardRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
       View inflatedView = LayoutInflater.from(viewGroup.getContext())
@@ -146,7 +181,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onBindViewHolder(final DashboardRecyclerAdapter.ViewHolder viewHolder, int i) {
-      final int position = viewHolder.getAdapterPosition();
 
       viewHolder.mTitle.setText(mPolls.get(i).getPollTitle());
       Date date = new Date(mPolls.get(i).getStartDate());
@@ -154,7 +188,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
       viewHolder.mSubtitle.setText(sdf.format(date));
       viewHolder.mCircle.setText(String.valueOf(i + 1));
 
-      if (position == mExpandedPosition) {
+      if (i == mExpandedPosition) {
         viewHolder.itemView.setActivated(true);
         viewHolder.mDeleteButton.setVisibility(View.VISIBLE);
       } else {
@@ -177,6 +211,18 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             mExpandedPosition = viewHolder.getAdapterPosition();
             notifyItemChanged(mExpandedPosition, EXPANDCOLLAPSE);
           } else {
+            mExpandedPosition = RecyclerView.NO_POSITION;
+          }
+        }
+      });
+
+      viewHolder.mDeleteButton.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          int position = viewHolder.getAdapterPosition();
+          UUID pollToRemove = mPolls.get(position).getUuid();
+          PersistenceUtils.deletePoll(getApplicationContext(), pollToRemove);
+          if (position == mExpandedPosition) {
             mExpandedPosition = RecyclerView.NO_POSITION;
           }
         }
@@ -223,9 +269,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
       @Override
       public void onClick(View v) {
-        Intent i = new Intent(v.getContext(), CommsActivity.class);
-        i.putExtra(Constants.EXTRA_POLL_ID, mPolls.get(getAdapterPosition()).getUuid());
-        v.getContext().startActivity(i);
+
       }
     }
   }
