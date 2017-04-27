@@ -114,6 +114,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
   class DashboardRecyclerAdapter extends RecyclerView.Adapter<DashboardRecyclerAdapter.ViewHolder> {
 
+    private static final int EXPANDCOLLAPSE = 0x1;
+
     private List<Poll> mPolls;
     private int mExpandedPosition = RecyclerView.NO_POSITION;
 
@@ -169,17 +171,31 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
           // There is an expanded item
           if (mExpandedPosition != RecyclerView.NO_POSITION) {
             int prev = mExpandedPosition;
-            notifyItemChanged(prev);
-
+            notifyItemChanged(prev, EXPANDCOLLAPSE);
           }
           if (mExpandedPosition != viewHolder.getAdapterPosition()) {
             mExpandedPosition = viewHolder.getAdapterPosition();
-            notifyItemChanged(mExpandedPosition);
+            notifyItemChanged(mExpandedPosition, EXPANDCOLLAPSE);
           } else {
             mExpandedPosition = RecyclerView.NO_POSITION;
           }
         }
       });
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
+      if (payloads.contains(EXPANDCOLLAPSE)) {
+        if (position == mExpandedPosition) {
+          holder.itemView.setActivated(true);
+          holder.mDeleteButton.setVisibility(View.VISIBLE);
+        } else {
+          holder.itemView.setActivated(false);
+          holder.mDeleteButton.setVisibility(View.GONE);
+        }
+      } else {
+        onBindViewHolder(holder, position);
+      }
     }
 
     @Override
