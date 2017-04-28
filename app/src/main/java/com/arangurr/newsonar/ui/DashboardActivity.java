@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -198,7 +199,17 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
       viewHolder.itemView.setOnClickListener(new OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
+          Intent commsIntent = new Intent(DashboardActivity.this, CommsActivity.class);
+          commsIntent.putExtra(Constants.EXTRA_POLL_ID,
+              mPolls.get(viewHolder.getAdapterPosition()).getUuid());
+          startActivity(commsIntent);
+        }
+      });
+
+      viewHolder.itemView.setOnLongClickListener(new OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
 
           //TransitionManager.beginDelayedTransition(mPollRecyclerView);
 
@@ -213,6 +224,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
           } else {
             mExpandedPosition = RecyclerView.NO_POSITION;
           }
+          return true;
         }
       });
 
@@ -249,7 +261,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
       return mPolls.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
       private TextView mTitle;
       private TextView mSubtitle;
@@ -263,13 +275,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         mSubtitle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_subtitle);
         mCircle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_circle);
         mDeleteButton = (ImageButton) itemView.findViewById(R.id.button_dashboard_item_delete);
-
-        //itemView.setOnClickListener(this);
-      }
-
-      @Override
-      public void onClick(View v) {
-
       }
     }
   }
