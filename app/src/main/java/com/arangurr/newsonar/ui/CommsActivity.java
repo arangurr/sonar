@@ -102,8 +102,6 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (mGoogleApiClient.isConnected()) {
           if (isChecked) {
-            mPublishOptions = mPublishOptionsBuilder.build();
-            mStatusProgressBar.setVisibility(View.VISIBLE);
             publish();
             subscribe();
             mDurationSpinner.setEnabled(false);
@@ -257,6 +255,9 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
     mActiveMessage = new Message(message.getBytes(StandardCharsets.UTF_8),  // Not documented
         Constants.NAMESPACE,                                                // Namespace
         Poll.TYPE);                                                         // Type of message
+
+    mPublishOptions = mPublishOptionsBuilder.build();
+    mStatusProgressBar.setVisibility(View.VISIBLE);
 
     Nearby.Messages.publish(mGoogleApiClient, mActiveMessage, mPublishOptions)
         .setResultCallback(new ResultCallback<Status>() {
