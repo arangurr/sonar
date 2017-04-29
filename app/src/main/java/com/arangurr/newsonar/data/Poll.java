@@ -113,6 +113,7 @@ public class Poll {
   }
 
   public void updateWithVote(Vote vote) {
+    // Has not voted. Simply add the vote
     if (!hasVoted(vote.getVoterIdPair())){
       for(QuestionSelection questionSelection : vote.getSelectionList()){
         for (Question q : mQuestionList){
@@ -121,6 +122,9 @@ public class Poll {
           }
         }
       }
+    } else {
+      // Has voted. // TODO: 28/04/201  7 update votes with new answers
+
     }
   }
 

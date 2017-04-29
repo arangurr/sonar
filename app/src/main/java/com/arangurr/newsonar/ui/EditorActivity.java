@@ -25,6 +25,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.transition.ArcMotion;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -103,6 +105,24 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         mPasswordEditText.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        mPoll.setPasswordProtected(isChecked);
+      }
+    });
+
+    mPasswordEditText.addTextChangedListener(new TextWatcher() {
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+        mPoll.setPassword(s.toString());
       }
     });
 
