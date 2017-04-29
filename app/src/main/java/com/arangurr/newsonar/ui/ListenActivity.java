@@ -122,7 +122,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
       @Override
       public void onItemClick(View view, Poll poll) {
         if (poll.isPasswordProtected()) {
-          launchBottomSheet(view, poll);
+          launchPasswordDialog(view, poll);
         } else {
           startVotingForPoll(poll);
         }
@@ -149,7 +149,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
     buildGoogleApiClient();
   }
 
-  private void launchBottomSheet(View view, final Poll p) {
+  private void launchPasswordDialog(View view, final Poll p) {
     final View dialogView = LayoutInflater.from(view.getContext())
         .inflate(R.layout.sheet_password, null);
 
