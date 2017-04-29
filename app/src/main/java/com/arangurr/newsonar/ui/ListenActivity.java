@@ -1,16 +1,25 @@
 package com.arangurr.newsonar.ui;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnShowListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ProgressBar;
@@ -112,10 +121,11 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
     mNearbyPollsAdapter.setItemClickListener(new OnItemClickListener() {
       @Override
       public void onItemClick(View view, Poll poll) {
-        String serialized = GsonUtils.serialize(poll);
-        Intent voteIntent = new Intent(view.getContext(), VotingActivity.class);
-        voteIntent.putExtra(Constants.EXTRA_SERIALIZED_POLL, serialized);
-        getActivity().startActivityForResult(voteIntent, Constants.VOTE_REQUEST);
+        if (poll.isPasswordProtected()) {
+          launchBottomSheet(view, poll);
+        } else {
+          startVotingForPoll(poll);
+        }
       }
     });
 
@@ -137,6 +147,52 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
     });
 
     buildGoogleApiClient();
+  }
+
+  private void launchBottomSheet(View view, final Poll p) {
+    final View dialogView = LayoutInflater.from(view.getContext())
+        .inflate(R.layout.sheet_password, null);
+
+    final AlertDialog passwordDialog = new AlertDialog.Builder(view.getContext())
+        .setTitle("Unlock poll")
+        .setView(dialogView)
+        .setPositiveButton(android.R.string.ok, null)
+        .setNegativeButton(android.R.string.cancel, null)
+        .create();
+
+    passwordDialog.setOnShowListener(new OnShowListener() {
+      @Override
+      public void onShow(DialogInterface dialog) {
+        Button positiveButton = passwordDialog.getButton(Dialog.BUTTON_POSITIVE);
+        positiveButton.setOnClickListener(new OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            TextInputLayout inputLayout =
+                (TextInputLayout) dialogView.findViewById(R.id.textinputlayout_sheet);
+            TextInputEditText inputEditText =
+                (TextInputEditText) dialogView.findViewById(R.id.textinputedittext_sheet);
+
+            if (inputEditText.getText().toString().equals(p.getPassword())) {
+              startVotingForPoll(p);
+              passwordDialog.dismiss();
+            } else {
+              inputLayout.setError("Wrong password");
+            }
+          }
+        });
+
+      }
+    });
+
+    passwordDialog.show();
+  }
+
+  private void startVotingForPoll(Poll poll) {
+    String serialized = GsonUtils.serialize(poll);
+    Intent voteIntent = new Intent(ListenActivity.this, VotingActivity.class);
+    voteIntent.putExtra(Constants.EXTRA_SERIALIZED_POLL, serialized);
+    getActivity().startActivityForResult(voteIntent, Constants.VOTE_REQUEST);
+
   }
 
   @Override

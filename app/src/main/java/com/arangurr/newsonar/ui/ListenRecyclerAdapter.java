@@ -5,7 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.Poll;
 import java.util.List;
 
@@ -54,7 +56,7 @@ public class ListenRecyclerAdapter extends RecyclerView.Adapter<ListenRecyclerAd
   public ListenRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
     View inflatedView = LayoutInflater.from(parent.getContext())
-        .inflate(android.R.layout.simple_list_item_2, parent, false);
+        .inflate(R.layout.item_listen, parent, false);
     return new ViewHolder(inflatedView);
   }
 
@@ -62,6 +64,12 @@ public class ListenRecyclerAdapter extends RecyclerView.Adapter<ListenRecyclerAd
   public void onBindViewHolder(ListenRecyclerAdapter.ViewHolder holder, int position) {
     holder.mText1.setText(mFoundPolls.get(position).getPollTitle());
     holder.mText2.setText(mFoundPolls.get(position).getOwnerName());
+
+    if (mFoundPolls.get(position).isPasswordProtected()) {
+      holder.mLock.setVisibility(View.VISIBLE);
+    } else {
+      holder.mLock.setVisibility(View.GONE);
+    }
   }
 
   @Override
@@ -78,12 +86,14 @@ public class ListenRecyclerAdapter extends RecyclerView.Adapter<ListenRecyclerAd
 
     private final TextView mText1;
     private final TextView mText2;
+    private final ImageView mLock;
 
     public ViewHolder(View itemView) {
       super(itemView);
 
-      mText1 = (TextView) itemView.findViewById(android.R.id.text1);
-      mText2 = (TextView) itemView.findViewById(android.R.id.text2);
+      mText1 = (TextView) itemView.findViewById(R.id.textview_listen_text1);
+      mText2 = (TextView) itemView.findViewById(R.id.textview_listen_text2);
+      mLock = (ImageView) itemView.findViewById(R.id.button_listen_item_lock);
 
       itemView.setOnClickListener(this);
     }
