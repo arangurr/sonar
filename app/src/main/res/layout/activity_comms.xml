@@ -19,6 +19,8 @@
     style="@style/TextAppearance.AppCompat.Body1"
     android:layout_width="0dp"
     android:layout_height="48dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp"
     android:layout_marginRight="8dp"
     android:gravity="center_vertical"
     android:text="Make poll available for..."
@@ -37,35 +39,46 @@
     app:layout_constraintRight_toLeftOf="@+id/toggle_comms"
     app:layout_constraintTop_toTopOf="@+id/textview_comms_duration"/>
 
-  <ProgressBar
-    android:id="@+id/progressbar_comms_status"
-    style="?android:attr/progressBarStyle"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+  <ViewSwitcher
+    android:id="@+id/viewswitcher_comms"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
     android:layout_marginTop="8dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:indeterminate="true"
-    android:visibility="gone"
+    android:layout_marginBottom="8dp"
+    app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/spinner_comms_duration"
-    tools:visibility="visible"/>
+    app:layout_constraintTop_toBottomOf="@+id/textview_comms_duration">
 
-  <TextView
-    android:id="@+id/textview_comms_status"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:gravity="center_vertical"
-    android:textAlignment="center"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/progressbar_comms_status"
-    tools:text="Publishing and listening..."/>
+    <android.support.v7.widget.RecyclerView
+      android:id="@+id/recyclerview_comms"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
+
+    <LinearLayout
+      android:id="@+id/linearlayout_comms_status"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:gravity="center">
+      <ProgressBar
+        android:id="@+id/progressbar_comms_status"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+      <TextView
+        android:id="@+id/textview_comms_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:gravity="center_vertical"
+        android:textAlignment="center"
+        tools:text="Publishing and listening..."/>
+    </LinearLayout>
+
+  </ViewSwitcher>
 
   <ToggleButton
     android:id="@+id/toggle_comms"

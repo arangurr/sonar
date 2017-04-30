@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import android.widget.ViewSwitcher;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.GsonUtils;
 import com.arangurr.newsonar.PersistenceUtils;
@@ -52,6 +53,8 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
   private TextView mStatusTextView;
   private ProgressBar mStatusProgressBar;
   private ToggleButton mToggleButton;
+  private ViewSwitcher mViewSwitcher;
+
 
   private Strategy.Builder mStrategyBuilder;
 
@@ -96,10 +99,20 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
     mStatusProgressBar = (ProgressBar) findViewById(R.id.progressbar_comms_status);
     mToggleButton = (ToggleButton) findViewById(R.id.toggle_comms);
     mDurationSpinner = (Spinner) findViewById(R.id.spinner_comms_duration);
+    mViewSwitcher = (ViewSwitcher) findViewById(R.id.viewswitcher_comms);
+
+    mViewSwitcher.setInAnimation(this, android.R.anim.fade_in);
+    mViewSwitcher.setOutAnimation(this, android.R.anim.fade_out);
 
     mToggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+          setStatusView();
+        } else {
+          setDetailsView();
+        }
+
         if (mGoogleApiClient.isConnected()) {
           if (isChecked) {
             publish();
@@ -131,7 +144,6 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
           mDurationTextView.setCompoundDrawablesWithIntrinsicBounds(
               0, 0, R.drawable.ic_warning_24dp, 0);
           mDurationTextView.setClickable(true);
-
         }
 
         mPublishOptionsBuilder.setStrategy(strategy);
@@ -171,6 +183,18 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
     };
 
     buildGoogleApiClient();
+  }
+
+  private void setStatusView() {
+    if (mViewSwitcher.getNextView().getId() == R.id.linearlayout_comms_status) {
+      mViewSwitcher.showNext();
+    }
+  }
+
+  private void setDetailsView() {
+    if (mViewSwitcher.getNextView().getId() == R.id.recyclerview_comms) {
+      mViewSwitcher.showNext();
+    }
   }
 
   @Override
