@@ -251,7 +251,7 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
   }
 
   private void publish() {
-    String message = GsonUtils.serialize(mCurrentPoll);
+    String message = GsonUtils.serializeExcluding(mCurrentPoll);
     mActiveMessage = new Message(message.getBytes(StandardCharsets.UTF_8),  // Not documented
         Constants.NAMESPACE,                                                // Namespace
         Poll.TYPE);                                                         // Type of message

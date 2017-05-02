@@ -1,5 +1,6 @@
 package com.arangurr.newsonar.data;
 
+import com.arangurr.newsonar.GsonUtils.Exclude;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -11,6 +12,7 @@ public class Option {
 
   private UUID mOptionUUID;
   private String mOptionName;
+  @Exclude
   private ArrayList<VoterIdPair> mVoterList;
 
   public Option(String title) {
@@ -40,7 +42,7 @@ public class Option {
     return false;
   }
 
-  public void addVoter(VoterIdPair voter){
+  public void addVoter(VoterIdPair voter) {
     mVoterList.add(voter);
   }
 }

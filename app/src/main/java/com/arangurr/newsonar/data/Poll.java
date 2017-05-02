@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import com.arangurr.newsonar.Constants;
+import com.arangurr.newsonar.GsonUtils.Exclude;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,7 @@ public class Poll {
   private boolean mPasswordProtected = false;
   private String mPassword;
   private ArrayList<Question> mQuestionList;
+  @Exclude
   private int mPrivacySetting = Constants.PRIVACY_PRIVATE;
 
   public Poll(Context context) {
@@ -114,10 +116,10 @@ public class Poll {
 
   public void updateWithVote(Vote vote) {
     // Has not voted. Simply add the vote
-    if (!hasVoted(vote.getVoterIdPair())){
-      for(QuestionSelection questionSelection : vote.getSelectionList()){
-        for (Question q : mQuestionList){
-          if (q.getUuid().equals(questionSelection.getQuestionId())){
+    if (!hasVoted(vote.getVoterIdPair())) {
+      for (QuestionSelection questionSelection : vote.getSelectionList()) {
+        for (Question q : mQuestionList) {
+          if (q.getUuid().equals(questionSelection.getQuestionId())) {
             q.addSelection(questionSelection, vote.getVoterIdPair());
           }
         }
