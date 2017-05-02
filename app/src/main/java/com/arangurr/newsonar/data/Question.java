@@ -1,5 +1,6 @@
 package com.arangurr.newsonar.data;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -9,9 +10,13 @@ import java.util.UUID;
 
 public class Question {
 
+  @SerializedName("id")
   private UUID mUuid;
+  @SerializedName("title")
   private String mTitle;
+  @SerializedName("ops")
   private ArrayList<Option> mOptions;
+  @SerializedName("qm")
   private int mQuestionMode;
 
   public Question() {

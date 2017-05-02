@@ -1,6 +1,7 @@
 package com.arangurr.newsonar.data;
 
 import com.arangurr.newsonar.GsonUtils.Exclude;
+import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -10,7 +11,9 @@ import java.util.UUID;
 
 public class Option {
 
+  @SerializedName("id")
   private UUID mOptionUUID;
+  @SerializedName("title")
   private String mOptionName;
   @Exclude
   private ArrayList<VoterIdPair> mVoterList;

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.GsonUtils.Exclude;
+import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,13 +19,21 @@ public class Poll {
 
   public static final String TYPE = "poll";
 
+  @SerializedName("date")
   private final long mStartDate;
+  @SerializedName("id")
   private final UUID mPollId;
+  @SerializedName("idown")
   private final String mOwnerId; // Not UUID, coming from Secure.ID
+  @SerializedName("namown")
   private String mOwnerName;
+  @SerializedName("title")
   private String mPollTitle;
+  @SerializedName("pwp")
   private boolean mPasswordProtected = false;
+  @SerializedName("pw")
   private String mPassword;
+  @SerializedName("qs")
   private ArrayList<Question> mQuestionList;
   @Exclude
   private int mPrivacySetting = Constants.PRIVACY_PRIVATE;

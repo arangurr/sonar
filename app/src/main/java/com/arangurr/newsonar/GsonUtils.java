@@ -34,7 +34,7 @@ public class GsonUtils {
     return fullGson.toJson(object);
   }
 
-  public static String serializeExcluding(Object object){
+  public static String serializeExcluding(Object object) {
     return excludeGson.toJson(object);
   }
 
