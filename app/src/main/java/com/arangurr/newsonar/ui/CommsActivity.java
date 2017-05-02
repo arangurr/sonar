@@ -7,8 +7,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -54,7 +58,8 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
   private ProgressBar mStatusProgressBar;
   private ToggleButton mToggleButton;
   private ViewSwitcher mViewSwitcher;
-
+  private RecyclerView mRecyclerView;
+  private SimpleRecyclerViewAdapter mAdapter;
 
   private Strategy.Builder mStrategyBuilder;
 
@@ -100,9 +105,14 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
     mToggleButton = (ToggleButton) findViewById(R.id.toggle_comms);
     mDurationSpinner = (Spinner) findViewById(R.id.spinner_comms_duration);
     mViewSwitcher = (ViewSwitcher) findViewById(R.id.viewswitcher_comms);
+    mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_comms);
 
     mViewSwitcher.setInAnimation(this, android.R.anim.fade_in);
     mViewSwitcher.setOutAnimation(this, android.R.anim.fade_out);
+
+    mAdapter = new SimpleRecyclerViewAdapter();
+    mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    mRecyclerView.setAdapter(mAdapter);
 
     mToggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
       @Override
@@ -343,5 +353,38 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
         .addConnectionCallbacks(this)
         .enableAutoManage(this, this)
         .build();
+  }
+
+  class SimpleRecyclerViewAdapter extends
+      RecyclerView.Adapter<SimpleRecyclerViewAdapter.SimpleHolder> {
+
+    @Override
+    public SimpleHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+      View inflatedView = LayoutInflater.from(parent.getContext())
+          .inflate(android.R.layout.simple_list_item_1, parent, false);
+      return new SimpleHolder(inflatedView);
+    }
+
+    @Override
+    public void onBindViewHolder(SimpleHolder holder, int position) {
+      holder.mText1.setText(String.valueOf(position));
+    }
+
+    @Override
+    public int getItemCount() {
+      return 10;
+    }
+
+
+    class SimpleHolder extends RecyclerView.ViewHolder {
+
+      private TextView mText1;
+
+      public SimpleHolder(View itemView) {
+        super(itemView);
+
+        mText1 = (TextView) itemView.findViewById(android.R.id.text1);
+      }
+    }
   }
 }
