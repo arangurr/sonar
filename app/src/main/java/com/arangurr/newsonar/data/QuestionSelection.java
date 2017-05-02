@@ -1,7 +1,6 @@
 package com.arangurr.newsonar.data;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * Created by Rodrigo on 21/04/2017.
@@ -9,29 +8,29 @@ import java.util.UUID;
 
 public class QuestionSelection {
 
-  private UUID mQuestionId;
-  private ArrayList<UUID> mSelections;
+  private int mQuestionId;
+  private ArrayList<Integer> mSelections;
 
-  public QuestionSelection(UUID questionId, ArrayList<UUID> options) {
+  public QuestionSelection(int questionId, ArrayList<Integer> options) {
     mQuestionId = questionId;
     mSelections = options;
   }
 
-  public QuestionSelection(UUID questionId, UUID optionUUID) {
+  public QuestionSelection(int questionId, Integer optionUUID) {
     mQuestionId = questionId;
     mSelections = new ArrayList<>();
     mSelections.add(optionUUID);
   }
 
-  public ArrayList<UUID> getSelections() {
+  public ArrayList<Integer> getSelections() {
     return mSelections;
   }
 
-  public UUID getQuestionId() {
+  public int getQuestionId() {
     return mQuestionId;
   }
 
-  public void swapSelection(ArrayList<UUID> options) {
+  public void swapSelection(ArrayList<Integer> options) {
     mSelections.clear();
     mSelections.addAll(options);
   }

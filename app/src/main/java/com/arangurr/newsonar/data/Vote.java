@@ -27,18 +27,18 @@ public class Vote {
   }
 
   public void attachResponse(Question question, Option... options) {
-    ArrayList<UUID> ids = new ArrayList<>(options.length);
+    ArrayList<Integer> ids = new ArrayList<>(options.length);
     for (Option o : options) {
-      ids.add(o.getOptionUUID());
+      ids.add(o.getKey());
     }
 
     for (QuestionSelection qs : mSelectionList) {
-      if (qs.getQuestionId().equals(question.getUuid())) {
+      if (qs.getQuestionId() == (question.getKey())) {
         qs.swapSelection(ids);
         return;
       }
     }
-    mSelectionList.add(new QuestionSelection(question.getUuid(), ids));
+    mSelectionList.add(new QuestionSelection(question.getKey(), ids));
   }
 
   public UUID getPollId() {

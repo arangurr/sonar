@@ -2,7 +2,6 @@ package com.arangurr.newsonar.data;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * Created by Rodrigo on 30/03/2017.
@@ -11,31 +10,28 @@ import java.util.UUID;
 public class Question {
 
   @SerializedName("id")
-  private UUID mUuid;
+  private int mKey;
   @SerializedName("title")
   private String mTitle;
   @SerializedName("ops")
   private ArrayList<Option> mOptions;
   @SerializedName("qm")
   private int mQuestionMode;
-
-  public Question() {
-    mUuid = UUID.randomUUID();
-    mOptions = new ArrayList<>();
-  }
-
   public Question(String title) {
-    mUuid = UUID.randomUUID();
-    mOptions = new ArrayList<>();
     mTitle = title;
+    mOptions = new ArrayList<>();
   }
 
   public ArrayList<Option> getAllOptions() {
     return mOptions;
   }
 
-  public UUID getUuid() {
-    return mUuid;
+  public int getKey() {
+    return mKey;
+  }
+
+  public void setKey(int key) {
+    mKey = key;
   }
 
   public String getTitle() {
@@ -46,8 +42,9 @@ public class Question {
     mTitle = title;
   }
 
-  public void addOption(Option option) {
-    mOptions.add(option);
+  public void addOption(String optionTitle) {
+    Option o = new Option(mOptions.size(), optionTitle);
+    mOptions.add(o);
   }
 
   public int getQuestionMode() {
@@ -73,8 +70,8 @@ public class Question {
 
   public void addSelection(QuestionSelection questionSelection, VoterIdPair voterIdPair) {
     for (Option option : mOptions) {
-      for (UUID optionIdInQS : questionSelection.getSelections()) {
-        if (optionIdInQS.equals(option.getOptionUUID())) {
+      for (Integer optionIdInQS : questionSelection.getSelections()) {
+        if (optionIdInQS.equals(option.getKey())) {
           option.addVoter(voterIdPair);
         }
       }

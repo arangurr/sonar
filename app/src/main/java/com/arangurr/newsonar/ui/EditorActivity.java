@@ -46,7 +46,6 @@ import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.BinaryQuestion;
-import com.arangurr.newsonar.data.Option;
 import com.arangurr.newsonar.data.Poll;
 import java.util.UUID;
 
@@ -271,8 +270,8 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
                 question = new BinaryQuestion(
                     title.getText().toString(),
                     Constants.BINARY_MODE_CUSTOM);
-                question.addOption(new Option(option1.getText().toString()));
-                question.addOption(new Option(option2.getText().toString()));
+                question.addOption(option1.getText().toString());
+                question.addOption(option2.getText().toString());
             }
             mPoll.addQuestion(question);
             mAdapter.notifyDataSetChanged();

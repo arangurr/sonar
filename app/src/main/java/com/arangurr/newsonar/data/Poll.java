@@ -96,6 +96,7 @@ public class Poll {
   }
 
   public void addQuestion(Question newQuestion) {
+    newQuestion.setKey(mQuestionList.size());
     mQuestionList.add(newQuestion);
   }
 
@@ -128,7 +129,7 @@ public class Poll {
     if (!hasVoted(vote.getVoterIdPair())) {
       for (QuestionSelection questionSelection : vote.getSelectionList()) {
         for (Question q : mQuestionList) {
-          if (q.getUuid().equals(questionSelection.getQuestionId())) {
+          if (q.getKey() == (questionSelection.getQuestionId())) {
             q.addSelection(questionSelection, vote.getVoterIdPair());
           }
         }

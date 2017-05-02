@@ -3,7 +3,6 @@ package com.arangurr.newsonar.data;
 import com.arangurr.newsonar.GsonUtils.Exclude;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * Created by Rodrigo on 01/04/2017.
@@ -12,14 +11,14 @@ import java.util.UUID;
 public class Option {
 
   @SerializedName("id")
-  private UUID mOptionUUID;
+  private final int mKey;
   @SerializedName("title")
   private String mOptionName;
   @Exclude
   private ArrayList<VoterIdPair> mVoterList;
 
-  public Option(String title) {
-    mOptionUUID = UUID.randomUUID();
+  public Option(int key, String title) {
+    mKey = key;
     mOptionName = title;
     mVoterList = new ArrayList<>();
   }
@@ -32,8 +31,8 @@ public class Option {
     return mOptionName;
   }
 
-  public UUID getOptionUUID() {
-    return mOptionUUID;
+  public int getKey() {
+    return mKey;
   }
 
   public boolean isVotedBy(VoterIdPair voter) {
