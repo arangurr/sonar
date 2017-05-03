@@ -21,6 +21,7 @@ import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.BinaryQuestion;
 import com.arangurr.newsonar.data.Poll;
+import com.arangurr.newsonar.data.Question;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -94,8 +95,13 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         startActivity(i);
         break;
       case R.id.fab_dashboard_add_debug:
-        Poll poll = new Poll(this, "Sample Poll Title");
-        poll.addQuestion(new BinaryQuestion("First Title", Constants.BINARY_MODE_TRUEFALSE));
+        Poll poll = new Poll(this, "Generic Poll Title");
+        poll.addQuestion(new BinaryQuestion("First Question", Constants.BINARY_MODE_TRUEFALSE));
+        poll.addQuestion(new BinaryQuestion("Second Question", Constants.BINARY_MODE_YESNO));
+        Question q = new BinaryQuestion("Third Question", Constants.BINARY_MODE_CUSTOM);
+        q.addOption("First Option");
+        q.addOption("Second Option");
+        poll.addQuestion(q);
         PersistenceUtils.storePollInPreferences(this, poll);
         break;
     }
