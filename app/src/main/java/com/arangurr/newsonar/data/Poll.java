@@ -125,19 +125,31 @@ public class Poll {
   }
 
   public void updateWithVote(Vote vote) {
-    // Has not voted. Simply add the vote
-    if (!hasVoted(vote.getVoterIdPair())) {
-      for (QuestionSelection questionSelection : vote.getSelectionList()) {
-        for (Question q : mQuestionList) {
-          if (q.getKey() == (questionSelection.getQuestionId())) {
-            q.addSelection(questionSelection, vote.getVoterIdPair());
-          }
+    if (hasVoted(vote.getVoterIdPair())) {
+      deleteUserResponse(vote.getVoterIdPair());
+    }
+    addUserResponse(vote);
+  }
+
+  private void addUserResponse(Vote vote) {
+    for (QuestionSelection questionSelection : vote.getSelectionList()) {
+      for (Question q : mQuestionList) {
+        if (q.getKey() == (questionSelection.getQuestionId())) {
+          q.addSelection(questionSelection, vote.getVoterIdPair());
         }
       }
-    } else {
-      // Has voted. // TODO: 28/04/201  7 update votes with new answers
-
     }
+  }
+
+  private void deleteUserResponse(VoterIdPair user) {
+    for (Question question : mQuestionList) {
+      Option o = question.getOptionVotedBy(user);
+      if (o != null) {
+        o.removeVoter(user);
+        return;
+      }
+    }
+    return;
   }
 
   private boolean hasVoted(VoterIdPair voter) {

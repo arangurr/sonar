@@ -47,4 +47,15 @@ public class Option {
   public void addVoter(VoterIdPair voter) {
     mVoterList.add(voter);
   }
+
+  public void removeVoter(VoterIdPair voter) {
+    if (!mVoterList.remove(voter)) {
+      for (VoterIdPair user : mVoterList) {
+        if (user.getUuid().equals(voter.getUuid())) {
+          mVoterList.remove(user);
+          return;
+        }
+      }
+    }
+  }
 }

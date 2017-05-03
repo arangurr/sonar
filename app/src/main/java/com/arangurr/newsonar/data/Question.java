@@ -17,6 +17,7 @@ public class Question {
   private ArrayList<Option> mOptions;
   @SerializedName("qm")
   private int mQuestionMode;
+
   public Question(String title) {
     mTitle = title;
     mOptions = new ArrayList<>();
@@ -66,6 +67,15 @@ public class Question {
       }
     }
     return false;
+  }
+
+  public Option getOptionVotedBy(VoterIdPair voter) {
+    for (Option option : mOptions) {
+      if (option.isVotedBy(voter)) {
+        return option;
+      }
+    }
+    return null;
   }
 
   public void addSelection(QuestionSelection questionSelection, VoterIdPair voterIdPair) {
