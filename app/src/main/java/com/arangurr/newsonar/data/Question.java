@@ -9,20 +9,15 @@ import java.util.UUID;
 
 public class Question {
 
+  private final int mQuestionMode;
+  protected ArrayList<Option> mOptions;
   private UUID mUuid;
   private String mTitle;
-  private ArrayList<Option> mOptions;
-  private int mQuestionMode;
 
-  public Question() {
+  public Question(String title, int mode) {
     mUuid = UUID.randomUUID();
-    mOptions = new ArrayList<>();
-  }
-
-  public Question(String title) {
-    mUuid = UUID.randomUUID();
-    mOptions = new ArrayList<>();
     mTitle = title;
+    mQuestionMode = mode;
   }
 
   public ArrayList<Option> getAllOptions() {
@@ -47,10 +42,6 @@ public class Question {
 
   public int getQuestionMode() {
     return mQuestionMode;
-  }
-
-  public void setQuestionMode(int questionMode) {
-    mQuestionMode = questionMode;
   }
 
   public Option getOption(int position) {
