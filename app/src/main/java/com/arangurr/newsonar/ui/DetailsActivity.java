@@ -46,10 +46,10 @@ import com.google.android.gms.nearby.messages.SubscribeOptions;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-public class CommsActivity extends AppCompatActivity implements View.OnClickListener,
+public class DetailsActivity extends AppCompatActivity implements View.OnClickListener,
     GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-  private static final String TAG = "CommsActivity";
+  private static final String TAG = "DetailsActivity";
 
   private GoogleApiClient mGoogleApiClient;
   private Message mActiveMessage;

@@ -200,7 +200,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
       viewHolder.itemView.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View view) {
-          Intent commsIntent = new Intent(DashboardActivity.this, CommsActivity.class);
+          Intent commsIntent = new Intent(DashboardActivity.this, DetailsActivity.class);
           commsIntent.putExtra(Constants.EXTRA_POLL_ID,
               mPolls.get(viewHolder.getAdapterPosition()).getUuid());
           startActivity(commsIntent);
