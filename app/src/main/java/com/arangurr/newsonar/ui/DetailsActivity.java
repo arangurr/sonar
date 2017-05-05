@@ -158,6 +158,7 @@ public class DetailsActivity extends AppCompatActivity implements
             mVoteCount++;
             mCounterTextView.setText(String.format("%d votes in this session", mVoteCount));
             PersistenceUtils.storePollInPreferences(getBaseContext(), mCurrentPoll);
+            mAdapter.notifyDataSetChanged();
           }
         } else {
           Log.d(TAG, "Could not update Poll with found Vote");
