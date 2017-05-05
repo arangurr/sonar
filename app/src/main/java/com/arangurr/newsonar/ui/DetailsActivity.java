@@ -94,10 +94,8 @@ public class DetailsActivity extends AppCompatActivity implements
     behavior.setBottomSheetCallback(new BottomSheetCallback() {
       @Override
       public void onStateChanged(@NonNull View bottomSheet, int newState) {
-        if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-          behavior.setState(mToggleButton.isChecked() ?
-              BottomSheetBehavior.STATE_EXPANDED :  // Prevent collapsing
-              BottomSheetBehavior.STATE_COLLAPSED); // Prevent expanding
+        if (newState == BottomSheetBehavior.STATE_DRAGGING && !mToggleButton.isChecked()) {
+          behavior.setState(BottomSheetBehavior.STATE_COLLAPSED); // Prevent expanding
         }
       }
 
