@@ -73,7 +73,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_comms);
+    setContentView(R.layout.activity_details);
 
     Bundle extras = getIntent().getExtras();
     if (extras != null) {
@@ -101,13 +101,13 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
           }
         });
 
-    mDurationTextView = (TextView) findViewById(R.id.textview_comms_duration);
-    mStatusTextView = (TextView) findViewById(R.id.textview_comms_status);
-    mStatusProgressBar = (ProgressBar) findViewById(R.id.progressbar_comms_status);
-    mToggleButton = (ToggleButton) findViewById(R.id.toggle_comms);
-    mDurationSpinner = (Spinner) findViewById(R.id.spinner_comms_duration);
-    mViewSwitcher = (ViewSwitcher) findViewById(R.id.viewswitcher_comms);
-    mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_comms);
+    mDurationTextView = (TextView) findViewById(R.id.textview_details_duration);
+    mStatusTextView = (TextView) findViewById(R.id.textview_details_status);
+    mStatusProgressBar = (ProgressBar) findViewById(R.id.progressbar_details_status);
+    mToggleButton = (ToggleButton) findViewById(R.id.toggle_details);
+    mDurationSpinner = (Spinner) findViewById(R.id.spinner_details_duration);
+    mViewSwitcher = (ViewSwitcher) findViewById(R.id.viewswitcher_details);
+    mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_details);
 
     mViewSwitcher.setInAnimation(this, android.R.anim.fade_in);
     mViewSwitcher.setOutAnimation(this, android.R.anim.fade_out);
@@ -198,13 +198,13 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
   }
 
   private void setStatusView() {
-    if (mViewSwitcher.getNextView().getId() == R.id.linearlayout_comms_status) {
+    if (mViewSwitcher.getNextView().getId() == R.id.linearlayout_details_status) {
       mViewSwitcher.showNext();
     }
   }
 
   private void setDetailsView() {
-    if (mViewSwitcher.getNextView().getId() == R.id.recyclerview_comms) {
+    if (mViewSwitcher.getNextView().getId() == R.id.recyclerview_details) {
       mViewSwitcher.showNext();
       mAdapter.notifyDataSetChanged();
     }
@@ -213,7 +213,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
   @Override
   public void onClick(View v) {
     switch (v.getId()) {
-      case R.id.textview_comms_duration:
+      case R.id.textview_details_duration:
         Snackbar snackbar = Snackbar.make(v, "Longer times drain battery faster. " +
             "Please use accordingly.", LENGTH_LONG);
         snackbar.show();
