@@ -238,7 +238,7 @@ public class DetailsActivity extends AppCompatActivity implements
 
     PublishOptions publishOptions = new PublishOptions.Builder()
         .setStrategy(new Strategy.Builder()
-            .setTtlSeconds(Constants.TTL_10MIN)
+            .setTtlSeconds(Constants.TTL_10MIN + 10)  // Wait just a little bit longer
             .setDistanceType(Strategy.DISTANCE_TYPE_EARSHOT)
             .build())
         .setCallback(new PublishCallback() {
@@ -258,7 +258,7 @@ public class DetailsActivity extends AppCompatActivity implements
           public void onResult(@NonNull Status status) {
             if (status.isSuccess()) {
               Log.d(TAG, "Published successfully");
-              mStatusTextView.append("\nPoll is available");
+              mStatusTextView.setText("Poll is available");
             } else {
               Log.d(TAG, "Couldn't publish due to status = " + status);
             }
