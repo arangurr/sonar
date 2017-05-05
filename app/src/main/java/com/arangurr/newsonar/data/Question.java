@@ -14,13 +14,13 @@ public abstract class Question {
   @SerializedName("title")
   private String mTitle;
   @SerializedName("ops")
-  private ArrayList<Option> mOptions;
+  protected ArrayList<Option> mOptions;
   @SerializedName("qm")
   private int mQuestionMode;
 
-  public Question(String title) {
+  public Question(String title, int mode) {
     mTitle = title;
-    mOptions = new ArrayList<>();
+    mQuestionMode = mode;
   }
 
   public ArrayList<Option> getAllOptions() {
@@ -50,10 +50,6 @@ public abstract class Question {
 
   public int getQuestionMode() {
     return mQuestionMode;
-  }
-
-  public void setQuestionMode(int questionMode) {
-    mQuestionMode = questionMode;
   }
 
   public Option getOption(int position) {

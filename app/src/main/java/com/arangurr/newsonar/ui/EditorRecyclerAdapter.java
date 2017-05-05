@@ -43,7 +43,7 @@ public class EditorRecyclerAdapter extends
             .inflate(R.layout.item_editor_title, parent, false));
       case TYPE_BINARY:
         return new BinaryViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.item_editor_binary, parent, false));
+            .inflate(R.layout.item_card_binary, parent, false));
     }
     return null;
   }

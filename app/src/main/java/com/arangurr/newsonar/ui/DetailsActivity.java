@@ -7,8 +7,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -17,11 +22,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import android.widget.ViewSwitcher;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.GsonUtils;
 import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.Poll;
+import com.arangurr.newsonar.data.Question;
 import com.arangurr.newsonar.data.Vote;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -39,10 +46,10 @@ import com.google.android.gms.nearby.messages.SubscribeOptions;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-public class CommsActivity extends AppCompatActivity implements View.OnClickListener,
+public class DetailsActivity extends AppCompatActivity implements View.OnClickListener,
     GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-  private static final String TAG = "CommsActivity";
+  private static final String TAG = "DetailsActivity";
 
   private GoogleApiClient mGoogleApiClient;
   private Message mActiveMessage;
@@ -52,6 +59,9 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
   private TextView mStatusTextView;
   private ProgressBar mStatusProgressBar;
   private ToggleButton mToggleButton;
+  private ViewSwitcher mViewSwitcher;
+  private RecyclerView mRecyclerView;
+  private SimpleRecyclerViewAdapter mAdapter;
 
   private Strategy.Builder mStrategyBuilder;
 
@@ -96,10 +106,25 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
     mStatusProgressBar = (ProgressBar) findViewById(R.id.progressbar_comms_status);
     mToggleButton = (ToggleButton) findViewById(R.id.toggle_comms);
     mDurationSpinner = (Spinner) findViewById(R.id.spinner_comms_duration);
+    mViewSwitcher = (ViewSwitcher) findViewById(R.id.viewswitcher_comms);
+    mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_comms);
+
+    mViewSwitcher.setInAnimation(this, android.R.anim.fade_in);
+    mViewSwitcher.setOutAnimation(this, android.R.anim.fade_out);
+
+    mAdapter = new SimpleRecyclerViewAdapter();
+    mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    mRecyclerView.setAdapter(mAdapter);
 
     mToggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+          setStatusView();
+        } else {
+          setDetailsView();
+        }
+
         if (mGoogleApiClient.isConnected()) {
           if (isChecked) {
             publish();
@@ -131,7 +156,6 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
           mDurationTextView.setCompoundDrawablesWithIntrinsicBounds(
               0, 0, R.drawable.ic_warning_24dp, 0);
           mDurationTextView.setClickable(true);
-
         }
 
         mPublishOptionsBuilder.setStrategy(strategy);
@@ -171,6 +195,19 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
     };
 
     buildGoogleApiClient();
+  }
+
+  private void setStatusView() {
+    if (mViewSwitcher.getNextView().getId() == R.id.linearlayout_comms_status) {
+      mViewSwitcher.showNext();
+    }
+  }
+
+  private void setDetailsView() {
+    if (mViewSwitcher.getNextView().getId() == R.id.recyclerview_comms) {
+      mViewSwitcher.showNext();
+      mAdapter.notifyDataSetChanged();
+    }
   }
 
   @Override
@@ -319,5 +356,96 @@ public class CommsActivity extends AppCompatActivity implements View.OnClickList
         .addConnectionCallbacks(this)
         .enableAutoManage(this, this)
         .build();
+  }
+
+  class SimpleRecyclerViewAdapter extends
+      RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    @Override
+    public int getItemViewType(int position) {
+      Question q = mCurrentPoll.getQuestionList().get(position);
+      switch (q.getQuestionMode()) {
+        case Constants.BINARY_MODE_CUSTOM:
+        case Constants.BINARY_MODE_TRUEFALSE:
+        case Constants.BINARY_MODE_UPDOWNVOTE:
+        case Constants.BINARY_MODE_YESNO:
+          return R.layout.item_card_binary;
+      }
+      return android.R.layout.simple_list_item_1;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+      View inflatedView;
+      switch (viewType) {
+        case R.layout.item_card_binary:
+          inflatedView = LayoutInflater.from(parent.getContext())
+              .inflate(R.layout.item_card_binary, parent, false);
+          return new BinaryHolder(inflatedView);
+//        case R.layout.item_card_multi:
+//        case R.layout.item_card_rate:
+      }
+      inflatedView = LayoutInflater.from(parent.getContext())
+          .inflate(android.R.layout.simple_list_item_1, parent, false);
+      return new SimpleHolder(inflatedView);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+      switch (getItemViewType(position)) {
+        case R.layout.item_card_binary:
+          bindBinary((BinaryHolder) holder, position);
+          break;
+        default:
+          ((SimpleHolder) holder).mText1.setText(String.valueOf(position));
+      }
+    }
+
+    @Override
+    public int getItemCount() {
+      return mCurrentPoll.getQuestionList().size();
+    }
+
+    private void bindBinary(BinaryHolder holder, int position) {
+      Question q = mCurrentPoll.getQuestionList().get(position);
+      holder.header.setText(q.getTitle());
+      holder.headerNumber.setText(String.valueOf(position));
+      holder.option1.setText(String.format(
+          "%1$s, (%2$d)",
+          q.getOption(0).getOptionName(),
+          q.getOption(0).getNumberOfVotes()));
+      holder.option2.setText(String.format(
+          "%1$s, (%2$d)",
+          q.getOption(1).getOptionName(),
+          q.getOption(1).getNumberOfVotes()));
+    }
+
+    class BinaryHolder extends RecyclerView.ViewHolder {
+
+      TextView headerNumber;
+      TextView header;
+      TextView option1;
+      TextView option2;
+
+      public BinaryHolder(View itemView) {
+        super(itemView);
+
+        headerNumber = (TextView) itemView.findViewById(R.id.textview_editor_item_header_counter);
+        header = (TextView) itemView.findViewById(R.id.textview_editor_item_header_title);
+        option1 = (TextView) itemView.findViewById(R.id.textview_editor_item_binary_option1);
+        option2 = (TextView) itemView.findViewById(R.id.textview_editor_item_binary_option2);
+      }
+    }
+
+    class SimpleHolder extends RecyclerView.ViewHolder {
+
+      private TextView mText1;
+
+      public SimpleHolder(View itemView) {
+        super(itemView);
+
+        mText1 = (TextView) itemView.findViewById(android.R.id.text1);
+      }
+    }
   }
 }

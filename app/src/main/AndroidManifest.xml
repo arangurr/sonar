@@ -33,7 +33,7 @@
         android:name="android.support.PARENT_ACTIVITY"
         android:value="com.arangurr.newsonar.ui.DashboardActivity"/>
     </activity>
-    <activity android:name=".ui.CommsActivity">
+    <activity android:name=".ui.DetailsActivity">
     </activity>
     <activity android:name=".ui.ListenActivity">
     </activity>

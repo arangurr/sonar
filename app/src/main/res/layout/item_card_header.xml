@@ -1,7 +1,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  tools:showIn="@layout/item_editor_binary">
+  tools:showIn="@layout/item_card_binary">
 
   <TextView
     android:id="@+id/textview_editor_item_header_title"
