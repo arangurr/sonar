@@ -224,7 +224,14 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         finish();
         return true;
       case R.id.action_done:
-        PersistenceUtils.storePollInPreferences(this, mPoll);
+        if (mPoll.getQuestionList().size() == 0) {
+          PersistenceUtils.deletePoll(this, mPoll);
+        } else {
+          if (mPoll.getPollTitle() == null) {
+            mPoll.setPollTitle("Untitled poll");
+          }
+          PersistenceUtils.storePollInPreferences(this, mPoll);
+        }
         finish();
       default:
         return super.onOptionsItemSelected(item);

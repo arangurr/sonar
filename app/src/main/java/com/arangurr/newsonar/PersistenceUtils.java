@@ -57,10 +57,6 @@ public class PersistenceUtils {
     return array;
   }
 
-  public static void deletePoll(Context context, UUID uuid) {
-    deletePoll(context, uuid.toString());
-  }
-
   public static void deletePoll(Context context, String uuid) {
     SharedPreferences.Editor editor = context
         .getSharedPreferences(Constants.PREFS_POLLS, Context.MODE_PRIVATE)
@@ -68,6 +64,14 @@ public class PersistenceUtils {
 
     editor.remove(uuid);
     editor.apply();
+  }
+
+  public static void deletePoll(Context context, UUID uuid) {
+    deletePoll(context, uuid.toString());
+  }
+
+  public static void deletePoll(Context context, Poll poll) {
+    deletePoll(context, poll.getUuid());
   }
 
   public static void storeVoteInPreferences(Context context, Vote vote) {
