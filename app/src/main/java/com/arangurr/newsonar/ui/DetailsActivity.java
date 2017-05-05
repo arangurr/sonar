@@ -1,11 +1,11 @@
 package com.arangurr.newsonar.ui;
 
-import static android.support.design.widget.Snackbar.LENGTH_LONG;
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetBehavior.BottomSheetCallback;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,15 +14,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import android.widget.ViewSwitcher;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.GsonUtils;
 import com.arangurr.newsonar.PersistenceUtils;
@@ -46,7 +43,7 @@ import com.google.android.gms.nearby.messages.SubscribeOptions;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-public class DetailsActivity extends AppCompatActivity implements View.OnClickListener,
+public class DetailsActivity extends AppCompatActivity implements
     GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
   private static final String TAG = "DetailsActivity";
@@ -55,21 +52,17 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
   private Message mActiveMessage;
   private MessageListener mMessageListener;
 
-  private TextView mDurationTextView;
   private TextView mStatusTextView;
   private ProgressBar mStatusProgressBar;
   private ToggleButton mToggleButton;
-  private ViewSwitcher mViewSwitcher;
+  //private ViewSwitcher mViewSwitcher;
   private RecyclerView mRecyclerView;
+  private ConstraintLayout mBottomSheet;
+
   private SimpleRecyclerViewAdapter mAdapter;
 
-  private Strategy.Builder mStrategyBuilder;
-
   private PublishOptions.Builder mPublishOptionsBuilder;
-  private PublishOptions mPublishOptions;
-
   private Poll mCurrentPoll;
-  private Spinner mDurationSpinner;
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -86,32 +79,27 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
 
     getSupportActionBar().setTitle(mCurrentPoll.getPollTitle());
 
-    mStrategyBuilder = new Strategy.Builder()
-        .setDistanceType(Strategy.DISTANCE_TYPE_EARSHOT)
-        .setDiscoveryMode(Strategy.DISCOVERY_MODE_DEFAULT);
-
-    mPublishOptionsBuilder = new PublishOptions.Builder()
-        .setCallback(new PublishCallback() {
-          @Override
-          public void onExpired() {
-            Log.d(TAG, "Publish expired");
-            mStatusTextView
-                .setText("Poll no longer available.\nWaiting for votes a little longer...");
-            super.onExpired();
-          }
-        });
-
-    mDurationTextView = (TextView) findViewById(R.id.textview_details_duration);
     mStatusTextView = (TextView) findViewById(R.id.textview_details_status);
     mStatusProgressBar = (ProgressBar) findViewById(R.id.progressbar_details_status);
     mToggleButton = (ToggleButton) findViewById(R.id.toggle_details);
-    mDurationSpinner = (Spinner) findViewById(R.id.spinner_details_duration);
-    mViewSwitcher = (ViewSwitcher) findViewById(R.id.viewswitcher_details);
     mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_details);
+    mBottomSheet = (ConstraintLayout) findViewById(R.id.bottomsheet_details);
 
-    mViewSwitcher.setInAnimation(this, android.R.anim.fade_in);
-    mViewSwitcher.setOutAnimation(this, android.R.anim.fade_out);
+    final BottomSheetBehavior behavior = BottomSheetBehavior.from(mBottomSheet);
+    behavior.setBottomSheetCallback(new BottomSheetCallback() {
+      @Override
+      public void onStateChanged(@NonNull View bottomSheet, int newState) {
+        if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+          behavior.setState(mToggleButton.isChecked() ?
+              BottomSheetBehavior.STATE_EXPANDED :  // Prevent collapsing
+              BottomSheetBehavior.STATE_COLLAPSED); // Prevent expanding
+        }
+      }
 
+      @Override
+      public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+      }
+    });
     mAdapter = new SimpleRecyclerViewAdapter();
     mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     mRecyclerView.setAdapter(mAdapter);
@@ -120,54 +108,24 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
-          setStatusView();
+          behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+          //setStatusView();
         } else {
-          setDetailsView();
+          behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+          //setDetailsView();
         }
 
         if (mGoogleApiClient.isConnected()) {
           if (isChecked) {
             publish();
             subscribe();
-            mDurationSpinner.setEnabled(false);
           } else {
             unpublish();
             unsubscribe();
-            mDurationSpinner.setEnabled(true);
           }
         }
       }
     });
-
-    mDurationTextView.setOnClickListener(this);
-
-    mDurationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override
-      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Strategy strategy;
-        if (position < 6) {
-          int[] ttlValues = getResources()
-              .getIntArray(R.array.array_publish_durations_values);
-          strategy = mStrategyBuilder.setTtlSeconds(ttlValues[position]).build();
-          mDurationTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-          mDurationTextView.setClickable(false);
-        } else {
-          strategy = mStrategyBuilder.setTtlSeconds(Strategy.TTL_SECONDS_MAX).build();
-          mDurationTextView.setCompoundDrawablesWithIntrinsicBounds(
-              0, 0, R.drawable.ic_warning_24dp, 0);
-          mDurationTextView.setClickable(true);
-        }
-
-        mPublishOptionsBuilder.setStrategy(strategy);
-      }
-
-      @Override
-      public void onNothingSelected(AdapterView<?> parent) {
-
-      }
-    });
-
-    mDurationSpinner.setSelection(3);
 
     mMessageListener = new MessageListener() {
       @Override
@@ -197,7 +155,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     buildGoogleApiClient();
   }
 
-  private void setStatusView() {
+  /*private void setStatusView() {
     if (mViewSwitcher.getNextView().getId() == R.id.linearlayout_details_status) {
       mViewSwitcher.showNext();
     }
@@ -209,21 +167,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
       mAdapter.notifyDataSetChanged();
     }
   }
-
-  @Override
-  public void onClick(View v) {
-    switch (v.getId()) {
-      case R.id.textview_details_duration:
-        Snackbar snackbar = Snackbar.make(v, "Longer times drain battery faster. " +
-            "Please use accordingly.", LENGTH_LONG);
-        snackbar.show();
-        break;
-
-      default:
-        // Do nothing
-    }
-
-  }
+*/
 
   @Override
   public void onConnected(@Nullable Bundle bundle) {
@@ -245,14 +189,10 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
   }
 
   private void subscribe() {
-    // Subscribe for 30 seconds more than the currently set publication
-    int[] ttlValues = getResources()
-        .getIntArray(R.array.array_publish_durations_values);
-    int currentTtl = ttlValues[mDurationSpinner.getSelectedItemPosition()];
 
     SubscribeOptions subscribeOptions = new SubscribeOptions.Builder()
         .setStrategy(new Strategy.Builder()
-            .setTtlSeconds(currentTtl + Constants.TTL_30SEC)
+            .setTtlSeconds(Constants.TTL_10MIN)
             .setDistanceType(Strategy.DISTANCE_TYPE_EARSHOT)
             .build())
         .setCallback(new SubscribeCallback() {
@@ -293,10 +233,19 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         Constants.NAMESPACE,                                                // Namespace
         Poll.TYPE);                                                         // Type of message
 
-    mPublishOptions = mPublishOptionsBuilder.build();
-    mStatusProgressBar.setVisibility(View.VISIBLE);
+    PublishOptions publishOptions = new PublishOptions.Builder()
+        .setCallback(new PublishCallback() {
+          @Override
+          public void onExpired() {
+            Log.d(TAG, "Publish expired");
+            mStatusTextView
+                .setText("Poll no longer available.\nWaiting for votes a little longer...");
+            super.onExpired();
+          }
+        })
+        .build();
 
-    Nearby.Messages.publish(mGoogleApiClient, mActiveMessage, mPublishOptions)
+    Nearby.Messages.publish(mGoogleApiClient, mActiveMessage, publishOptions)
         .setResultCallback(new ResultCallback<Status>() {
           @Override
           public void onResult(@NonNull Status status) {
@@ -309,6 +258,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
           }
         });
     Log.d(TAG, "Trying to publish");
+    mStatusProgressBar.setVisibility(View.VISIBLE);
     mStatusTextView.setText("Trying to make poll available");
   }
 
