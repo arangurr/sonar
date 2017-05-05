@@ -188,7 +188,6 @@ public class DetailsActivity extends AppCompatActivity implements
   }
 
   private void subscribe() {
-
     SubscribeOptions subscribeOptions = new SubscribeOptions.Builder()
         .setStrategy(new Strategy.Builder()
             .setTtlSeconds(Constants.TTL_10MIN)
@@ -199,9 +198,14 @@ public class DetailsActivity extends AppCompatActivity implements
           public void onExpired() {
             super.onExpired();
             Log.d(TAG, "Subscription expired");
-            mToggleButton.setChecked(false);
-            mStatusProgressBar.setVisibility(View.GONE);
-            mStatusTextView.setText("");
+            mStatusProgressBar.setVisibility(View.INVISIBLE);
+            mStatusTextView.setText("Stopping...");
+            mToggleButton.postDelayed(new Runnable() {
+              @Override
+              public void run() {
+                mToggleButton.setChecked(false);
+              }
+            }, Constants.DELAY_2SEC);
           }
         })
         .setFilter(new MessageFilter.Builder()
@@ -233,6 +237,10 @@ public class DetailsActivity extends AppCompatActivity implements
         Poll.TYPE);                                                         // Type of message
 
     PublishOptions publishOptions = new PublishOptions.Builder()
+        .setStrategy(new Strategy.Builder()
+            .setTtlSeconds(Constants.TTL_10MIN)
+            .setDistanceType(Strategy.DISTANCE_TYPE_EARSHOT)
+            .build())
         .setCallback(new PublishCallback() {
           @Override
           public void onExpired() {
@@ -270,7 +278,7 @@ public class DetailsActivity extends AppCompatActivity implements
             if (status.isSuccess()) {
               Log.d(TAG, "Unsubscribed successfully");
               mStatusTextView.setText("");
-              mStatusProgressBar.setVisibility(View.GONE);
+              mStatusProgressBar.setVisibility(View.INVISIBLE);
             } else {
               Log.d(TAG, "Could not unsubscribe due to status " + status);
             }
