@@ -59,12 +59,13 @@ public class DetailsActivity extends AppCompatActivity implements
   private ToggleButton mToggleButton;
   //private ViewSwitcher mViewSwitcher;
   private RecyclerView mRecyclerView;
+  private TextView mCounterTextView;
+  private Chronometer mChronometer;
 
   private SimpleRecyclerViewAdapter mAdapter;
 
-  private PublishOptions.Builder mPublishOptionsBuilder;
   private Poll mCurrentPoll;
-  private Chronometer mChronometer;
+  private int mVoteCount;
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -87,6 +88,7 @@ public class DetailsActivity extends AppCompatActivity implements
     mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_details);
     LinearLayout bottomSheet = (LinearLayout) findViewById(R.id.bottomsheet_details);
     mChronometer = (Chronometer) findViewById(R.id.chronometer_details);
+    mCounterTextView = (TextView) findViewById(R.id.textview_details_counter);
 
     final BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
     behavior.setBottomSheetCallback(new BottomSheetCallback() {
@@ -111,6 +113,7 @@ public class DetailsActivity extends AppCompatActivity implements
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
+          mVoteCount = 0;
           mChronometer.setBase(SystemClock.elapsedRealtime());
           mChronometer.start();
           behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -148,10 +151,12 @@ public class DetailsActivity extends AppCompatActivity implements
                     String.format("Got vote from %s", v.getVoterIdPair().getUserName()));
                 break;
               case Constants.PRIVACY_SECRET:
-                mStatusTextView.setText("Got another vote");
+                // Do nothing
                 break;
             }
             mCurrentPoll.updateWithVote(v);
+            mVoteCount++;
+            mCounterTextView.setText(String.format("%d votes in this session", mVoteCount));
             PersistenceUtils.storePollInPreferences(getBaseContext(), mCurrentPoll);
           }
         } else {
