@@ -1,6 +1,7 @@
 package com.arangurr.newsonar.ui;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
@@ -62,6 +64,7 @@ public class DetailsActivity extends AppCompatActivity implements
 
   private PublishOptions.Builder mPublishOptionsBuilder;
   private Poll mCurrentPoll;
+  private Chronometer mChronometer;
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -83,6 +86,7 @@ public class DetailsActivity extends AppCompatActivity implements
     mToggleButton = (ToggleButton) findViewById(R.id.toggle_details);
     mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_details);
     LinearLayout bottomSheet = (LinearLayout) findViewById(R.id.bottomsheet_details);
+    mChronometer = (Chronometer) findViewById(R.id.chronometer_details);
 
     final BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
     behavior.setBottomSheetCallback(new BottomSheetCallback() {
@@ -107,6 +111,8 @@ public class DetailsActivity extends AppCompatActivity implements
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
+          mChronometer.setBase(SystemClock.elapsedRealtime());
+          mChronometer.start();
           behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
           //setStatusView();
         } else {
@@ -135,6 +141,16 @@ public class DetailsActivity extends AppCompatActivity implements
         if (v != null) {
           Log.d(TAG, "Trying to update Poll with found Vote");
           if (v.getPollId().equals(mCurrentPoll.getUuid())) {
+            switch (mCurrentPoll.getPrivacySetting()) {
+              case Constants.PRIVACY_PUBLIC:
+              case Constants.PRIVACY_PRIVATE:
+                mStatusTextView.setText(
+                    String.format("Got vote from %s", v.getVoterIdPair().getUserName()));
+                break;
+              case Constants.PRIVACY_SECRET:
+                mStatusTextView.setText("Got another vote");
+                break;
+            }
             mCurrentPoll.updateWithVote(v);
             PersistenceUtils.storePollInPreferences(getBaseContext(), mCurrentPoll);
           }

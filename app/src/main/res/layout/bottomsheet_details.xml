@@ -40,6 +40,38 @@
     android:layout_gravity="top"
     android:indeterminate="true"/>
 
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <TextView
+      android:id="@+id/textView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:padding="8dp"
+      android:drawablePadding="8dp"
+      android:drawableTint="@color/colorPrimaryDark"
+      android:drawableTop="@drawable/ic_person_24dp"
+      android:text="N votes in this session"
+      android:textAlignment="center"
+      android:textAppearance="@android:style/TextAppearance.Material.Medium"
+      android:textColor="@color/colorPrimaryDark"
+      />
+    <Chronometer
+      android:id="@+id/chronometer_details"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:padding="8dp"
+      android:drawablePadding="8dp"
+      android:drawableTint="@color/colorPrimaryDark"
+      android:drawableTop="@drawable/ic_timer_24dp"
+      android:format="Elapsed time: %s"
+      android:textAlignment="center"
+      android:textAppearance="@android:style/TextAppearance.Material.Medium"
+      android:textColor="@color/colorPrimaryDark"/>
+  </LinearLayout>
   <TextView
     android:id="@+id/textview_details_status"
     android:layout_width="match_parent"
