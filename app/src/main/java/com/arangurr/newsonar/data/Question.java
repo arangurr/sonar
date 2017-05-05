@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Created by Rodrigo on 30/03/2017.
  */
 
-public abstract class Question {
+public class Question {
 
   @SerializedName("id")
   private int mKey;
