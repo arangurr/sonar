@@ -3,7 +3,6 @@ package com.arangurr.newsonar.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetBehavior.BottomSheetCallback;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,7 +57,6 @@ public class DetailsActivity extends AppCompatActivity implements
   private ToggleButton mToggleButton;
   //private ViewSwitcher mViewSwitcher;
   private RecyclerView mRecyclerView;
-  private ConstraintLayout mBottomSheet;
 
   private SimpleRecyclerViewAdapter mAdapter;
 
@@ -83,9 +82,9 @@ public class DetailsActivity extends AppCompatActivity implements
     mStatusProgressBar = (ProgressBar) findViewById(R.id.progressbar_details_status);
     mToggleButton = (ToggleButton) findViewById(R.id.toggle_details);
     mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_details);
-    mBottomSheet = (ConstraintLayout) findViewById(R.id.bottomsheet_details);
+    LinearLayout bottomSheet = (LinearLayout) findViewById(R.id.bottomsheet_details);
 
-    final BottomSheetBehavior behavior = BottomSheetBehavior.from(mBottomSheet);
+    final BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
     behavior.setBottomSheetCallback(new BottomSheetCallback() {
       @Override
       public void onStateChanged(@NonNull View bottomSheet, int newState) {
