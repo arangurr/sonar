@@ -187,6 +187,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
   }
 
   private void startVotingForPoll(Poll poll) {
+    PersistenceUtils.deleteVote(this);
     String serialized = GsonUtils.serialize(poll);
     Intent voteIntent = new Intent(ListenActivity.this, VotingActivity.class);
     voteIntent.putExtra(Constants.EXTRA_SERIALIZED_POLL, serialized);
