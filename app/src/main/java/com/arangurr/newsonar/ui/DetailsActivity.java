@@ -49,6 +49,9 @@ public class DetailsActivity extends AppCompatActivity implements
     GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
   private static final String TAG = "DetailsActivity";
+  private static final String EXTRA_COUNTER = "counter";
+  private static final String EXTRA_CHRONO = "chrono";
+
 
   private GoogleApiClient mGoogleApiClient;
   private Message mActiveMessage;
@@ -174,19 +177,20 @@ public class DetailsActivity extends AppCompatActivity implements
     buildGoogleApiClient();
   }
 
-  /*private void setStatusView() {
-    if (mViewSwitcher.getNextView().getId() == R.id.linearlayout_details_status) {
-      mViewSwitcher.showNext();
-    }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    outState.putInt(EXTRA_COUNTER, mVoteCount);
+    outState.putLong(EXTRA_CHRONO, mChronometer.getBase());
+    super.onSaveInstanceState(outState);
   }
 
-  private void setDetailsView() {
-    if (mViewSwitcher.getNextView().getId() == R.id.recyclerview_details) {
-      mViewSwitcher.showNext();
-      mAdapter.notifyDataSetChanged();
-    }
+  @Override
+  protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+    mVoteCount = savedInstanceState.getInt(EXTRA_COUNTER);
+    mChronometer.setBase(savedInstanceState.getLong(EXTRA_CHRONO));
   }
-*/
 
   @Override
   public void onConnected(@Nullable Bundle bundle) {
