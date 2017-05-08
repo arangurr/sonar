@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.arangurr.newsonar.R;
+import com.arangurr.newsonar.data.Option;
 import com.arangurr.newsonar.data.Poll;
 import com.arangurr.newsonar.data.Question;
 import java.util.List;
@@ -22,10 +23,7 @@ public class EditorRecyclerAdapter extends
     RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
   private static final int TYPE_TITLE = 1;
-  private static final int TYPE_BINARY = 2;
-  private static final int TYPE_MULTI = 3;
-  private static final int TYPE_RATE = 4;
-
+  private static final int TYPE_QUESTION = 2;
   private Poll mPoll;
 
   private List<Question> mItems;
@@ -41,9 +39,9 @@ public class EditorRecyclerAdapter extends
       case TYPE_TITLE:
         return new TitleHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.item_editor_title, parent, false));
-      case TYPE_BINARY:
-        return new BinaryViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.item_card_binary, parent, false));
+      case TYPE_QUESTION:
+        return new SimpleHolder(LayoutInflater.from(parent.getContext())
+            .inflate(android.R.layout.simple_list_item_2, parent, false));
     }
     return null;
   }
@@ -53,7 +51,7 @@ public class EditorRecyclerAdapter extends
     if (position == 0) {
       return TYPE_TITLE;
     } else {
-      return TYPE_BINARY;
+      return TYPE_QUESTION;
     }
 
   }
@@ -65,8 +63,8 @@ public class EditorRecyclerAdapter extends
       case TYPE_TITLE:
         bindTitle((TitleHolder) holder);
         break;
-      case TYPE_BINARY:
-        bindBinary((BinaryViewHolder) holder, position);
+      case TYPE_QUESTION:
+        bindQuestion((SimpleHolder) holder, position);
         break;
 
     }
@@ -99,11 +97,17 @@ public class EditorRecyclerAdapter extends
     });
   }
 
-  private void bindBinary(BinaryViewHolder holder, int position) {
-    holder.mCounter.setText(Integer.toString(position));
-    holder.mQuestionTitle.setText(mItems.get(position - 1).getTitle());
-    holder.mOption1.setText(mItems.get(position - 1).getOption(0).getOptionName());
-    holder.mOption2.setText(mItems.get(position - 1).getOption(1).getOptionName());
+  private void bindQuestion(SimpleHolder holder, int position) {
+    holder.mQuestionTitle.setText(
+        String.format("%d. %s", position, mItems.get(position - 1).getTitle()));
+
+    StringBuilder sb = new StringBuilder();
+    sb.append("Options:");
+    for (Option o : mItems.get(position - 1).getAllOptions()) {
+      sb.append("\t\t");
+      sb.append(o.getOptionName());
+    }
+    holder.mQuestionSubtitle.setText(sb.toString());
   }
 
   @Override
@@ -112,19 +116,15 @@ public class EditorRecyclerAdapter extends
   }
 
 
-  public class BinaryViewHolder extends RecyclerView.ViewHolder {
+  public class SimpleHolder extends RecyclerView.ViewHolder {
 
     private TextView mQuestionTitle;
-    private TextView mCounter;
-    private TextView mOption1;
-    private TextView mOption2;
+    private TextView mQuestionSubtitle;
 
-    public BinaryViewHolder(View itemView) {
+    public SimpleHolder(View itemView) {
       super(itemView);
-      mQuestionTitle = (TextView) itemView.findViewById(R.id.textview_editor_item_header_title);
-      mCounter = (TextView) itemView.findViewById(R.id.textview_editor_item_header_counter);
-      mOption1 = (TextView) itemView.findViewById(R.id.textview_editor_item_binary_option1);
-      mOption2 = (TextView) itemView.findViewById(R.id.textview_editor_item_binary_option2);
+      mQuestionTitle = (TextView) itemView.findViewById(android.R.id.text1);
+      mQuestionSubtitle = (TextView) itemView.findViewById(android.R.id.text2);
     }
 
   }
