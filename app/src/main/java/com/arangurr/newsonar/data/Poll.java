@@ -146,7 +146,6 @@ public class Poll {
       Option o = question.getOptionVotedBy(user);
       if (o != null) {
         o.removeVoter(user);
-        return;
       }
     }
     return;

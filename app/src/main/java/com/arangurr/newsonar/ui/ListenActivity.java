@@ -310,6 +310,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
                   @Override
                   public void run() {
                     setStatus(null);
+                    PersistenceUtils.deleteVote(getApplicationContext());
                   }
                 }, 2000);
               }
