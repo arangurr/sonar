@@ -1,40 +1,17 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   tools:showIn="@layout/item_card_binary">
 
   <TextView
     android:id="@+id/textview_editor_item_header_title"
     style="@android:style/TextAppearance.Material.Widget.ActionBar.Title.Inverse"
-    android:layout_width="0dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingStart="@dimen/item_start_margin"
+    android:paddingEnd="@dimen/item_start_margin"
     android:background="@color/colorPrimaryLight"
     android:elevation="2dp"
     android:gravity="center_vertical"
     android:minHeight="@dimen/item_height_small"
-    app:layout_constraintLeft_toRightOf="@+id/textview_editor_item_header_counter"
-    app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
     tools:text="title"/>
-
-  <TextView
-    android:id="@+id/textview_editor_item_header_counter"
-    style="@android:style/TextAppearance.Material.Widget.ActionBar.Title.Inverse"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:paddingStart="8dp"
-    android:paddingEnd="8dp"
-    android:background="@color/colorPrimaryIntermediate"
-    android:elevation="2dp"
-    android:fontFamily="monospace"
-    android:gravity="center"
-    android:textColor="@color/colorPrimaryTextDark"
-    app:layout_constraintBottom_toBottomOf="@+id/textview_editor_item_header_title"
-    app:layout_constraintDimensionRatio="1"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toLeftOf="@id/textview_editor_item_header_title"
-    app:layout_constraintTop_toTopOf="@id/textview_editor_item_header_title"
-    tools:text="1"/>
-
 </merge>

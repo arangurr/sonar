@@ -18,5 +18,7 @@
 
   <color name="colorWarning">#ffa000</color>
 
+  <color name="colorStat">#80cfd8dc</color>
+
   <color name="colorBackgroundTranslucent">#99323232</color>
 </resources>

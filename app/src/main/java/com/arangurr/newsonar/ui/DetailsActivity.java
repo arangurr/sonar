@@ -1,5 +1,6 @@
 package com.arangurr.newsonar.ui;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -389,32 +390,50 @@ public class DetailsActivity extends AppCompatActivity implements
 
     private void bindBinary(BinaryHolder holder, int position) {
       Question q = mCurrentPoll.getQuestionList().get(position);
-      holder.header.setText(q.getTitle());
-      holder.headerNumber.setText(String.valueOf(position));
-      holder.option1.setText(String.format(
-          "%1$s, (%2$d)",
-          q.getOption(0).getOptionName(),
-          q.getOption(0).getNumberOfVotes()));
-      holder.option2.setText(String.format(
-          "%1$s, (%2$d)",
-          q.getOption(1).getOptionName(),
-          q.getOption(1).getNumberOfVotes()));
+      holder.header.setText(String.format("%s. %s", String.valueOf(position + 1), q.getTitle()));
+      holder.option1.setText(q.getOption(0).getOptionName());
+      holder.option2.setText(q.getOption(1).getOptionName());
+      holder.counter1.setText(String.valueOf(q.getOption(0).getNumberOfVotes()));
+      holder.counter2.setText(String.valueOf(q.getOption(1).getNumberOfVotes()));
+
+      int vote1 = mCurrentPoll.getQuestionList().get(position).getOption(0).getNumberOfVotes();
+      int vote2 = mCurrentPoll.getQuestionList().get(position).getOption(1).getNumberOfVotes();
+
+      if (vote1 + vote2 > 0) {
+        int level1 = (int) (vote1 / ((float) vote1 + vote2) * 10000);
+        int level2 = (int) (vote2 / ((float) vote1 + vote2) * 10000);
+
+        holder.option1.getBackground().setLevel(level1);
+        holder.option2.getBackground().setLevel(level2);
+
+        if (vote1 == vote2) {
+          holder.option1.setTypeface(holder.option1.getTypeface(), Typeface.BOLD);
+          holder.option2.setTypeface(holder.option2.getTypeface(), Typeface.BOLD);
+        } else {
+          holder.option1.setTypeface(holder.option1.getTypeface(),
+              vote1 > vote2 ? Typeface.BOLD : Typeface.NORMAL);
+          holder.option2.setTypeface(holder.option2.getTypeface(),
+              vote1 > vote2 ? Typeface.NORMAL : Typeface.BOLD);
+        }
+      }
     }
 
     class BinaryHolder extends RecyclerView.ViewHolder {
 
-      TextView headerNumber;
       TextView header;
       TextView option1;
       TextView option2;
+      TextView counter1;
+      TextView counter2;
 
       public BinaryHolder(View itemView) {
         super(itemView);
 
-        headerNumber = (TextView) itemView.findViewById(R.id.textview_editor_item_header_counter);
         header = (TextView) itemView.findViewById(R.id.textview_editor_item_header_title);
         option1 = (TextView) itemView.findViewById(R.id.textview_editor_item_binary_option1);
         option2 = (TextView) itemView.findViewById(R.id.textview_editor_item_binary_option2);
+        counter1 = (TextView) itemView.findViewById(R.id.textview_editor_item_binary_option1_count);
+        counter2 = (TextView) itemView.findViewById(R.id.textview_editor_item_binary_option2_count);
       }
     }
 
