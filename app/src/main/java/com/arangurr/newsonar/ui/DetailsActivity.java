@@ -400,6 +400,9 @@ public class DetailsActivity extends AppCompatActivity implements
       int vote2 = mCurrentPoll.getQuestionList().get(position).getOption(1).getNumberOfVotes();
 
       if (vote1 + vote2 > 0) {
+        holder.counter1.setVisibility(View.VISIBLE);
+        holder.counter2.setVisibility(View.VISIBLE);
+
         int level1 = (int) (vote1 / ((float) vote1 + vote2) * 10000);
         int level2 = (int) (vote2 / ((float) vote1 + vote2) * 10000);
 
@@ -415,6 +418,9 @@ public class DetailsActivity extends AppCompatActivity implements
           holder.option2.setTypeface(holder.option2.getTypeface(),
               vote1 > vote2 ? Typeface.NORMAL : Typeface.BOLD);
         }
+      } else {
+        holder.counter1.setVisibility(View.GONE);
+        holder.counter2.setVisibility(View.GONE);
       }
     }
 
