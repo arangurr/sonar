@@ -349,7 +349,6 @@ public class DetailsActivity extends AppCompatActivity implements
       switch (q.getQuestionMode()) {
         case Constants.BINARY_MODE_CUSTOM:
         case Constants.BINARY_MODE_TRUEFALSE:
-        case Constants.BINARY_MODE_UPDOWNVOTE:
         case Constants.BINARY_MODE_YESNO:
           return R.layout.item_card_binary;
       }

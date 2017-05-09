@@ -47,6 +47,7 @@ import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.BinaryQuestion;
 import com.arangurr.newsonar.data.Poll;
+import com.arangurr.newsonar.data.RateQuestion;
 import java.util.UUID;
 
 public class EditorActivity extends AppCompatActivity implements View.OnClickListener,
@@ -183,8 +184,18 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         break;
       case R.id.textview_card_binary:
         showBinaryDialog(v.getContext());
+        if (!mIsFabAnimating) {
+          reverseFabTransform();
+        }
       case R.id.textview_card_multiple:
+        if (!mIsFabAnimating) {
+          reverseFabTransform();
+        }
       case R.id.textview_card_rate:
+        showRateDialog(v.getContext());
+        if (!mIsFabAnimating) {
+          reverseFabTransform();
+        }
       case R.id.textview_card_close:
         if (!mIsFabAnimating) {
           reverseFabTransform();
@@ -196,6 +207,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       default:
     }
   }
+
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -289,6 +301,63 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         .setTitle("BinaryQuestion")
         .setOnDismissListener(this);
     dialogBuilder.show();
+  }
+
+  private void showRateDialog(Context context) {
+    LayoutInflater inflater = getLayoutInflater();
+    View dialogView = inflater.inflate(R.layout.editor_dialog_rate, null);
+
+    final EditText title = (EditText) dialogView.findViewById(R.id.edittext_rate_title);
+    final EditText min = (EditText) dialogView.findViewById(R.id.edittext_rate_min);
+    final EditText max = (EditText) dialogView.findViewById(R.id.edittext_rate_max);
+    final RadioGroup radiogroup = (RadioGroup) dialogView.findViewById(R.id.radiogroup_rate);
+
+    radiogroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+        min.setVisibility(checkedId == R.id.radiobutton_rate_custom ? View.VISIBLE : View.GONE);
+        max.setVisibility(checkedId == R.id.radiobutton_rate_custom ? View.VISIBLE : View.GONE);
+      }
+    });
+
+    AlertDialog.Builder dialogBuilder = new Builder(context);
+    dialogBuilder
+        .setPositiveButton(android.R.string.ok, new OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            RateQuestion rateQuestion;
+            switch (radiogroup.getCheckedRadioButtonId()) {
+              case R.id.radiobutton_rate_stars:
+                rateQuestion = new RateQuestion(
+                    title.getText().toString(),
+                    Constants.RATE_MODE_STARS);
+                break;
+              case R.id.radiobutton_rate_likedislike:
+                rateQuestion = new RateQuestion(
+                    title.getText().toString(),
+                    Constants.RATE_MODE_LIKEDISLIKE);
+                break;
+              case R.id.radiobutton_rate_score:
+                rateQuestion = new RateQuestion(
+                    title.getText().toString(),
+                    Constants.RATE_MODE_SCORE);
+                break;
+              default:
+                rateQuestion = new RateQuestion(
+                    title.getText().toString(),
+                    Integer.valueOf(min.getText().toString()),
+                    Integer.valueOf(max.getText().toString()));
+                break;
+            }
+            mPoll.addQuestion(rateQuestion);
+            mAdapter.notifyDataSetChanged();
+          }
+        })
+        .setNegativeButton(android.R.string.cancel, null)
+        .setView(dialogView)
+        .setTitle("Rate Question");
+    dialogBuilder.show();
+
   }
 
   private void rotateIcon(Drawable icon, boolean reverse) {

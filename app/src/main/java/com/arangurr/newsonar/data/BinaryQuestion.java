@@ -20,10 +20,7 @@ public class BinaryQuestion extends Question {
         addOption("True");
         addOption("False");
         break;
-      case Constants.BINARY_MODE_UPDOWNVOTE: // TODO: 02/05/2017 move to "rate"
-        addOption("Upvote");
-        addOption("Downvote");
-        break;
+      case Constants.BINARY_MODE_CUSTOM:
       default:
         break;
     }

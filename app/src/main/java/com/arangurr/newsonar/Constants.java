@@ -20,8 +20,12 @@ public class Constants {
 
   public static final int BINARY_MODE_YESNO = 10;
   public static final int BINARY_MODE_TRUEFALSE = 11;
-  public static final int BINARY_MODE_UPDOWNVOTE = 12;
   public static final int BINARY_MODE_CUSTOM = 13;
+
+  public static final int RATE_MODE_STARS = 20;
+  public static final int RATE_MODE_LIKEDISLIKE = 21;
+  public static final int RATE_MODE_SCORE = 22;
+  public static final int RATE_MODE_CUSTOM = 23;
 
   public static final String PREFS_POLLS = "preferences_polls";
   public static final String PREFS_VOTE = "preferences_vote";

@@ -18,10 +18,12 @@
     <item>Votes will be secret. You will only be able to know how many completed the questionnaire.</item>
   </string-array>
 
-  <string-array name="array_binaryquestion_modes">
-    <item>Yes / No</item>
-    <item>True / False</item>
-    <item>Upvote / Downvote</item>
-    <item>Custom</item>
+  <string-array name="array_rate_modes">
+    <item>1 to 5 stars</item>
+    <item>Like/Dislike</item>
+    <item>Score from 0 to 10</item>
+    <item>Customized range</item>
   </string-array>
+
+
 </resources>

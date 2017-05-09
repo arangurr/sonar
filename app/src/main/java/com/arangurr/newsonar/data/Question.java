@@ -16,7 +16,7 @@ public class Question {
   @SerializedName("ops")
   protected ArrayList<Option> mOptions;
   @SerializedName("qm")
-  private int mQuestionMode;
+  private final int mQuestionMode;
 
   public Question(String title, int mode) {
     mTitle = title;
