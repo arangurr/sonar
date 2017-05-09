@@ -19,7 +19,6 @@ import com.arangurr.newsonar.BuildConfig;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
-import com.arangurr.newsonar.data.BinaryQuestion;
 import com.arangurr.newsonar.data.Poll;
 import com.arangurr.newsonar.data.Question;
 import java.text.SimpleDateFormat;
@@ -96,9 +95,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         break;
       case R.id.fab_dashboard_add_debug:
         Poll poll = new Poll(this, "Generic Poll Title");
-        poll.addQuestion(new BinaryQuestion("First Question", Constants.BINARY_MODE_TRUEFALSE));
-        poll.addQuestion(new BinaryQuestion("Second Question", Constants.BINARY_MODE_YESNO));
-        Question q = new BinaryQuestion("Third Question", Constants.BINARY_MODE_CUSTOM);
+        poll.addQuestion(new Question("First Question", Constants.BINARY_MODE_TRUEFALSE));
+        poll.addQuestion(new Question("Second Question", Constants.BINARY_MODE_YESNO));
+        Question q = new Question("Third Question", Constants.BINARY_MODE_CUSTOM);
         q.addOption("First Option");
         q.addOption("Second Option");
         poll.addQuestion(q);

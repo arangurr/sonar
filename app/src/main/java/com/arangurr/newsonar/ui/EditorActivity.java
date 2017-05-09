@@ -45,9 +45,8 @@ import android.widget.TextView;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
-import com.arangurr.newsonar.data.BinaryQuestion;
 import com.arangurr.newsonar.data.Poll;
-import com.arangurr.newsonar.data.RateQuestion;
+import com.arangurr.newsonar.data.Question;
 import java.util.UUID;
 
 public class EditorActivity extends AppCompatActivity implements View.OnClickListener,
@@ -276,20 +275,20 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         .setPositiveButton(android.R.string.ok, new OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            BinaryQuestion question;
+            Question question;
             switch (radiogroup.getCheckedRadioButtonId()) {
               case R.id.radiobutton_binary_yesno:
-                question = new BinaryQuestion(
+                question = new Question(
                     title.getText().toString(),
                     Constants.BINARY_MODE_YESNO);
                 break;
               case R.id.radiobutton_binary_truefalse:
-                question = new BinaryQuestion(
+                question = new Question(
                     title.getText().toString(),
                     Constants.BINARY_MODE_TRUEFALSE);
                 break;
               default:
-                question = new BinaryQuestion(
+                question = new Question(
                     title.getText().toString(),
                     Constants.BINARY_MODE_CUSTOM);
                 question.addOption(option1.getText().toString());
@@ -328,26 +327,28 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         .setPositiveButton(android.R.string.ok, new OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            RateQuestion rateQuestion;
+            Question rateQuestion;
             switch (radiogroup.getCheckedRadioButtonId()) {
               case R.id.radiobutton_rate_stars:
-                rateQuestion = new RateQuestion(
+                rateQuestion = new Question(
                     title.getText().toString(),
                     Constants.RATE_MODE_STARS);
                 break;
               case R.id.radiobutton_rate_likedislike:
-                rateQuestion = new RateQuestion(
+                rateQuestion = new Question(
                     title.getText().toString(),
                     Constants.RATE_MODE_LIKEDISLIKE);
                 break;
               case R.id.radiobutton_rate_score:
-                rateQuestion = new RateQuestion(
+                rateQuestion = new Question(
                     title.getText().toString(),
                     Constants.RATE_MODE_SCORE);
                 break;
               default:
-                rateQuestion = new RateQuestion(
+                rateQuestion = new Question(
                     title.getText().toString(),
+                    Constants.RATE_MODE_CUSTOM);
+                rateQuestion.setRateCustomLowHigh(
                     Integer.valueOf(min.getText().toString()),
                     Integer.valueOf(max.getText().toString()));
                 break;

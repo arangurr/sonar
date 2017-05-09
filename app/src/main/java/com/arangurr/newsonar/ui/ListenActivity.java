@@ -31,8 +31,8 @@ import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.GsonUtils;
 import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
-import com.arangurr.newsonar.data.BinaryQuestion;
 import com.arangurr.newsonar.data.Poll;
+import com.arangurr.newsonar.data.Question;
 import com.arangurr.newsonar.data.Vote;
 import com.arangurr.newsonar.ui.ListenRecyclerAdapter.OnItemClickListener;
 import com.google.android.gms.common.ConnectionResult;
@@ -382,9 +382,9 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
   public void launchVotingUi(View view) {
     // Sample Poll
     Poll p = new Poll(this, "Sample Poll title");
-    p.addQuestion(new BinaryQuestion("Question 1, yesno", Constants.BINARY_MODE_YESNO));
-    p.addQuestion(new BinaryQuestion("Question 2, truefalse", Constants.BINARY_MODE_TRUEFALSE));
-    BinaryQuestion question = new BinaryQuestion("Question 3, red v Blue",
+    p.addQuestion(new Question("Question 1, yesno", Constants.BINARY_MODE_YESNO));
+    p.addQuestion(new Question("Question 2, truefalse", Constants.BINARY_MODE_TRUEFALSE));
+    Question question = new Question("Question 3, red v Blue",
         Constants.BINARY_MODE_CUSTOM);
     question.addOption("Red");
     question.addOption("Blue");
