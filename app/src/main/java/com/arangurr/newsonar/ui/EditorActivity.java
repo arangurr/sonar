@@ -187,15 +187,18 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         if (!mIsFabAnimating) {
           reverseFabTransform();
         }
+        break;
       case R.id.textview_card_multiple:
         if (!mIsFabAnimating) {
           reverseFabTransform();
         }
+        break;
       case R.id.textview_card_rate:
         showRateDialog(v.getContext());
         if (!mIsFabAnimating) {
           reverseFabTransform();
         }
+        break;
       case R.id.textview_card_close:
         if (!mIsFabAnimating) {
           reverseFabTransform();
