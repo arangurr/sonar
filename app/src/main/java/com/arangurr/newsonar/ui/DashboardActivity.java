@@ -101,6 +101,12 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         q.addOption("First Option");
         q.addOption("Second Option");
         poll.addQuestion(q);
+        poll.addQuestion(new Question("4th Question", Constants.RATE_MODE_STARS));
+        poll.addQuestion(new Question("5th Question", Constants.RATE_MODE_SCORE));
+        poll.addQuestion(new Question("6th Question", Constants.RATE_MODE_LIKEDISLIKE));
+        q = new Question("7th Question", Constants.RATE_MODE_CUSTOM);
+        q.setRateCustomLowHigh(2, 8);
+        poll.addQuestion(q);
         PersistenceUtils.storePollInPreferences(this, poll);
         break;
     }
