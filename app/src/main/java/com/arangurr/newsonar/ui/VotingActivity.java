@@ -189,14 +189,6 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
           }
           if (mVote.getSelectionList().size() == mQuestionList.size()) {
             mSendButton.setVisibility(View.VISIBLE);
-          } else {
-            mViewPager.postDelayed(new Runnable() {
-                                     @Override
-                                     public void run() {
-                                       moveNext();
-                                     }
-                                   },
-                getResources().getInteger(android.R.integer.config_longAnimTime));
           }
         }
       });
@@ -243,15 +235,6 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
           PersistenceUtils.storeVoteInPreferences(getApplicationContext(), mVote);
           if (mVote.getSelectionList().size() == mQuestionList.size()) {
             mSendButton.setVisibility(View.VISIBLE);
-          } else {
-            mViewPager.postDelayed(
-                new Runnable() {
-                  @Override
-                  public void run() {
-                    moveNext();
-                  }
-                },
-                getResources().getInteger(android.R.integer.config_longAnimTime));
           }
         }
       });
