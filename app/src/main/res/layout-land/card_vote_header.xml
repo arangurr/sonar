@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools">
+  <TextView
+    android:id="@+id/textview_card_binary_vote_title"
+    style="@style/TextAppearance.AppCompat.Title"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:layout_gravity="center_horizontal"
+    android:padding="8dp"
+    android:background="@color/colorAccentIntermediateLight"
+    android:elevation="2dp"
+    android:gravity="center"
+    android:minHeight="?android:attr/actionBarSize"
+    tools:text="1 of 3"
+    />
+
+  <TextView
+    android:id="@+id/textview_card_binary_vote_content"
+    style="@style/TextAppearance.AppCompat.Body1"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="3"
+    android:padding="8dp"
+    android:gravity="center"
+    tools:text="Super duper long text with a lot of text. It should not fit in a single line."/>
+</merge>
