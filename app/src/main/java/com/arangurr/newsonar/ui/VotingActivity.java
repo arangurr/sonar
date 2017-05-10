@@ -21,6 +21,8 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.GsonUtils;
@@ -146,16 +148,38 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-      View view = LayoutInflater.from(container.getContext())
-          .inflate(R.layout.card_vote_binary, container, false);
-      container.addView(view);
-      bindQuestion(mQuestionList.get(position), view, position);
+      View view;
+      switch (mQuestionList.get(position).getQuestionMode()) {
+        case Constants.BINARY_MODE_CUSTOM:
+        case Constants.BINARY_MODE_TRUEFALSE:
+        case Constants.BINARY_MODE_YESNO:
+          view = LayoutInflater.from(container.getContext())
+              .inflate(R.layout.card_vote_binary, container, false);
+          container.addView(view);
+          bindBinaryQuestion(mQuestionList.get(position), view, position);
+          break;
+        case Constants.RATE_MODE_LIKEDISLIKE:
+        case Constants.RATE_MODE_SCORE:
+        case Constants.RATE_MODE_STARS:
+        case Constants.RATE_MODE_CUSTOM:
+          view = LayoutInflater.from(container.getContext())
+              .inflate(R.layout.card_vote_rate, container, false);
+          container.addView(view);
+          bindRateQuestion(mQuestionList.get(position), view, position);
+          break;
+        default:
+          view = LayoutInflater.from(container.getContext())
+              .inflate(android.R.layout.simple_list_item_1, container, false);
+          ((TextView) view.findViewById(android.R.id.text1))
+              .setText(mQuestionList.get(position).toString());
+          container.addView(view);
+      }
 
       return view;
 
     }
 
-    private void bindQuestion(final Question question, View view, final int position) {
+    private void bindBinaryQuestion(final Question question, View view, final int position) {
       TextView header = (TextView) view.findViewById(R.id.textview_card_binary_vote_title);
       TextView content = (TextView) view.findViewById(R.id.textview_card_binary_vote_content);
       RadioButton rb1 = (RadioButton) view.findViewById(R.id.radiobutton1_card_binary_vote);
@@ -194,6 +218,45 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
                                    },
                 getResources().getInteger(android.R.integer.config_longAnimTime));
           }
+        }
+      });
+    }
+
+    private void bindRateQuestion(final Question question, View view, final int position) {
+      TextView header = (TextView) view.findViewById(R.id.textview_card_rate_vote_title);
+      TextView content = (TextView) view.findViewById(R.id.textview_card_rate_vote_content);
+      TextView maxTv = (TextView) view.findViewById(R.id.textview_card_rate_vote_max);
+      TextView minTv = (TextView) view.findViewById(R.id.textview_card_rate_vote_min);
+      SeekBar seekBar = (SeekBar) view.findViewById(R.id.seekbar_card_rate_vote);
+
+      header.setText(String.format(
+          getString(R.string.voting_card_title),
+          position + 1,
+          mQuestionList.size()));
+      content.setText(question.getTitle());
+
+      int range = question.getAllOptions().size() -1;
+      int min = Integer.parseInt(question.getOption(0).getOptionName());
+      int max = min + range;
+
+      maxTv.setText(String.valueOf(max));
+      minTv.setText(String.valueOf(min));
+      seekBar.setMax(range);
+
+      seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
         }
       });
     }

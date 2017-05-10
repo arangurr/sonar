@@ -389,6 +389,9 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
     question.addOption("Red");
     question.addOption("Blue");
     p.addQuestion(question);
+    p.addQuestion(new Question("4th Question", Constants.RATE_MODE_STARS));
+    p.addQuestion(new Question("5th Question", Constants.RATE_MODE_LIKEDISLIKE));
+    p.addQuestion(new Question("6th Question", Constants.RATE_MODE_SCORE));
 
     String serialized = GsonUtils.serialize(p);
 

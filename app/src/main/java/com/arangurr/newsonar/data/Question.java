@@ -42,7 +42,7 @@ public class Question {
         addOption(String.valueOf(1));
         break;
       case Constants.RATE_MODE_SCORE:
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 0; i <= 10; i++) {
           addOption(String.valueOf(i));
         }
         break;
