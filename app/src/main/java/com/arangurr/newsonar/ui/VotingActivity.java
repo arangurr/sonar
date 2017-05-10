@@ -6,11 +6,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -18,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -40,9 +40,9 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
   private List<Question> mQuestionList;
   private ViewPager mViewPager;
   private QuestionPagerAdapter mQuestionPagerAdapter;
-  private FloatingActionButton mNextFab;
-  private FloatingActionButton mPrevFab;
-  private FloatingActionButton mSendFab;
+  private ImageButton mNextButton;
+  private ImageButton mPreviousButton;
+  private Button mSendButton;
 
 
   @Override
@@ -63,38 +63,18 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
 
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_voting);
     mViewPager = (ViewPager) findViewById(R.id.viewpager_voting);
-    mNextFab = (FloatingActionButton) findViewById(R.id.button_voting_next);
-    mPrevFab = (FloatingActionButton) findViewById(R.id.button_voting_previous);
-    mSendFab = (FloatingActionButton) findViewById(R.id.button_voting_send);
+    mNextButton = (ImageButton) findViewById(R.id.button_voting_next);
+    mPreviousButton = (ImageButton) findViewById(R.id.button_voting_previous);
+    mSendButton = (Button) findViewById(R.id.button_voting_send);
 
     mQuestionList = mPoll.getQuestionList();
     mQuestionPagerAdapter = new QuestionPagerAdapter();
 
-    mViewPager.addOnPageChangeListener(new SimpleOnPageChangeListener() {
-      @Override
-      public void onPageSelected(int position) {
-        super.onPageSelected(position);
-        if (position != mQuestionList.size() - 1) {
-          if (mNextFab.getVisibility() == View.GONE || mPrevFab.getVisibility() == View.INVISIBLE) {
-            mNextFab.show();
-          }
-        } else {
-          mNextFab.hide();
-        }
-        if (position != 0) {
-          if (mPrevFab.getVisibility() == View.GONE || mPrevFab.getVisibility() == View.INVISIBLE) {
-            mPrevFab.show();
-          }
-        } else {
-          mPrevFab.hide();
-        }
-      }
-    });
     mViewPager.setOffscreenPageLimit(mPoll.getQuestionList().size());
 
-    mNextFab.setOnClickListener(this);
-    mPrevFab.setOnClickListener(this);
-    mSendFab.setOnClickListener(this);
+    mNextButton.setOnClickListener(this);
+    mPreviousButton.setOnClickListener(this);
+    mNextButton.setOnClickListener(this);
 
     setSupportActionBar(toolbar);
     Drawable cancelDrawable = getDrawable(R.drawable.ic_clear_24dp);
@@ -208,7 +188,7 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
               break;
           }
           if (mVote.getSelectionList().size() == mQuestionList.size()) {
-            mSendFab.show();
+            mSendButton.setVisibility(View.VISIBLE);
           } else {
             mViewPager.postDelayed(new Runnable() {
                                      @Override
@@ -262,7 +242,7 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
           mVote.attachResponse(question, question.getOption(seekBar.getProgress()));
           PersistenceUtils.storeVoteInPreferences(getApplicationContext(), mVote);
           if (mVote.getSelectionList().size() == mQuestionList.size()) {
-            mSendFab.show();
+            mSendButton.setVisibility(View.VISIBLE);
           } else {
             mViewPager.postDelayed(
                 new Runnable() {
