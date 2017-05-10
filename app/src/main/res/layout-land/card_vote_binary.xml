@@ -13,6 +13,17 @@
 
     <include layout="@layout/card_vote_header"/>
 
+    <TextView
+      android:id="@+id/textview_card_vote_content"
+      style="@style/TextAppearance.AppCompat.Body1"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="3"
+      android:padding="8dp"
+      android:gravity="center"
+      tools:text="Super duper long text with a lot of text. It should not fit in a single line."/>
+
+
     <RadioGroup
       android:id="@+id/radiogroup_card_binary_vote"
       android:layout_width="0dp"
