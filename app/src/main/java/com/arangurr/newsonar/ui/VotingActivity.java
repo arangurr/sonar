@@ -180,8 +180,8 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
     }
 
     private void bindBinaryQuestion(final Question question, View view, final int position) {
-      TextView header = (TextView) view.findViewById(R.id.textview_card_binary_vote_title);
-      TextView content = (TextView) view.findViewById(R.id.textview_card_binary_vote_content);
+      TextView header = (TextView) view.findViewById(R.id.textview_card_vote_title);
+      TextView content = (TextView) view.findViewById(R.id.textview_card_vote_content);
       RadioButton rb1 = (RadioButton) view.findViewById(R.id.radiobutton1_card_binary_vote);
       RadioButton rb2 = (RadioButton) view.findViewById(R.id.radiobutton2_card_binary_vote);
       RadioGroup rg = (RadioGroup) view.findViewById(R.id.radiogroup_card_binary_vote);
@@ -223,11 +223,12 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
     }
 
     private void bindRateQuestion(final Question question, View view, final int position) {
-      TextView header = (TextView) view.findViewById(R.id.textview_card_rate_vote_title);
-      TextView content = (TextView) view.findViewById(R.id.textview_card_rate_vote_content);
-      TextView maxTv = (TextView) view.findViewById(R.id.textview_card_rate_vote_max);
-      TextView minTv = (TextView) view.findViewById(R.id.textview_card_rate_vote_min);
-      SeekBar seekBar = (SeekBar) view.findViewById(R.id.seekbar_card_rate_vote);
+      final TextView header = (TextView) view.findViewById(R.id.textview_card_vote_title);
+      final TextView content = (TextView) view.findViewById(R.id.textview_card_vote_content);
+      final TextView maxTv = (TextView) view.findViewById(R.id.textview_card_rate_vote_max);
+      final TextView minTv = (TextView) view.findViewById(R.id.textview_card_rate_vote_min);
+      final TextView selected = (TextView) view.findViewById(R.id.textview_card_rate_vote_selected);
+      final SeekBar seekBar = (SeekBar) view.findViewById(R.id.seekbar_card_rate_vote);
 
       header.setText(String.format(
           getString(R.string.voting_card_title),
@@ -235,9 +236,9 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
           mQuestionList.size()));
       content.setText(question.getTitle());
 
-      int range = question.getAllOptions().size() -1;
-      int min = Integer.parseInt(question.getOption(0).getOptionName());
-      int max = min + range;
+      final int range = question.getAllOptions().size() - 1;
+      final int min = Integer.parseInt(question.getOption(0).getOptionName());
+      final int max = min + range;
 
       maxTv.setText(String.valueOf(max));
       minTv.setText(String.valueOf(min));
@@ -246,7 +247,9 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
       seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+          if (fromUser) {
+            selected.setText(String.valueOf(progress + min));
+          }
         }
 
         @Override
@@ -256,7 +259,20 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-
+          mVote.attachResponse(question, question.getOption(seekBar.getProgress()));
+          PersistenceUtils.storeVoteInPreferences(getApplicationContext(), mVote);
+          if (mVote.getSelectionList().size() == mQuestionList.size()) {
+            mSendFab.show();
+          } else {
+            mViewPager.postDelayed(
+                new Runnable() {
+                  @Override
+                  public void run() {
+                    moveNext();
+                  }
+                },
+                getResources().getInteger(android.R.integer.config_longAnimTime));
+          }
         }
       });
     }

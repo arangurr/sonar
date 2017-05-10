@@ -26,6 +26,11 @@ public class Vote {
     return mSelectionList;
   }
 
+  /**
+   *
+   * @param question The question to attach the answer to
+   * @param options The selected option
+   */
   public void attachResponse(Question question, Option... options) {
     ArrayList<Integer> ids = new ArrayList<>(options.length);
     for (Option o : options) {
