@@ -120,4 +120,12 @@ public class Question {
       }
     }
   }
+
+  public int getNumberOfVotes() {
+    int count = 0;
+    for (Option o : mOptions) {
+      count += o.getNumberOfVotes();
+    }
+    return count;
+  }
 }

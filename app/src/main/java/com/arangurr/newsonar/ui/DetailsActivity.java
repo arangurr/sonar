@@ -27,6 +27,7 @@ import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.GsonUtils;
 import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
+import com.arangurr.newsonar.data.Option;
 import com.arangurr.newsonar.data.Poll;
 import com.arangurr.newsonar.data.Question;
 import com.arangurr.newsonar.data.Vote;
@@ -351,6 +352,11 @@ public class DetailsActivity extends AppCompatActivity implements
         case Constants.BINARY_MODE_TRUEFALSE:
         case Constants.BINARY_MODE_YESNO:
           return R.layout.item_card_binary;
+        case Constants.RATE_MODE_CUSTOM:
+        case Constants.RATE_MODE_LIKEDISLIKE:
+        case Constants.RATE_MODE_SCORE:
+        case Constants.RATE_MODE_STARS:
+          return R.layout.item_card_rate;
       }
       return android.R.layout.simple_list_item_1;
     }
@@ -364,7 +370,10 @@ public class DetailsActivity extends AppCompatActivity implements
               .inflate(R.layout.item_card_binary, parent, false);
           return new BinaryHolder(inflatedView);
 //        case R.layout.item_card_multi:
-//        case R.layout.item_card_rate:
+        case R.layout.item_card_rate:
+          inflatedView = LayoutInflater.from(parent.getContext())
+              .inflate(R.layout.item_card_rate, parent, false);
+          return new MultipleItemHolder(inflatedView);
       }
       inflatedView = LayoutInflater.from(parent.getContext())
           .inflate(android.R.layout.simple_list_item_1, parent, false);
@@ -376,6 +385,9 @@ public class DetailsActivity extends AppCompatActivity implements
       switch (getItemViewType(position)) {
         case R.layout.item_card_binary:
           bindBinary((BinaryHolder) holder, position);
+          break;
+        case R.layout.item_card_rate:
+          bindRate((MultipleItemHolder) holder, position);
           break;
         default:
           ((SimpleHolder) holder).mText1.setText(String.valueOf(position));
@@ -423,6 +435,32 @@ public class DetailsActivity extends AppCompatActivity implements
       }
     }
 
+    private void bindRate(MultipleItemHolder holder, int position) {
+      Question q = mCurrentPoll.getQuestionList().get(position);
+
+      int voters = q.getNumberOfVotes();
+
+      holder.header.setText(String.format("%s. %s", String.valueOf(position + 1), q.getTitle()));
+
+      if (holder.container.getChildCount() != 0) {
+        holder.container.removeAllViews();
+      }
+
+      for (Option o : q.getAllOptions()) {
+        View rowView = LayoutInflater.from(holder.container.getContext())
+            .inflate(android.R.layout.simple_list_item_2, holder.container, false);
+        ((TextView) rowView.findViewById(android.R.id.text1)).setText(o.getOptionName());
+        ((TextView) rowView.findViewById(android.R.id.text2))
+            .setText(String.valueOf(o.getNumberOfVotes()));
+
+        int level = (int) (o.getNumberOfVotes() / (float) voters * 10000);
+
+        rowView.setBackgroundResource(R.drawable.dw_level_start);
+        rowView.getBackground().setLevel(level);
+        holder.container.addView(rowView);
+      }
+    }
+
     class BinaryHolder extends RecyclerView.ViewHolder {
 
       TextView header;
@@ -437,8 +475,24 @@ public class DetailsActivity extends AppCompatActivity implements
         header = (TextView) itemView.findViewById(R.id.textview_details_item_header_title);
         option1 = (TextView) itemView.findViewById(R.id.textview_details_item_binary_option1);
         option2 = (TextView) itemView.findViewById(R.id.textview_details_item_binary_option2);
-        counter1 = (TextView) itemView.findViewById(R.id.textview_details_item_binary_option1_count);
-        counter2 = (TextView) itemView.findViewById(R.id.textview_details_item_binary_option2_count);
+        counter1 = (TextView) itemView
+            .findViewById(R.id.textview_details_item_binary_option1_count);
+        counter2 = (TextView) itemView
+            .findViewById(R.id.textview_details_item_binary_option2_count);
+      }
+    }
+
+    class MultipleItemHolder extends RecyclerView.ViewHolder {
+
+      TextView header;
+      LinearLayout container;
+
+      public MultipleItemHolder(View itemView) {
+        super(itemView);
+
+        header = (TextView) itemView.findViewById(R.id.textview_details_item_header_title);
+        container = (LinearLayout) itemView
+            .findViewById(R.id.linearlayout_item_card_rate_container);
       }
     }
 
