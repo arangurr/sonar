@@ -57,9 +57,8 @@
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
       android:layout_gravity="center"
-      android:text="Send"
-      android:visibility="gone"
-      tools:visibility="visible"/>
+      android:enabled="false"
+      android:text="Send"/>
     <ImageButton
       android:id="@+id/button_voting_next"
       android:layout_width="wrap_content"

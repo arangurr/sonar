@@ -74,7 +74,7 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
 
     mNextButton.setOnClickListener(this);
     mPreviousButton.setOnClickListener(this);
-    mNextButton.setOnClickListener(this);
+    mSendButton.setOnClickListener(this);
 
     setSupportActionBar(toolbar);
     Drawable cancelDrawable = getDrawable(R.drawable.ic_clear_24dp);
@@ -187,9 +187,7 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
               PersistenceUtils.storeVoteInPreferences(getApplicationContext(), mVote);
               break;
           }
-          if (mVote.getSelectionList().size() == mQuestionList.size()) {
-            mSendButton.setVisibility(View.VISIBLE);
-          }
+          mSendButton.setEnabled(mVote.getSelectionList().size() == mQuestionList.size());
         }
       });
     }
@@ -233,9 +231,7 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
         public void onStopTrackingTouch(SeekBar seekBar) {
           mVote.attachResponse(question, question.getOption(seekBar.getProgress()));
           PersistenceUtils.storeVoteInPreferences(getApplicationContext(), mVote);
-          if (mVote.getSelectionList().size() == mQuestionList.size()) {
-            mSendButton.setVisibility(View.VISIBLE);
-          }
+          mSendButton.setEnabled(mVote.getSelectionList().size() == mQuestionList.size());
         }
       });
     }
