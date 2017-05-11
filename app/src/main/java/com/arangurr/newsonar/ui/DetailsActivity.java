@@ -442,22 +442,24 @@ public class DetailsActivity extends AppCompatActivity implements
 
       holder.header.setText(String.format("%s. %s", String.valueOf(position + 1), q.getTitle()));
 
-      if (holder.container.getChildCount() != 0) {
-        holder.container.removeAllViews();
-      }
-
       for (Option o : q.getAllOptions()) {
-        View rowView = LayoutInflater.from(holder.container.getContext())
-            .inflate(android.R.layout.simple_list_item_2, holder.container, false);
-        ((TextView) rowView.findViewById(android.R.id.text1)).setText(o.getOptionName());
+        View rowView;
+        rowView = holder.container.findViewWithTag(o.getKey());
+        if (rowView == null) {
+          rowView = LayoutInflater.from(holder.container.getContext())
+              .inflate(android.R.layout.simple_list_item_2, holder.container, false);
+          rowView.setBackgroundResource(R.drawable.dw_level_start);
+          rowView.setTag(o.getKey());
+          holder.container.addView(rowView);
+        }
+
+        ((TextView) rowView.findViewById(android.R.id.text1))
+            .setText(o.getOptionName());
         ((TextView) rowView.findViewById(android.R.id.text2))
-            .setText(String.valueOf(o.getNumberOfVotes()));
+            .setText(String.format("Votes: %d", o.getNumberOfVotes()));
 
         int level = (int) (o.getNumberOfVotes() / (float) voters * 10000);
-
-        rowView.setBackgroundResource(R.drawable.dw_level_start);
         rowView.getBackground().setLevel(level);
-        holder.container.addView(rowView);
       }
     }
 
