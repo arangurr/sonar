@@ -3,7 +3,7 @@
   tools:showIn="@layout/item_card_binary">
 
   <TextView
-    android:id="@+id/textview_editor_item_header_title"
+    android:id="@+id/textview_details_item_header_title"
     style="@android:style/TextAppearance.Material.Widget.ActionBar.Title.Inverse"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

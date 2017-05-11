@@ -434,11 +434,11 @@ public class DetailsActivity extends AppCompatActivity implements
       public BinaryHolder(View itemView) {
         super(itemView);
 
-        header = (TextView) itemView.findViewById(R.id.textview_editor_item_header_title);
-        option1 = (TextView) itemView.findViewById(R.id.textview_editor_item_binary_option1);
-        option2 = (TextView) itemView.findViewById(R.id.textview_editor_item_binary_option2);
-        counter1 = (TextView) itemView.findViewById(R.id.textview_editor_item_binary_option1_count);
-        counter2 = (TextView) itemView.findViewById(R.id.textview_editor_item_binary_option2_count);
+        header = (TextView) itemView.findViewById(R.id.textview_details_item_header_title);
+        option1 = (TextView) itemView.findViewById(R.id.textview_details_item_binary_option1);
+        option2 = (TextView) itemView.findViewById(R.id.textview_details_item_binary_option2);
+        counter1 = (TextView) itemView.findViewById(R.id.textview_details_item_binary_option1_count);
+        counter2 = (TextView) itemView.findViewById(R.id.textview_details_item_binary_option2_count);
       }
     }
 

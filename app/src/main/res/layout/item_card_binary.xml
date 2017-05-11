@@ -23,7 +23,7 @@
       android:clipToPadding="false">
 
       <TextView
-        android:id="@+id/textview_editor_item_binary_option1"
+        android:id="@+id/textview_details_item_binary_option1"
         style="@android:style/TextAppearance.Material.Medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
         android:textAlignment="textStart"
         tools:text="option1"/>
       <TextView
-        android:id="@+id/textview_editor_item_binary_option1_count"
+        android:id="@+id/textview_details_item_binary_option1_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="4dp"
@@ -47,14 +47,14 @@
         android:layout_height="match_parent"
         android:background="@color/colorDivider"/>
       <TextView
-        android:id="@+id/textview_editor_item_binary_option2_count"
+        android:id="@+id/textview_details_item_binary_option2_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="4dp"
         android:text="21"
         android:textAlignment="center"/>
       <TextView
-        android:id="@+id/textview_editor_item_binary_option2"
+        android:id="@+id/textview_details_item_binary_option2"
         style="@android:style/TextAppearance.Material.Medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
