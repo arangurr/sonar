@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetBehavior.BottomSheetCallback;
+import android.support.transition.TransitionManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
@@ -23,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import android.widget.ViewSwitcher;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.GsonUtils;
 import com.arangurr.newsonar.PersistenceUtils;
@@ -435,12 +438,26 @@ public class DetailsActivity extends AppCompatActivity implements
       }
     }
 
-    private void bindRate(MultipleItemHolder holder, int position) {
+    private void bindRate(final MultipleItemHolder holder, final int position) {
       Question q = mCurrentPoll.getQuestionList().get(position);
 
       int voters = q.getNumberOfVotes();
 
       holder.header.setText(String.format("%s. %s", String.valueOf(position + 1), q.getTitle()));
+
+      holder.header.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          TransitionManager.beginDelayedTransition(mRecyclerView);
+
+          boolean isExpanded = holder.header.isSelected();
+
+          holder.header.setSelected(!isExpanded);
+          holder.switcher.setDisplayedChild(isExpanded ? 0 : 1);
+        }
+      });
+
+      int sum = 0;
 
       for (Option o : q.getAllOptions()) {
         View rowView;
@@ -453,6 +470,8 @@ public class DetailsActivity extends AppCompatActivity implements
           holder.container.addView(rowView);
         }
 
+        sum += Integer.parseInt(o.getOptionName()) * o.getNumberOfVotes();
+
         ((TextView) rowView.findViewById(android.R.id.text1))
             .setText(o.getOptionName());
         ((TextView) rowView.findViewById(android.R.id.text2))
@@ -461,6 +480,10 @@ public class DetailsActivity extends AppCompatActivity implements
         int level = (int) (o.getNumberOfVotes() / (float) voters * 10000);
         rowView.getBackground().setLevel(level);
       }
+
+      float average = voters > 0 ? sum / voters : 0;
+
+      holder.summary.setText(String.format("Average rating: %.2f", average));
     }
 
     class BinaryHolder extends RecyclerView.ViewHolder {
@@ -488,6 +511,8 @@ public class DetailsActivity extends AppCompatActivity implements
 
       TextView header;
       LinearLayout container;
+      ViewSwitcher switcher;
+      TextView summary;
 
       public MultipleItemHolder(View itemView) {
         super(itemView);
@@ -495,6 +520,8 @@ public class DetailsActivity extends AppCompatActivity implements
         header = (TextView) itemView.findViewById(R.id.textview_details_item_header_title);
         container = (LinearLayout) itemView
             .findViewById(R.id.linearlayout_item_card_rate_container);
+        switcher = (ViewSwitcher) itemView.findViewById(R.id.viewswitcher_item_card_rate);
+        summary = (TextView) itemView.findViewById(R.id.textview_item_card_rate_summary);
       }
     }
 
