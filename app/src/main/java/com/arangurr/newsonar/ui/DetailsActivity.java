@@ -355,8 +355,9 @@ public class DetailsActivity extends AppCompatActivity implements
         case Constants.BINARY_MODE_TRUEFALSE:
         case Constants.BINARY_MODE_YESNO:
           return R.layout.item_card_twoitems;
-        case Constants.RATE_MODE_CUSTOM:
         case Constants.RATE_MODE_LIKEDISLIKE:
+          return R.layout.item_card_likedislike;
+        case Constants.RATE_MODE_CUSTOM:
         case Constants.RATE_MODE_SCORE:
         case Constants.RATE_MODE_STARS:
           return R.layout.item_card_multiple;
@@ -372,6 +373,10 @@ public class DetailsActivity extends AppCompatActivity implements
           inflatedView = LayoutInflater.from(parent.getContext())
               .inflate(R.layout.item_card_twoitems, parent, false);
           return new DualItemHolder(inflatedView);
+        case R.layout.item_card_likedislike:
+          inflatedView = LayoutInflater.from(parent.getContext())
+              .inflate(R.layout.item_card_likedislike, parent, false);
+          return new LikeDislikeHolder(inflatedView);
 //        case R.layout.item_card_multi:
         case R.layout.item_card_multiple:
           inflatedView = LayoutInflater.from(parent.getContext())
@@ -391,6 +396,9 @@ public class DetailsActivity extends AppCompatActivity implements
           break;
         case R.layout.item_card_multiple:
           bindRate((MultipleItemHolder) holder, position);
+          break;
+        case R.layout.item_card_likedislike:
+          bindLikeDislike((LikeDislikeHolder) holder, position);
           break;
         default:
           ((SimpleHolder) holder).mText1.setText(String.valueOf(position));
@@ -486,6 +494,36 @@ public class DetailsActivity extends AppCompatActivity implements
       holder.summary.setText(String.format("Average rating: %.2f", average));
     }
 
+    private void bindLikeDislike(LikeDislikeHolder holder, int position) {
+      Question q = mCurrentPoll.getQuestionList().get(position);
+      holder.header.setText(String.format("%s. %s", String.valueOf(position + 1), q.getTitle()));
+
+      int voteDislike = q.getOption(0).getNumberOfVotes();
+      int voteLike = q.getOption(1).getNumberOfVotes();
+
+      holder.like.setText(String.valueOf(voteLike));
+      holder.dislike.setText(String.valueOf(voteDislike));
+
+      if (voteDislike + voteLike > 0) {
+
+        int levelDislike = (int) (voteDislike / ((float) voteDislike + voteLike) * 10000);
+        int levelLike = (int) (voteLike / ((float) voteDislike + voteLike) * 10000);
+
+        holder.like.getBackground().setLevel(levelLike);
+        holder.dislike.getBackground().setLevel(levelDislike);
+
+        if (voteDislike == voteLike) {
+          holder.dislike.setTypeface(holder.dislike.getTypeface(), Typeface.BOLD);
+          holder.like.setTypeface(holder.like.getTypeface(), Typeface.BOLD);
+        } else {
+          holder.dislike.setTypeface(holder.dislike.getTypeface(),
+              voteDislike > voteLike ? Typeface.BOLD : Typeface.NORMAL);
+          holder.like.setTypeface(holder.like.getTypeface(),
+              voteDislike > voteLike ? Typeface.NORMAL : Typeface.BOLD);
+        }
+      }
+    }
+
     class DualItemHolder extends RecyclerView.ViewHolder {
 
       TextView header;
@@ -522,6 +560,24 @@ public class DetailsActivity extends AppCompatActivity implements
             .findViewById(R.id.linearlayout_item_card_rate_container);
         switcher = (ViewSwitcher) itemView.findViewById(R.id.viewswitcher_item_card_rate);
         summary = (TextView) itemView.findViewById(R.id.textview_item_card_rate_summary);
+      }
+    }
+
+    class LikeDislikeHolder extends RecyclerView.ViewHolder {
+
+      TextView header;
+      TextView like;
+      TextView dislike;
+
+      public LikeDislikeHolder(View itemView) {
+        super(itemView);
+
+        header = (TextView) itemView.findViewById(R.id.textview_details_item_header_title);
+        like = (TextView) itemView
+            .findViewById(R.id.textview_details_item_likedislike_like_counter);
+        dislike = (TextView) itemView
+            .findViewById(R.id.textview_details_item_likedislike_dislike_counter);
+
       }
     }
 
