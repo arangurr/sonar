@@ -354,13 +354,13 @@ public class DetailsActivity extends AppCompatActivity implements
         case Constants.BINARY_MODE_CUSTOM:
         case Constants.BINARY_MODE_TRUEFALSE:
         case Constants.BINARY_MODE_YESNO:
-          return R.layout.item_card_twoitems;
+          return R.layout.details_card_twoitems;
         case Constants.RATE_MODE_LIKEDISLIKE:
-          return R.layout.item_card_likedislike;
+          return R.layout.details_card_likedislike;
         case Constants.RATE_MODE_CUSTOM:
         case Constants.RATE_MODE_SCORE:
         case Constants.RATE_MODE_STARS:
-          return R.layout.item_card_multiple;
+          return R.layout.details_card_multiple;
       }
       return android.R.layout.simple_list_item_1;
     }
@@ -369,18 +369,18 @@ public class DetailsActivity extends AppCompatActivity implements
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       View inflatedView;
       switch (viewType) {
-        case R.layout.item_card_twoitems:
+        case R.layout.details_card_twoitems:
           inflatedView = LayoutInflater.from(parent.getContext())
-              .inflate(R.layout.item_card_twoitems, parent, false);
+              .inflate(R.layout.details_card_twoitems, parent, false);
           return new DualItemHolder(inflatedView);
-        case R.layout.item_card_likedislike:
+        case R.layout.details_card_likedislike:
           inflatedView = LayoutInflater.from(parent.getContext())
-              .inflate(R.layout.item_card_likedislike, parent, false);
+              .inflate(R.layout.details_card_likedislike, parent, false);
           return new LikeDislikeHolder(inflatedView);
 //        case R.layout.item_card_multi:
-        case R.layout.item_card_multiple:
+        case R.layout.details_card_multiple:
           inflatedView = LayoutInflater.from(parent.getContext())
-              .inflate(R.layout.item_card_multiple, parent, false);
+              .inflate(R.layout.details_card_multiple, parent, false);
           return new MultipleItemHolder(inflatedView);
       }
       inflatedView = LayoutInflater.from(parent.getContext())
@@ -391,13 +391,13 @@ public class DetailsActivity extends AppCompatActivity implements
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
       switch (getItemViewType(position)) {
-        case R.layout.item_card_twoitems:
+        case R.layout.details_card_twoitems:
           bindDualItem((DualItemHolder) holder, position);
           break;
-        case R.layout.item_card_multiple:
+        case R.layout.details_card_multiple:
           bindRate((MultipleItemHolder) holder, position);
           break;
-        case R.layout.item_card_likedislike:
+        case R.layout.details_card_likedislike:
           bindLikeDislike((LikeDislikeHolder) holder, position);
           break;
         default:
