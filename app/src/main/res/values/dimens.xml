@@ -6,7 +6,7 @@
   <dimen name="item_margin">16dp</dimen>
   <dimen name="list_top_margin">8dp</dimen>
   <dimen name="item_height_small">48dp</dimen>
-  <dimen name="pager_padding_sides">64dp</dimen>
-  <dimen name="pager_padding_bottom">104dp</dimen>
-  <dimen name="pager_margin">32dp</dimen>
+  <dimen name="pager_padding_sides">48dp</dimen>
+  <dimen name="pager_padding_bottom">52dp</dimen>
+  <dimen name="pager_margin">16dp</dimen>
 </resources>
