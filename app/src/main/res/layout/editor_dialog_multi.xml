@@ -1,57 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:paddingTop="8dp"
   android:paddingBottom="8dp"
   android:paddingLeft="16dp"
-  android:paddingRight="16dp"
-  android:animateLayoutChanges="true"
-  android:orientation="vertical">
+  android:paddingRight="16dp">
 
-  <EditText
-    android:id="@+id/edittext_multi_title"
+  <LinearLayout
+    android:id="@+id/linearlayout_multi_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:hint="Title"
-    android:imeOptions="flagNoExtractUi"
-    android:minHeight="@dimen/item_height_small"
-    android:selectAllOnFocus="true"
-    android:text="Title"/>
-
-  <CheckBox
-    android:id="@+id/checkbox_multi"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="@dimen/item_height_small"
-    android:text="Can check multiple options"/>
-
-  <ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <LinearLayout
-      android:id="@+id/linearlayout_multi_container"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+    <EditText
+      android:id="@+id/edittext_multi_title"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:orientation="vertical">
-      <EditText
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/edittext_multi_option0"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:imeOptions="flagNoExtractUi"
-        tools:hint="Option 1"/>
-      <EditText
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/edittext_multi_option1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:imeOptions="flagNoExtractUi"
-        tools:hint="Option 1"/>
-    </LinearLayout>
+      android:hint="Title"
+      android:imeOptions="flagNoExtractUi"
+      android:minHeight="@dimen/item_height_small"/>
+    <CheckBox
+      android:id="@+id/checkbox_multi"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:minHeight="@dimen/item_height_small"
+      android:text="Can check multiple options"/>
+    <EditText
+      android:id="@+id/edittext_multi_option0"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="Option 1"
+      android:imeOptions="flagNoExtractUi"/>
+  </LinearLayout>
 
-  </ScrollView>
-
-</LinearLayout>
+</ScrollView>

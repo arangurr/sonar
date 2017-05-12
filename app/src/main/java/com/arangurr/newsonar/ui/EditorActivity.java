@@ -382,11 +382,12 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
       @Override
       public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (s.length() == 1 && before != 2) {
+        if (s.length() == 1 && before != 2 && container.getChildCount() <= 12) {
           EditText editText = (EditText) inflater
               .inflate(R.layout.editor_dialog_multi_option, container, false);
 
           editText.addTextChangedListener(this);
+          editText.setHint("Option " + (container.getChildCount() - 1));
           container.addView(editText);
         } else if (s.length() == 0) {
           container.removeViewAt(container.getChildCount() - 1);
