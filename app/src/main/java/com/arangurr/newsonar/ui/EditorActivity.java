@@ -300,7 +300,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         })
         .setNegativeButton(android.R.string.cancel, null)
         .setView(dialogView)
-        .setTitle("BinaryQuestion")
+        .setTitle("Binary Question")
         .setOnDismissListener(this);
     dialogBuilder.show();
   }
