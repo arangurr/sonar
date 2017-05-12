@@ -33,6 +33,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.WindowManager.LayoutParams;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
@@ -404,7 +405,9 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     dialogBuilder
         .setView(dialogView)
         .setTitle("Multiple Option Question");
-    dialogBuilder.show();
+    AlertDialog dialog = dialogBuilder.create();
+    dialog.show();
+    dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
   }
 
   private void rotateIcon(Drawable icon, boolean reverse) {
