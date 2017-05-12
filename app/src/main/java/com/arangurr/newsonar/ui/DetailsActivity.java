@@ -354,12 +354,12 @@ public class DetailsActivity extends AppCompatActivity implements
         case Constants.BINARY_MODE_CUSTOM:
         case Constants.BINARY_MODE_TRUEFALSE:
         case Constants.BINARY_MODE_YESNO:
-          return R.layout.item_card_binary;
+          return R.layout.item_card_twoitems;
         case Constants.RATE_MODE_CUSTOM:
         case Constants.RATE_MODE_LIKEDISLIKE:
         case Constants.RATE_MODE_SCORE:
         case Constants.RATE_MODE_STARS:
-          return R.layout.item_card_rate;
+          return R.layout.item_card_multiple;
       }
       return android.R.layout.simple_list_item_1;
     }
@@ -368,14 +368,14 @@ public class DetailsActivity extends AppCompatActivity implements
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       View inflatedView;
       switch (viewType) {
-        case R.layout.item_card_binary:
+        case R.layout.item_card_twoitems:
           inflatedView = LayoutInflater.from(parent.getContext())
-              .inflate(R.layout.item_card_binary, parent, false);
-          return new BinaryHolder(inflatedView);
+              .inflate(R.layout.item_card_twoitems, parent, false);
+          return new DualItemHolder(inflatedView);
 //        case R.layout.item_card_multi:
-        case R.layout.item_card_rate:
+        case R.layout.item_card_multiple:
           inflatedView = LayoutInflater.from(parent.getContext())
-              .inflate(R.layout.item_card_rate, parent, false);
+              .inflate(R.layout.item_card_multiple, parent, false);
           return new MultipleItemHolder(inflatedView);
       }
       inflatedView = LayoutInflater.from(parent.getContext())
@@ -386,10 +386,10 @@ public class DetailsActivity extends AppCompatActivity implements
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
       switch (getItemViewType(position)) {
-        case R.layout.item_card_binary:
-          bindBinary((BinaryHolder) holder, position);
+        case R.layout.item_card_twoitems:
+          bindDualItem((DualItemHolder) holder, position);
           break;
-        case R.layout.item_card_rate:
+        case R.layout.item_card_multiple:
           bindRate((MultipleItemHolder) holder, position);
           break;
         default:
@@ -402,7 +402,7 @@ public class DetailsActivity extends AppCompatActivity implements
       return mCurrentPoll.getQuestionList().size();
     }
 
-    private void bindBinary(BinaryHolder holder, int position) {
+    private void bindDualItem(DualItemHolder holder, int position) {
       Question q = mCurrentPoll.getQuestionList().get(position);
       holder.header.setText(String.format("%s. %s", String.valueOf(position + 1), q.getTitle()));
       holder.option1.setText(q.getOption(0).getOptionName());
@@ -410,8 +410,8 @@ public class DetailsActivity extends AppCompatActivity implements
       holder.counter1.setText(String.valueOf(q.getOption(0).getNumberOfVotes()));
       holder.counter2.setText(String.valueOf(q.getOption(1).getNumberOfVotes()));
 
-      int vote1 = mCurrentPoll.getQuestionList().get(position).getOption(0).getNumberOfVotes();
-      int vote2 = mCurrentPoll.getQuestionList().get(position).getOption(1).getNumberOfVotes();
+      int vote1 = q.getOption(0).getNumberOfVotes();
+      int vote2 = q.getOption(1).getNumberOfVotes();
 
       if (vote1 + vote2 > 0) {
         holder.counter1.setVisibility(View.VISIBLE);
@@ -486,7 +486,7 @@ public class DetailsActivity extends AppCompatActivity implements
       holder.summary.setText(String.format("Average rating: %.2f", average));
     }
 
-    class BinaryHolder extends RecyclerView.ViewHolder {
+    class DualItemHolder extends RecyclerView.ViewHolder {
 
       TextView header;
       TextView option1;
@@ -494,7 +494,7 @@ public class DetailsActivity extends AppCompatActivity implements
       TextView counter1;
       TextView counter2;
 
-      public BinaryHolder(View itemView) {
+      public DualItemHolder(View itemView) {
         super(itemView);
 
         header = (TextView) itemView.findViewById(R.id.textview_details_item_header_title);
