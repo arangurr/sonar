@@ -37,6 +37,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
@@ -188,6 +189,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         }
         break;
       case R.id.textview_card_multiple:
+        showMultiDialog(v.getContext());
         if (!mIsFabAnimating) {
           reverseFabTransform();
         }
@@ -362,6 +364,47 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         .setTitle("Rate Question");
     dialogBuilder.show();
 
+  }
+
+  private void showMultiDialog(Context context) {
+    final LayoutInflater inflater = getLayoutInflater();
+    View dialogView = inflater.inflate(R.layout.editor_dialog_multi, null);
+
+    final LinearLayout container = (LinearLayout) dialogView
+        .findViewById(R.id.linearlayout_multi_container);
+
+    final TextWatcher lastEditTextWatcher = new TextWatcher() {
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (s.length() == 1 && before != 2) {
+          EditText editText = (EditText) inflater
+              .inflate(R.layout.editor_dialog_multi_option, container, false);
+
+          editText.addTextChangedListener(this);
+          container.addView(editText);
+        } else if (s.length() == 0) {
+          container.removeViewAt(container.getChildCount() - 1);
+        }
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+
+      }
+    };
+    ((EditText) container.getChildAt(container.getChildCount() - 1))
+        .addTextChangedListener(lastEditTextWatcher);
+
+    AlertDialog.Builder dialogBuilder = new Builder(context);
+    dialogBuilder
+        .setView(dialogView)
+        .setTitle("Multiple Option Question");
+    dialogBuilder.show();
   }
 
   private void rotateIcon(Drawable icon, boolean reverse) {
