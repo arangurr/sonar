@@ -139,6 +139,11 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
           bindBinaryQuestion(mQuestionList.get(position), view, position);
           break;
         case Constants.RATE_MODE_LIKEDISLIKE:
+          view = LayoutInflater.from(container.getContext())
+              .inflate(R.layout.card_vote_likedislike, container, false);
+          container.addView(view);
+          bindLikeQuestion(mQuestionList.get(position), view, position);
+          break;
         case Constants.RATE_MODE_SCORE:
         case Constants.RATE_MODE_STARS:
         case Constants.RATE_MODE_CUSTOM:
@@ -156,7 +161,6 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
       }
 
       return view;
-
     }
 
     private void bindBinaryQuestion(final Question question, View view, final int position) {
@@ -234,6 +238,54 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
           mSendButton.setEnabled(mVote.getSelectionList().size() == mQuestionList.size());
         }
       });
+    }
+
+    private void bindLikeQuestion(final Question question, View view, final int position) {
+
+      final TextView header = (TextView) view.findViewById(R.id.textview_card_vote_title);
+      final TextView content = (TextView) view.findViewById(R.id.textview_card_vote_content);
+      final ImageButton like = (ImageButton) view.findViewById(R.id.button_card_vote_like);
+      final ImageButton dislike = (ImageButton) view.findViewById(R.id.button_card_vote_dislike);
+
+      header.setText(String.format(
+          getString(R.string.voting_card_title),
+          position + 1,
+          mQuestionList.size()));
+      content.setText(question.getTitle());
+
+      dislike.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          if (dislike.isSelected()) {
+            dislike.setSelected(false);
+          } else {
+            if (like.isSelected()) {
+              like.setSelected(false);
+            }
+            dislike.setSelected(true);
+            mVote.attachResponse(question, question.getOption(0));
+            PersistenceUtils.storeVoteInPreferences(getApplicationContext(), mVote);
+            mSendButton.setEnabled(mVote.getSelectionList().size() == mQuestionList.size());
+          }
+        }
+      });
+      like.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          if (like.isSelected()) {
+            like.setSelected(false);
+          } else {
+            if (dislike.isSelected()) {
+              dislike.setSelected(false);
+            }
+            like.setSelected(true);
+            mVote.attachResponse(question, question.getOption(1));
+            PersistenceUtils.storeVoteInPreferences(getApplicationContext(), mVote);
+            mSendButton.setEnabled(mVote.getSelectionList().size() == mQuestionList.size());
+          }
+        }
+      });
+
     }
 
     @Override

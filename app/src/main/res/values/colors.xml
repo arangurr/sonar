@@ -23,5 +23,8 @@
   <color name="colorRatePrimary">#fbc02d</color>
   <color name="colorRateSecondary">#fff3e0</color>
 
+  <color name="colorLike">#66bb6a</color>
+  <color name="colorDislike">#ff7043</color>
+
   <color name="colorBackgroundTranslucent">#99323232</color>
 </resources>
