@@ -600,7 +600,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
           newEditText.addTextChangedListener(this);
           newEditText.setTag(container.getChildCount() - 2);
-          newEditText.setHint("Option " + ((int) newEditText.getTag() + 1));
           if (container.getChildCount() == 11) {
             newEditText
                 .setImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfo.IME_FLAG_NO_EXTRACT_UI);

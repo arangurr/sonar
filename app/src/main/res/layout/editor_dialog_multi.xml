@@ -16,7 +16,7 @@
       android:id="@+id/edittext_multi_title"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:hint="Title"
+      android:hint="@string/question_title"
       android:imeOptions="flagNoExtractUi|actionDone"
       android:inputType="text|textCapSentences"
       android:minHeight="@dimen/item_height_small"/>
@@ -30,7 +30,7 @@
       android:id="@+id/edittext_multi_option0"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:hint="Option 1"
+      android:hint="@string/option_name"
       android:imeOptions="flagNoExtractUi|actionNext"
       android:inputType="text|textCapSentences"/>
   </LinearLayout>

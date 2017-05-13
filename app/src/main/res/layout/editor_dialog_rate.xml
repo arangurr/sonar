@@ -1,75 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:paddingLeft="16dp"
-  android:paddingRight="16dp"
-  android:animateLayoutChanges="true"
-  android:orientation="vertical">
+  android:paddingRight="16dp">
 
-  <EditText
-    android:id="@+id/edittext_rate_title"
+  <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:hint="Title"
-    android:imeOptions="flagNoExtractUi|actionDone"
-    android:inputType="text|textCapSentences"
-    android:minHeight="@dimen/item_height_small"
-    android:selectAllOnFocus="true"
-    android:text="Title"/>
-
-  <RadioGroup
-    android:id="@+id/radiogroup_rate"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:checkedButton="@+id/radiobutton_rate_stars"
+    android:animateLayoutChanges="true"
     android:orientation="vertical">
-    <RadioButton
-      android:id="@id/radiobutton_rate_stars"
+    <EditText
+      android:id="@+id/edittext_rate_title"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:minHeight="@dimen/item_height_small"
-      android:text="1 to 5 stars"/>
-    <RadioButton
-      android:id="@+id/radiobutton_rate_likedislike"
+      android:hint="@string/question_title"
+      android:imeOptions="flagNoExtractUi|actionDone"
+      android:inputType="text|textCapSentences"
+      android:minHeight="@dimen/item_height_small"/>
+
+    <RadioGroup
+      android:id="@+id/radiogroup_rate"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:minHeight="@dimen/item_height_small"
-      android:text="Like/Dislike"/>
-    <RadioButton
-      android:id="@+id/radiobutton_rate_score"
+      android:checkedButton="@+id/radiobutton_rate_stars"
+      android:orientation="vertical">
+      <RadioButton
+        android:id="@id/radiobutton_rate_stars"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/item_height_small"
+        android:text="1 to 5 stars"/>
+      <RadioButton
+        android:id="@+id/radiobutton_rate_likedislike"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/item_height_small"
+        android:text="Like/Dislike"/>
+      <RadioButton
+        android:id="@+id/radiobutton_rate_score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/item_height_small"
+        android:text="0 to 10"/>
+      <RadioButton
+        android:id="@+id/radiobutton_rate_custom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/item_height_small"
+        android:text="Custom range"/>
+    </RadioGroup>
+
+    <EditText
+      android:id="@+id/edittext_rate_min"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:minHeight="@dimen/item_height_small"
-      android:text="0 to 10"/>
-    <RadioButton
-      android:id="@+id/radiobutton_rate_custom"
+      android:hint="Minimum"
+      android:imeOptions="flagNoExtractUi|actionNext"
+      android:inputType="number|numberSigned"
+      android:visibility="gone"
+      tools:visibility="visible"/>
+
+    <EditText
+      android:id="@+id/edittext_rate_max"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:minHeight="@dimen/item_height_small"
-      android:text="Custom range"/>
-  </RadioGroup>
+      android:hint="Maximum"
+      android:imeOptions="flagNoExtractUi|actionDone"
+      android:inputType="number|numberSigned"
+      android:visibility="gone"
+      tools:visibility="visible"/>
 
-  <EditText
-    android:id="@+id/edittext_rate_min"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="Minimum"
-    android:imeOptions="flagNoExtractUi|actionNext"
-    android:inputType="number|numberSigned"
-    android:visibility="gone"
-    tools:visibility="visible"/>
-
-  <EditText
-    android:id="@+id/edittext_rate_max"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="Maximum"
-    android:imeOptions="flagNoExtractUi|actionDone"
-    android:inputType="number|numberSigned"
-    android:visibility="gone"
-    tools:visibility="visible"/>
-
-
-</LinearLayout>
+  </LinearLayout>
+</ScrollView>
