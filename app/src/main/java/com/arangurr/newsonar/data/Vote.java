@@ -27,7 +27,6 @@ public class Vote {
   }
 
   /**
-   *
    * @param question The question to attach the answer to
    * @param options The selected option
    */
@@ -44,6 +43,15 @@ public class Vote {
       }
     }
     mSelectionList.add(new QuestionSelection(question.getKey(), ids));
+  }
+
+  public void removeResponse(Question question) {
+    for (QuestionSelection qs : mSelectionList) {
+      if (qs.getQuestionId() == question.getKey()) {
+        mSelectionList.remove(qs);
+        return;
+      }
+    }
   }
 
   public UUID getPollId() {

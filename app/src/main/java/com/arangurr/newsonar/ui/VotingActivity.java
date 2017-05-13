@@ -17,7 +17,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -159,6 +162,12 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
               .inflate(R.layout.card_vote_multi_exclusive, container, false);
           container.addView(view);
           bindMultiExclusiveQuestion(mQuestionList.get(position), view, position);
+          break;
+        case Constants.MULTI_MODE_MULTIPLE:
+          view = LayoutInflater.from(container.getContext())
+              .inflate(R.layout.card_vote_multi_multiple, container, false);
+          container.addView(view);
+          bindMultiMultipleQuestion(mQuestionList.get(position), view, position);
           break;
         default:
           view = LayoutInflater.from(container.getContext())
@@ -325,6 +334,53 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
         }
       });
 
+    }
+
+    private void bindMultiMultipleQuestion(final Question question, View view, int position) {
+      final TextView header = (TextView) view.findViewById(R.id.textview_card_vote_title);
+      final TextView content = (TextView) view.findViewById(R.id.textview_card_vote_content);
+      final LinearLayout container = (LinearLayout) view
+          .findViewById(R.id.linearlayout_card_multi_multi_vote);
+
+      header.setText(String.format(
+          getString(R.string.voting_card_title),
+          position + 1,
+          mQuestionList.size()));
+      content.setText(question.getTitle());
+
+      final ArrayList<Option> options = question.getAllOptions();
+
+      CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+          List<Option> selected = new ArrayList<>();
+
+          for (int i = 0; i < options.size(); i++) {
+            if (((CheckBox) container.getChildAt(i)).isChecked()) {
+              selected.add(options.get(i));
+            }
+          }
+          if (selected.isEmpty()) {
+            mVote.removeResponse(question);
+          } else {
+            Option[] optionArray = new Option[selected.size()];
+            optionArray = selected.toArray(optionArray);
+
+            mVote.attachResponse(question, optionArray);
+          }
+          PersistenceUtils.storeVoteInPreferences(getApplicationContext(), mVote);
+          mSendButton.setEnabled(mVote.getSelectionList().size() == mQuestionList.size());
+        }
+      };
+
+      for (int i = 0; i < options.size(); i++) {
+        CheckBox checkBox = (CheckBox) LayoutInflater.from(view.getContext())
+            .inflate(R.layout.card_vote_multi_checkbox, container, false);
+        checkBox.setText(options.get(i).getOptionName());
+        checkBox.setId(options.get(i).getKey());
+        checkBox.setOnCheckedChangeListener(listener);
+        container.addView(checkBox);
+      }
     }
 
     @Override
