@@ -21,7 +21,6 @@
         android:id="@+id/radiogroup_card_multi_vote"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="24dp"
         android:orientation="vertical">
       </RadioGroup>
     </ScrollView>
