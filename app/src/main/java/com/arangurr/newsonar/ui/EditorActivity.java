@@ -255,6 +255,14 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     }
   }
 
+  @Override
+  protected void onStop() {
+    super.onStop();
+    if (mPoll.getQuestionList().size() == 0) {
+      PersistenceUtils.deletePoll(this, mPoll);
+    }
+  }
+
   private void showBinaryDialog(Context context) {
     LayoutInflater inflater = getLayoutInflater();
     View dialogView = inflater.inflate(R.layout.editor_dialog_binary, null);
