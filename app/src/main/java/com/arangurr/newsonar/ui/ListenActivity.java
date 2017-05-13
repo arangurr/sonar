@@ -381,19 +381,32 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
 
   public void launchVotingUi(View view) {
     // Sample Poll
-    Poll p = new Poll(this, "Sample Poll title");
-    p.addQuestion(new Question("Question 1, yesno", Constants.BINARY_MODE_YESNO));
-    p.addQuestion(new Question("Question 2, truefalse", Constants.BINARY_MODE_TRUEFALSE));
-    Question question = new Question("Question 3, red v Blue",
-        Constants.BINARY_MODE_CUSTOM);
-    question.addOption("Red");
-    question.addOption("Blue");
-    p.addQuestion(question);
-    p.addQuestion(new Question("4th Question", Constants.RATE_MODE_STARS));
-    p.addQuestion(new Question("5th Question", Constants.RATE_MODE_LIKEDISLIKE));
-    p.addQuestion(new Question("6th Question", Constants.RATE_MODE_SCORE));
+    Poll poll = new Poll(this, "Generic Poll Title");
+    poll.addQuestion(new Question("First Question", Constants.BINARY_MODE_TRUEFALSE));
+    poll.addQuestion(new Question("Second Question", Constants.BINARY_MODE_YESNO));
+    Question q = new Question("Third Question", Constants.BINARY_MODE_CUSTOM);
+    q.addOption("First Option");
+    q.addOption("Second Option");
+    poll.addQuestion(q);
+    poll.addQuestion(new Question("4th Question", Constants.RATE_MODE_STARS));
+    poll.addQuestion(new Question("5th Question", Constants.RATE_MODE_SCORE));
+    poll.addQuestion(new Question("6th Question", Constants.RATE_MODE_LIKEDISLIKE));
+    q = new Question("7th Question", Constants.RATE_MODE_CUSTOM);
+    q.setRateCustomLowHigh(2, 8);
+    poll.addQuestion(q);
+    q = new Question("8th Question", Constants.MULTI_MODE_EXCLUSIVE);
+    q.addOption("First Option");
+    q.addOption("Second Option");
+    q.addOption("Third Option");
+    q.addOption("Fourth Option");
+    poll.addQuestion(q);
+    q = new Question("9th Question", Constants.MULTI_MODE_MULTIPLE);
+    q.addOption("First Option");
+    q.addOption("Second Option");
+    q.addOption("Third Option");
+    poll.addQuestion(q);
 
-    String serialized = GsonUtils.serialize(p);
+    String serialized = GsonUtils.serialize(poll);
 
     PersistenceUtils.deleteVote(this);
 
