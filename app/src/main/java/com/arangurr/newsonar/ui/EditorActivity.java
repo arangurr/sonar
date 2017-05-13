@@ -270,6 +270,10 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   }
 
   private void showBinaryDialog(Context context) {
+    final boolean[] flags = {
+        false,  // Title
+        true   // Custom & two options
+    };
     LayoutInflater inflater = getLayoutInflater();
     View dialogView = inflater.inflate(R.layout.editor_dialog_binary, null);
 
@@ -277,15 +281,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     final EditText option1 = (EditText) dialogView.findViewById(R.id.edittext_binary_option1);
     final EditText option2 = (EditText) dialogView.findViewById(R.id.edittext_binary_option2);
     final RadioGroup radiogroup = (RadioGroup) dialogView.findViewById(R.id.radiogroup_binary);
-
-    radiogroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-      @Override
-      public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-        boolean custom = (checkedId == R.id.radiobutton_binary_custom);
-        option1.setVisibility(custom ? View.VISIBLE : View.GONE);
-        option2.setVisibility(custom ? View.VISIBLE : View.GONE);
-      }
-    });
 
     AlertDialog.Builder dialogBuilder = new Builder(context);
     dialogBuilder
@@ -319,10 +314,87 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         .setView(dialogView)
         .setTitle("Binary Question")
         .setOnDismissListener(this);
-    dialogBuilder.show();
+
+    final AlertDialog dialog = dialogBuilder.create();
+    dialog.show();
+
+    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+
+    radiogroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+        boolean isCustom = (checkedId == R.id.radiobutton_binary_custom);
+        option1.setVisibility(isCustom ? View.VISIBLE : View.GONE);
+        option2.setVisibility(isCustom ? View.VISIBLE : View.GONE);
+
+        if (isCustom) {
+          flags[1] = (option1.getText().length() > 0) && (option2.getText().length() > 0);
+        } else {
+          flags[1] = true;
+        }
+        enablePositiveButton(dialog, flags);
+      }
+    });
+
+    title.addTextChangedListener(new TextWatcher() {
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+        flags[0] = s.length() > 0;
+        enablePositiveButton(dialog, flags);
+      }
+    });
+    option1.addTextChangedListener(new TextWatcher() {
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+        flags[1] = radiogroup.getCheckedRadioButtonId() == R.id.radiobutton_binary_custom
+            && option1.getText().length() > 0
+            && option2.getText().length() > 0;
+        enablePositiveButton(dialog, flags);
+      }
+    });
+    option2.addTextChangedListener(new TextWatcher() {
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+        flags[1] = radiogroup.getCheckedRadioButtonId() == R.id.radiobutton_binary_custom
+            && option1.getText().length() > 0
+            && option2.getText().length() > 0;
+        enablePositiveButton(dialog, flags);
+      }
+    });
   }
 
   private void showRateDialog(Context context) {
+    final boolean[] flags = {
+        false, // Has Title
+        true, // Custom & min & max
+    };
+
     LayoutInflater inflater = getLayoutInflater();
     View dialogView = inflater.inflate(R.layout.editor_dialog_rate, null);
 
@@ -330,14 +402,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     final EditText min = (EditText) dialogView.findViewById(R.id.edittext_rate_min);
     final EditText max = (EditText) dialogView.findViewById(R.id.edittext_rate_max);
     final RadioGroup radiogroup = (RadioGroup) dialogView.findViewById(R.id.radiogroup_rate);
-
-    radiogroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-      @Override
-      public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-        min.setVisibility(checkedId == R.id.radiobutton_rate_custom ? View.VISIBLE : View.GONE);
-        max.setVisibility(checkedId == R.id.radiobutton_rate_custom ? View.VISIBLE : View.GONE);
-      }
-    });
 
     AlertDialog.Builder dialogBuilder = new Builder(context);
     dialogBuilder
@@ -377,11 +441,85 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         .setNegativeButton(android.R.string.cancel, null)
         .setView(dialogView)
         .setTitle("Rate Question");
-    dialogBuilder.show();
 
+    final AlertDialog dialog = dialogBuilder.create();
+    dialog.show();
+
+    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+
+    radiogroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+        min.setVisibility(checkedId == R.id.radiobutton_rate_custom ? View.VISIBLE : View.GONE);
+        max.setVisibility(checkedId == R.id.radiobutton_rate_custom ? View.VISIBLE : View.GONE);
+        if (checkedId == R.id.radiobutton_rate_custom) {
+          flags[1] = (min.getText().length() > 0) && (max.getText().length() > 0);
+        } else {
+          flags[1] = true;
+        }
+        enablePositiveButton(dialog, flags);
+      }
+    });
+
+    title.addTextChangedListener(new TextWatcher() {
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+        flags[0] = s.length() > 0;
+        enablePositiveButton(dialog, flags);
+      }
+    });
+    min.addTextChangedListener(new TextWatcher() {
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+        flags[1] = radiogroup.getCheckedRadioButtonId() == R.id.radiobutton_rate_custom
+            && (min.getText().length() > 0)
+            && (max.getText().length() > 0);
+        enablePositiveButton(dialog, flags);
+      }
+    });
+    max.addTextChangedListener(new TextWatcher() {
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+        flags[1] = radiogroup.getCheckedRadioButtonId() == R.id.radiobutton_rate_custom
+            && (min.getText().length() > 0)
+            && (max.getText().length() > 0);
+        enablePositiveButton(dialog, flags);
+      }
+    });
   }
 
   private void showMultiDialog(Context context) {
+    final boolean[] flags = {
+        false,  // Has a title
+        false   // Has at least two options
+    };
+
     final LayoutInflater inflater = getLayoutInflater();
     View dialogView = inflater.inflate(R.layout.editor_dialog_multi, null);
 
@@ -437,6 +575,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         .setView(dialogView)
         .setTitle("Multiple Option Question");
     final AlertDialog dialog = dialogBuilder.create();
+
     dialog.show();
     dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -468,8 +607,9 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
           }
           container.addView(newEditText);
 
-          dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-              .setEnabled(container.getChildCount() >= 2);
+          flags[1] = container.getChildCount() > 3;
+          enablePositiveButton(dialog, flags);
+
           lastEditText.removeTextChangedListener(this);
           //lastEditText.addTextChangedListener(removerWatcher);
         }
@@ -479,6 +619,33 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     EditText firstEditText = (EditText) container.findViewById(R.id.edittext_multi_option0);
     firstEditText.setTag(0);
     firstEditText.addTextChangedListener(lastEditTextWatcher);
+
+    title.addTextChangedListener(new TextWatcher() {
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+        flags[0] = s.length() > 0;
+        enablePositiveButton(dialog, flags);
+      }
+    });
+  }
+
+  private void enablePositiveButton(AlertDialog dialog, boolean... flags) {
+    boolean enable = true;
+    for (boolean b : flags) {
+      if (!b) {
+        enable = false;
+        break;
+      }
+    }
+    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(enable);
   }
 
   private void rotateIcon(Drawable icon, boolean reverse) {
