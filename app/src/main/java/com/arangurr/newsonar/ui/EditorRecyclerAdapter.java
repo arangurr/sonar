@@ -72,6 +72,8 @@ public class EditorRecyclerAdapter extends
   }
 
   private void bindTitle(final TitleHolder holder) {
+    holder.mPollTitle.setHorizontallyScrolling(false);
+    holder.mPollTitle.setMaxLines(3);
     if (mPoll.getPollTitle() != null) {
       holder.mPollTitle.setText(mPoll.getPollTitle());
     } else {

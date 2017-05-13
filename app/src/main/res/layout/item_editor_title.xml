@@ -23,10 +23,8 @@
       android:layout_height="wrap_content"
       android:hint="Title"
       android:imeOptions="flagNoExtractUi|actionDone"
-      android:inputType="text|textCapSentences|textMultiLine"
-      android:maxLines="3"
+      android:inputType="text|textCapSentences|textAutoCorrect"
       android:selectAllOnFocus="true"
-      android:text="Untitled Poll"
       tools:text="This is a very long title that should not fit in a single line. Blablabla. "/>
   </android.support.design.widget.TextInputLayout>
 
