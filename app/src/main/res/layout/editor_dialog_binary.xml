@@ -10,14 +10,13 @@
   android:orientation="vertical">
 
   <EditText
-    android:imeOptions="flagNoExtractUi"
     android:id="@+id/edittext_binary_title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:hint="Title"
-    android:minHeight="@dimen/item_height_small"
-    android:selectAllOnFocus="true"
-    android:text="Title"/>
+    android:imeOptions="flagNoExtractUi|actionDone"
+    android:inputType="text|textCapSentences"
+    android:minHeight="@dimen/item_height_small"/>
 
   <RadioGroup
     android:id="@+id/radiogroup_binary"
@@ -47,19 +46,21 @@
   </RadioGroup>
 
   <EditText
-    android:imeOptions="flagNoExtractUi"
     android:id="@+id/edittext_binary_option1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:hint="First Option"
+    android:imeOptions="flagNoExtractUi|actionDone"
+    android:inputType="text|textCapSentences"
     android:visibility="gone"/>
 
   <EditText
-    android:imeOptions="flagNoExtractUi"
     android:id="@+id/edittext_binary_option2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:hint="Second Option"
+    android:imeOptions="flagNoExtractUi|actionDone"
+    android:inputType="text|textCapSentences"
     android:visibility="gone"/>
 
 </LinearLayout>

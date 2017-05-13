@@ -15,7 +15,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:hint="Title"
-    android:imeOptions="flagNoExtractUi"
+    android:imeOptions="flagNoExtractUi|actionDone"
+    android:inputType="text|textCapSentences"
     android:minHeight="@dimen/item_height_small"
     android:selectAllOnFocus="true"
     android:text="Title"/>
@@ -57,7 +58,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:hint="Minimum"
-    android:imeOptions="flagNoExtractUi"
+    android:imeOptions="flagNoExtractUi|actionNext"
     android:inputType="number|numberSigned"
     android:visibility="gone"
     tools:visibility="visible"/>
@@ -67,7 +68,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:hint="Maximum"
-    android:imeOptions="flagNoExtractUi"
+    android:imeOptions="flagNoExtractUi|actionDone"
     android:inputType="number|numberSigned"
     android:visibility="gone"
     tools:visibility="visible"/>

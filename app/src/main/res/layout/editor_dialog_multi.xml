@@ -19,7 +19,8 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:hint="Title"
-      android:imeOptions="flagNoExtractUi"
+      android:imeOptions="flagNoExtractUi|actionDone"
+      android:inputType="text|textCapSentences"
       android:minHeight="@dimen/item_height_small"/>
     <CheckBox
       android:id="@+id/checkbox_multi"
@@ -32,7 +33,8 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:hint="Option 1"
-      android:imeOptions="flagNoExtractUi"/>
+      android:imeOptions="flagNoExtractUi|actionNext"
+      android:inputType="text|textCapSentences"/>
   </LinearLayout>
 
 </ScrollView>
