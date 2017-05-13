@@ -408,42 +408,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 //      }
 //    };
 
-    final TextWatcher lastEditTextWatcher = new TextWatcher() {
-      @Override
-      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-      }
-
-      @Override
-      public void onTextChanged(CharSequence s, int start, int before, int count) {
-      }
-
-      @Override
-      public void afterTextChanged(Editable s) {
-        if (s.length() != 0 && container.getChildCount() <= 11) {
-          EditText lastEditText = (EditText) container
-              .findViewWithTag(container.getChildCount() - 3);
-
-          EditText newEditText = (EditText) inflater
-              .inflate(R.layout.editor_dialog_multi_option, container, false);
-
-          newEditText.addTextChangedListener(this);
-          newEditText.setTag(container.getChildCount() - 2);
-          newEditText.setHint("Option " + ((int) newEditText.getTag() + 1));
-          if (container.getChildCount() == 11) {
-            newEditText
-                .setImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-          }
-          container.addView(newEditText);
-          lastEditText.removeTextChangedListener(this);
-          //lastEditText.addTextChangedListener(removerWatcher);
-        }
-      }
-    };
-
-    EditText firstEditText = (EditText) container.findViewById(R.id.edittext_multi_option0);
-    firstEditText.setTag(0);
-    firstEditText.addTextChangedListener(lastEditTextWatcher);
-
     AlertDialog.Builder dialogBuilder = new Builder(context);
     dialogBuilder
         .setNegativeButton(android.R.string.cancel, null)
@@ -472,9 +436,49 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         })
         .setView(dialogView)
         .setTitle("Multiple Option Question");
-    AlertDialog dialog = dialogBuilder.create();
+    final AlertDialog dialog = dialogBuilder.create();
     dialog.show();
     dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+
+    final TextWatcher lastEditTextWatcher = new TextWatcher() {
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+        if (s.length() != 0 && container.getChildCount() <= 11) {
+          EditText lastEditText = (EditText) container
+              .findViewWithTag(container.getChildCount() - 3);
+
+          EditText newEditText = (EditText) inflater
+              .inflate(R.layout.editor_dialog_multi_option, container, false);
+
+          newEditText.addTextChangedListener(this);
+          newEditText.setTag(container.getChildCount() - 2);
+          newEditText.setHint("Option " + ((int) newEditText.getTag() + 1));
+          if (container.getChildCount() == 11) {
+            newEditText
+                .setImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+          }
+          container.addView(newEditText);
+
+          dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+              .setEnabled(container.getChildCount() >= 2);
+          lastEditText.removeTextChangedListener(this);
+          //lastEditText.addTextChangedListener(removerWatcher);
+        }
+      }
+    };
+
+    EditText firstEditText = (EditText) container.findViewById(R.id.edittext_multi_option0);
+    firstEditText.setTag(0);
+    firstEditText.addTextChangedListener(lastEditTextWatcher);
   }
 
   private void rotateIcon(Drawable icon, boolean reverse) {
