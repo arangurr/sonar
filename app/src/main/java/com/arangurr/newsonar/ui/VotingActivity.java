@@ -28,9 +28,11 @@ import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.GsonUtils;
 import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
+import com.arangurr.newsonar.data.Option;
 import com.arangurr.newsonar.data.Poll;
 import com.arangurr.newsonar.data.Question;
 import com.arangurr.newsonar.data.Vote;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VotingActivity extends AppCompatActivity implements OnClickListener {
@@ -152,6 +154,12 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
           container.addView(view);
           bindRateQuestion(mQuestionList.get(position), view, position);
           break;
+        case Constants.MULTI_MODE_EXCLUSIVE:
+          view = LayoutInflater.from(container.getContext())
+              .inflate(R.layout.card_vote_multi_exclusive, container, false);
+          container.addView(view);
+          bindMultiExclusiveQuestion(mQuestionList.get(position), view, position);
+          break;
         default:
           view = LayoutInflater.from(container.getContext())
               .inflate(android.R.layout.simple_list_item_1, container, false);
@@ -241,7 +249,6 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
     }
 
     private void bindLikeQuestion(final Question question, View view, final int position) {
-
       final TextView header = (TextView) view.findViewById(R.id.textview_card_vote_title);
       final TextView content = (TextView) view.findViewById(R.id.textview_card_vote_content);
       final ImageButton like = (ImageButton) view.findViewById(R.id.button_card_vote_like);
@@ -283,6 +290,38 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
             PersistenceUtils.storeVoteInPreferences(getApplicationContext(), mVote);
             mSendButton.setEnabled(mVote.getSelectionList().size() == mQuestionList.size());
           }
+        }
+      });
+
+    }
+
+    private void bindMultiExclusiveQuestion(final Question question, View view, int position) {
+      final TextView header = (TextView) view.findViewById(R.id.textview_card_vote_title);
+      final TextView content = (TextView) view.findViewById(R.id.textview_card_vote_content);
+      final RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radiogroup_card_multi_vote);
+
+      header.setText(String.format(
+          getString(R.string.voting_card_title),
+          position + 1,
+          mQuestionList.size()));
+      content.setText(question.getTitle());
+
+      final ArrayList<Option> options = question.getAllOptions();
+
+      for (int i = 0; i < options.size(); i++) {
+        RadioButton radioButton = (RadioButton) LayoutInflater.from(view.getContext())
+            .inflate(R.layout.card_vote_multi_radiobutton, radioGroup, false);
+        radioButton.setText(options.get(i).getOptionName());
+        radioButton.setId(options.get(i).getKey());
+        radioGroup.addView(radioButton);
+      }
+
+      radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+          mVote.attachResponse(question, options.get(checkedId));
+          PersistenceUtils.storeVoteInPreferences(getApplicationContext(), mVote);
+          mSendButton.setEnabled(mVote.getSelectionList().size() == mQuestionList.size());
         }
       });
 
