@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.WindowManager.LayoutParams;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -386,33 +387,59 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     final LinearLayout container = (LinearLayout) dialogView
         .findViewById(R.id.linearlayout_multi_container);
 
+//    final TextWatcher removerWatcher = new TextWatcher() {
+//
+//      @Override
+//      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//      }
+//
+//      @Override
+//      public void onTextChanged(CharSequence s, int start, int before, int count) {
+//      }
+//
+//      @Override
+//      public void afterTextChanged(Editable s) {
+//        if (s.length() == 0) {
+//          container.removeViewAt(container.getChildCount() - 1);
+//        }
+//      }
+//    };
+
     final TextWatcher lastEditTextWatcher = new TextWatcher() {
       @Override
       public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
       }
 
       @Override
       public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (s.length() == 1 && before != 2 && container.getChildCount() <= 12) {
-          EditText editText = (EditText) inflater
-              .inflate(R.layout.editor_dialog_multi_option, container, false);
-
-          editText.addTextChangedListener(this);
-          editText.setHint("Option " + (container.getChildCount() - 1));
-          container.addView(editText);
-        } else if (s.length() == 0) {
-          container.removeViewAt(container.getChildCount() - 1);
-        }
       }
 
       @Override
       public void afterTextChanged(Editable s) {
+        if (s.length() != 0 && container.getChildCount() <= 11) {
+          EditText lastEditText = (EditText) container
+              .findViewWithTag(container.getChildCount() - 3);
 
+          EditText newEditText = (EditText) inflater
+              .inflate(R.layout.editor_dialog_multi_option, container, false);
+
+          newEditText.addTextChangedListener(this);
+          newEditText.setTag(container.getChildCount() - 2);
+          newEditText.setHint("Option " + ((int) newEditText.getTag() + 1));
+          if (container.getChildCount() == 11) {
+            newEditText
+                .setImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+          }
+          container.addView(newEditText);
+          lastEditText.removeTextChangedListener(this);
+          //lastEditText.addTextChangedListener(removerWatcher);
+        }
       }
     };
-    ((EditText) container.getChildAt(container.getChildCount() - 1))
-        .addTextChangedListener(lastEditTextWatcher);
+
+    EditText firstEditText = (EditText) container.findViewById(R.id.edittext_multi_option0);
+    firstEditText.setTag(0);
+    firstEditText.addTextChangedListener(lastEditTextWatcher);
 
     AlertDialog.Builder dialogBuilder = new Builder(context);
     dialogBuilder
