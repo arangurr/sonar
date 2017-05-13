@@ -86,6 +86,10 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       }
     }
 
+    if (mPoll == null) {
+      mPoll = new Poll(this);
+    }
+
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_24dp);
     toolbar.getNavigationIcon().mutate().setColorFilter(Color.WHITE, Mode.SRC_IN);
@@ -258,7 +262,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   @Override
   protected void onStop() {
     super.onStop();
-    if (mPoll.getQuestionList().size() == 0) {
+    if (mPoll.getPollTitle() == null && mPoll.getQuestionList().size() == 0) {
       PersistenceUtils.deletePoll(this, mPoll);
     }
   }
@@ -412,6 +416,8 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
     AlertDialog.Builder dialogBuilder = new Builder(context);
     dialogBuilder
+        .setNegativeButton(android.R.string.cancel, null)
+        .setPositiveButton(android.R.string.ok, null)
         .setView(dialogView)
         .setTitle("Multiple Option Question");
     AlertDialog dialog = dialogBuilder.create();
