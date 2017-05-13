@@ -557,9 +557,9 @@ public class DetailsActivity extends AppCompatActivity implements
 
         header = (TextView) itemView.findViewById(R.id.textview_details_item_header_title);
         container = (LinearLayout) itemView
-            .findViewById(R.id.linearlayout_item_card_rate_container);
-        switcher = (ViewSwitcher) itemView.findViewById(R.id.viewswitcher_item_card_rate);
-        summary = (TextView) itemView.findViewById(R.id.textview_item_card_rate_summary);
+            .findViewById(R.id.linearlayout_item_card_container);
+        switcher = (ViewSwitcher) itemView.findViewById(R.id.viewswitcher_item_card);
+        summary = (TextView) itemView.findViewById(R.id.textview_item_card_summary);
       }
     }
 
