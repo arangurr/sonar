@@ -27,6 +27,9 @@ public class Constants {
   public static final int RATE_MODE_SCORE = 22;
   public static final int RATE_MODE_CUSTOM = 23;
 
+  public static final int MULTI_MODE_MULTIPLE = 30;
+  public static final int MULTI_MODE_EXCLUSIVE = 31;
+
   public static final String PREFS_POLLS = "preferences_polls";
   public static final String PREFS_VOTE = "preferences_vote";
 

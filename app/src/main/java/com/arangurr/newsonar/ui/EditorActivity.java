@@ -37,6 +37,7 @@ import android.view.WindowManager.LayoutParams;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -386,6 +387,8 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
     final LinearLayout container = (LinearLayout) dialogView
         .findViewById(R.id.linearlayout_multi_container);
+    final EditText title = (EditText) dialogView.findViewById(R.id.edittext_multi_title);
+    final CheckBox checkBox = (CheckBox) dialogView.findViewById(R.id.checkbox_multi);
 
 //    final TextWatcher removerWatcher = new TextWatcher() {
 //
@@ -444,7 +447,29 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     AlertDialog.Builder dialogBuilder = new Builder(context);
     dialogBuilder
         .setNegativeButton(android.R.string.cancel, null)
-        .setPositiveButton(android.R.string.ok, null)
+        .setPositiveButton(android.R.string.ok, new OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            Question question;
+            question = new Question(title.getText().toString(),
+                checkBox.isChecked()
+                    ? Constants.MULTI_MODE_MULTIPLE
+                    : Constants.MULTI_MODE_EXCLUSIVE);
+
+            for (int tag = 0; ; tag++) {
+              View child = container.findViewWithTag(tag);
+              if (child == null) {
+                break;
+              }
+              String nameText = ((EditText) child).getText().toString();
+              if (!nameText.isEmpty()) {
+                question.addOption(nameText);
+              }
+            }
+            mPoll.addQuestion(question);
+            mAdapter.notifyDataSetChanged();
+          }
+        })
         .setView(dialogView)
         .setTitle("Multiple Option Question");
     AlertDialog dialog = dialogBuilder.create();
