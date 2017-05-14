@@ -14,8 +14,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
@@ -115,6 +117,20 @@ public class DetailsActivity extends AppCompatActivity implements
     mAdapter = new SimpleRecyclerViewAdapter();
     mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     mRecyclerView.setAdapter(mAdapter);
+
+    mRecyclerView.setOnTouchListener(new OnTouchListener() {
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+          if (behavior.getState() == BottomSheetBehavior.STATE_DRAGGING
+              || behavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return true;
+          }
+        }
+        return false;
+      }
+    });
 
     mToggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
       @Override
