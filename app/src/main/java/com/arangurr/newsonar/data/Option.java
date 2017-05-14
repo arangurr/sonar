@@ -23,6 +23,10 @@ public class Option {
     mVoterList = new ArrayList<>();
   }
 
+  public ArrayList<VoterIdPair> getVoterList() {
+    return mVoterList;
+  }
+
   public int getNumberOfVotes() {
     return mVoterList.size();
   }

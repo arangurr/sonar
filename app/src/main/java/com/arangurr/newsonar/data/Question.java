@@ -3,6 +3,7 @@ package com.arangurr.newsonar.data;
 import com.arangurr.newsonar.Constants;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Rodrigo on 30/03/2017.
@@ -122,10 +123,18 @@ public class Question {
   }
 
   public int getNumberOfVotes() {
-    int count = 0;
+    return getVoterIdList().size();
+  }
+
+  public List<String> getVoterIdList() {
+    List<String> list = new ArrayList<>();
     for (Option o : mOptions) {
-      count += o.getNumberOfVotes();
+      for (VoterIdPair voter : o.getVoterList()) {
+        if (!list.contains(voter.getUuid())) {
+          list.add(voter.getUuid());
+        }
+      }
     }
-    return count;
+    return list;
   }
 }

@@ -360,6 +360,8 @@ public class DetailsActivity extends AppCompatActivity implements
         case Constants.RATE_MODE_CUSTOM:
         case Constants.RATE_MODE_SCORE:
         case Constants.RATE_MODE_STARS:
+        case Constants.MULTI_MODE_EXCLUSIVE:
+        case Constants.MULTI_MODE_MULTIPLE:
           return R.layout.details_card_multiple;
       }
       return android.R.layout.simple_list_item_1;
@@ -377,7 +379,6 @@ public class DetailsActivity extends AppCompatActivity implements
           inflatedView = LayoutInflater.from(parent.getContext())
               .inflate(R.layout.details_card_likedislike, parent, false);
           return new LikeDislikeHolder(inflatedView);
-//        case R.layout.item_card_multi:
         case R.layout.details_card_multiple:
           inflatedView = LayoutInflater.from(parent.getContext())
               .inflate(R.layout.details_card_multiple, parent, false);
@@ -395,6 +396,11 @@ public class DetailsActivity extends AppCompatActivity implements
           bindDualItem((DualItemHolder) holder, position);
           break;
         case R.layout.details_card_multiple:
+          int mode = mCurrentPoll.getQuestionList().get(position).getQuestionMode();
+          if (mode == Constants.MULTI_MODE_EXCLUSIVE || mode == Constants.MULTI_MODE_MULTIPLE) {
+            bindMultipleOption((MultipleItemHolder) holder, position);
+            break;
+          }
           bindRate((MultipleItemHolder) holder, position);
           break;
         case R.layout.details_card_likedislike:
@@ -485,7 +491,7 @@ public class DetailsActivity extends AppCompatActivity implements
         ((TextView) rowView.findViewById(android.R.id.text2))
             .setText(String.format("Votes: %d", o.getNumberOfVotes()));
 
-        int level = (int) (o.getNumberOfVotes() / (float) voters * 10000);
+        int level = (int) ((float) o.getNumberOfVotes() / voters * 10000);
         rowView.getBackground().setLevel(level);
       }
 
@@ -522,6 +528,44 @@ public class DetailsActivity extends AppCompatActivity implements
               voteDislike > voteLike ? Typeface.NORMAL : Typeface.BOLD);
         }
       }
+    }
+
+    private void bindMultipleOption(final MultipleItemHolder holder, int position) {
+      Question q = mCurrentPoll.getQuestionList().get(position);
+      holder.header.setText(String.format("%s. %s", String.valueOf(position + 1), q.getTitle()));
+
+      int voters = q.getNumberOfVotes();
+
+      holder.header.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          boolean isExpanded = holder.header.isSelected();
+          TransitionManager.beginDelayedTransition(mRecyclerView);
+
+          holder.header.setSelected(!isExpanded);
+          holder.switcher.setDisplayedChild(isExpanded ? 0 : 1);
+        }
+      });
+
+      for (Option option : q.getAllOptions()) {
+        View rowView = holder.container.findViewWithTag(option.getKey());
+        if (rowView == null) {
+          rowView = LayoutInflater.from(holder.container.getContext())
+              .inflate(android.R.layout.simple_list_item_2, holder.container, false);
+          rowView.setTag(option.getKey());
+          rowView.setBackgroundResource(R.drawable.dw_level_start);
+          holder.container.addView(rowView);
+        }
+
+        ((TextView) rowView.findViewById(android.R.id.text1)).setText(option.getOptionName());
+        ((TextView) rowView.findViewById(android.R.id.text2))
+            .setText(String.format("Votes: %d", option.getNumberOfVotes()));
+
+        int level = (int) ((float) option.getNumberOfVotes() / voters * 10000);
+        rowView.getBackground().setLevel(level);
+      }
+
+      holder.summary.setText("Summary: " + String.valueOf(voters) + " voters");
     }
 
     class DualItemHolder extends RecyclerView.ViewHolder {
