@@ -11,74 +11,79 @@
   app:cardElevation="4dp"
   tools:visibility="visible">
 
-  <LinearLayout
+  <ScrollView
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:minWidth="196dp"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <TextView
-      android:id="@+id/textview_card_binary"
-      android:layout_width="match_parent"
-      android:layout_height="?android:attr/listPreferredItemHeight"
-      android:paddingStart="8dp"
-      android:paddingEnd="8dp"
-      android:background="?android:attr/selectableItemBackground"
-      android:drawableLeft="@drawable/ic_binary_24dp"
-      android:drawablePadding="8dp"
-      android:gravity="center_vertical"
-      android:onClick="onClick"
-      android:text="Binary"
-      android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Menu"/>
-
-    <TextView
-      android:id="@+id/textview_card_multiple"
-      android:layout_width="match_parent"
-      android:layout_height="?android:attr/listPreferredItemHeight"
-      android:paddingStart="8dp"
-      android:paddingEnd="8dp"
-      android:background="?android:attr/selectableItemBackground"
-      android:drawablePadding="8dp"
-      android:drawableStart="@drawable/ic_multiple_24dp"
-      android:gravity="center_vertical"
-      android:onClick="onClick"
-      android:text="Multiple options"
-      android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Menu"/>
-
-    <TextView
-      android:id="@+id/textview_card_rate"
-      android:layout_width="match_parent"
-      android:layout_height="?android:attr/listPreferredItemHeight"
-      android:paddingStart="8dp"
-      android:paddingEnd="8dp"
-      android:background="?android:attr/selectableItemBackground"
-      android:drawableLeft="@drawable/ic_thumbs_24dp"
-      android:drawablePadding="8dp"
-      android:gravity="center_vertical"
-      android:onClick="onClick"
-      android:text="Rate"
-      android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Menu"/>
-
-    <FrameLayout
-      android:layout_width="match_parent"
+    <LinearLayout
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:background="@color/colorAccentIntermediate"
-      android:clipToPadding="false">
+      android:minWidth="196dp"
+      android:orientation="vertical">
+
       <TextView
-        android:id="@+id/textview_card_close"
+        android:id="@+id/textview_card_binary"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:drawableLeft="@drawable/ic_binary_24dp"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:onClick="onClick"
+        android:text="Binary"
+        android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Menu"/>
+
+      <TextView
+        android:id="@+id/textview_card_multiple"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/listPreferredItemHeight"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:background="?android:attr/selectableItemBackground"
         android:drawablePadding="8dp"
-        android:drawableStart="@drawable/ic_clear_24dp"
+        android:drawableStart="@drawable/ic_multiple_24dp"
         android:gravity="center_vertical"
         android:onClick="onClick"
-        android:text="Close"
-        android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Menu"
-        android:textColor="@color/colorPrimaryText"/>
-    </FrameLayout>
+        android:text="Multiple options"
+        android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Menu"/>
 
-  </LinearLayout>
+      <TextView
+        android:id="@+id/textview_card_rate"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:drawableLeft="@drawable/ic_thumbs_24dp"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:onClick="onClick"
+        android:text="Rate"
+        android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Menu"/>
+
+      <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccentIntermediate"
+        android:clipToPadding="false">
+        <TextView
+          android:id="@+id/textview_card_close"
+          android:layout_width="match_parent"
+          android:layout_height="?android:attr/listPreferredItemHeight"
+          android:paddingStart="8dp"
+          android:paddingEnd="8dp"
+          android:background="?android:attr/selectableItemBackground"
+          android:drawablePadding="8dp"
+          android:drawableStart="@drawable/ic_clear_24dp"
+          android:gravity="center_vertical"
+          android:onClick="onClick"
+          android:text="Close"
+          android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Menu"
+          android:textColor="@color/colorPrimaryText"/>
+      </FrameLayout>
+      
+    </LinearLayout>
+  </ScrollView>
 </android.support.v7.widget.CardView>
