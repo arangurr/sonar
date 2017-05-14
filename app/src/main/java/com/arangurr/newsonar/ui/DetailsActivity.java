@@ -48,6 +48,7 @@ import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.UUID;
 
 public class DetailsActivity extends AppCompatActivity implements
@@ -564,8 +565,23 @@ public class DetailsActivity extends AppCompatActivity implements
         int level = (int) ((float) option.getNumberOfVotes() / voters * 10000);
         rowView.getBackground().setLevel(level);
       }
-
-      holder.summary.setText("Summary: " + String.valueOf(voters) + " voters");
+      if (voters > 0) {
+        List<Option> mostVoted = q.getMostVotedOptions();
+        if (mostVoted.size() != 1) {
+          StringBuilder summary = new StringBuilder("Most voted options: ");
+          for (Option o : mostVoted) {
+            summary.append(o.getOptionName());
+            summary.append(", ");
+          }
+          summary.deleteCharAt(summary.length() - 1);
+          summary.deleteCharAt(summary.length() - 1);  // This deletes last ", "
+          holder.summary.setText(summary.toString());
+        } else {
+          holder.summary.setText("Most voted option: " + mostVoted.get(0).getOptionName());
+        }
+      } else {
+        holder.summary.setText("No votes yet");
+      }
     }
 
     class DualItemHolder extends RecyclerView.ViewHolder {

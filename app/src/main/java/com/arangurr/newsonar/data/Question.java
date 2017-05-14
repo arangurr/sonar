@@ -137,4 +137,19 @@ public class Question {
     }
     return list;
   }
+
+  public List<Option> getMostVotedOptions() {
+    ArrayList<Option> candidates = new ArrayList<>();
+    candidates.add(mOptions.get(0));
+    for (Option o : mOptions) {
+      if (o.getNumberOfVotes() > candidates.get(0).getNumberOfVotes()) {
+        candidates.clear();
+        candidates.add(o);
+      } else if (o.getNumberOfVotes() == candidates.get(0).getNumberOfVotes()
+          && o.getKey() != candidates.get(0).getKey()) {
+        candidates.add(o);
+      }
+    }
+    return candidates;
+  }
 }
