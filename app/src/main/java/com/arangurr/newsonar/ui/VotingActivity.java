@@ -24,6 +24,8 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.RatingBar;
+import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -149,8 +151,13 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
           container.addView(view);
           bindLikeQuestion(mQuestionList.get(position), view, position);
           break;
-        case Constants.RATE_MODE_SCORE:
         case Constants.RATE_MODE_STARS:
+          view = LayoutInflater.from(container.getContext())
+              .inflate(R.layout.card_vote_rate_stars, container, false);
+          container.addView(view);
+          bindStarsQuestion(mQuestionList.get(position), view, position);
+          break;
+        case Constants.RATE_MODE_SCORE:
         case Constants.RATE_MODE_CUSTOM:
           view = LayoutInflater.from(container.getContext())
               .inflate(R.layout.card_vote_rate, container, false);
@@ -253,6 +260,29 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
           mVote.attachResponse(question, question.getOption(seekBar.getProgress()));
           PersistenceUtils.storeVoteInPreferences(getApplicationContext(), mVote);
           mSendButton.setEnabled(mVote.getSelectionList().size() == mQuestionList.size());
+        }
+      });
+    }
+
+    private void bindStarsQuestion(final Question question, View view, int position) {
+      final TextView header = (TextView) view.findViewById(R.id.textview_card_vote_title);
+      final TextView content = (TextView) view.findViewById(R.id.textview_card_vote_content);
+      final RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar_card_rate_vote);
+
+      header.setText(String.format(
+          getString(R.string.voting_card_title),
+          position + 1,
+          mQuestionList.size()));
+      content.setText(question.getTitle());
+
+      ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
+        @Override
+        public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+          if (fromUser) {
+            mVote.attachResponse(question, question.getOption((int) (rating - 1)));
+            PersistenceUtils.storeVoteInPreferences(getApplicationContext(), mVote);
+            mSendButton.setEnabled(mVote.getSelectionList().size() == mQuestionList.size());
+          }
         }
       });
     }
