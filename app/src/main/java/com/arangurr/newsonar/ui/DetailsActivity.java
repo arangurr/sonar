@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -486,6 +487,7 @@ public class DetailsActivity extends AppCompatActivity implements
       int voters = q.getNumberOfVotes();
 
       holder.header.setText(String.format("%s. %s", String.valueOf(position + 1), q.getTitle()));
+      holder.dropdown.setVisibility(View.VISIBLE);
 
       holder.header.setOnClickListener(new OnClickListener() {
         @Override
@@ -495,6 +497,7 @@ public class DetailsActivity extends AppCompatActivity implements
           boolean isExpanded = holder.header.isSelected();
 
           holder.header.setSelected(!isExpanded);
+          holder.dropdown.setSelected(!isExpanded);
           holder.switcher.setDisplayedChild(isExpanded ? 0 : 1);
         }
       });
@@ -561,6 +564,7 @@ public class DetailsActivity extends AppCompatActivity implements
     private void bindMultipleOption(final MultipleItemHolder holder, int position) {
       Question q = mCurrentPoll.getQuestionList().get(position);
       holder.header.setText(String.format("%s. %s", String.valueOf(position + 1), q.getTitle()));
+      holder.dropdown.setVisibility(View.VISIBLE);
 
       int voters = q.getNumberOfVotes();
 
@@ -571,6 +575,7 @@ public class DetailsActivity extends AppCompatActivity implements
           TransitionManager.beginDelayedTransition(mRecyclerView);
 
           holder.header.setSelected(!isExpanded);
+          holder.dropdown.setSelected(!isExpanded);
           holder.switcher.setDisplayedChild(isExpanded ? 0 : 1);
         }
       });
@@ -614,6 +619,7 @@ public class DetailsActivity extends AppCompatActivity implements
     private void bindStars(final StarsItemHolder holder, int position) {
       Question q = mCurrentPoll.getQuestionList().get(position);
       holder.header.setText(String.format("%s. %s", String.valueOf(position + 1), q.getTitle()));
+      holder.dropdown.setVisibility(View.VISIBLE);
 
       int voters = q.getNumberOfVotes();
 
@@ -624,6 +630,7 @@ public class DetailsActivity extends AppCompatActivity implements
           TransitionManager.beginDelayedTransition(mRecyclerView);
 
           holder.header.setSelected(!isExpanded);
+          holder.dropdown.setSelected(!isExpanded);
           holder.switcher.setDisplayedChild(isExpanded ? 0 : 1);
         }
       });
@@ -689,6 +696,7 @@ public class DetailsActivity extends AppCompatActivity implements
       LinearLayout container;
       ViewSwitcher switcher;
       TextView summary;
+      ImageButton dropdown;
 
       public MultipleItemHolder(View itemView) {
         super(itemView);
@@ -698,6 +706,7 @@ public class DetailsActivity extends AppCompatActivity implements
             .findViewById(R.id.linearlayout_item_card_container);
         switcher = (ViewSwitcher) itemView.findViewById(R.id.viewswitcher_item_card);
         summary = (TextView) itemView.findViewById(R.id.textview_item_card_summary);
+        dropdown = (ImageButton) itemView.findViewById(R.id.imagebutton_details_item_dropdown);
       }
     }
 
@@ -726,6 +735,7 @@ public class DetailsActivity extends AppCompatActivity implements
       ViewSwitcher switcher;
       TextView summary;
       RatingBar stars;
+      ImageButton dropdown;
 
       public StarsItemHolder(View itemView) {
         super(itemView);
@@ -735,6 +745,7 @@ public class DetailsActivity extends AppCompatActivity implements
         switcher = (ViewSwitcher) itemView.findViewById(R.id.viewswitcher_item_card);
         summary = (TextView) itemView.findViewById(R.id.textview_item_card_summary);
         stars = (RatingBar) itemView.findViewById(R.id.ratingbar_item_card_summary);
+        dropdown = (ImageButton) itemView.findViewById(R.id.imagebutton_details_item_dropdown);
       }
     }
 
