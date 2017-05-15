@@ -1,39 +1,27 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   tools:showIn="@layout/details_card_twoitems">
 
-  <LinearLayout
+  <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimaryLight"
-    android:clickable="true"
-    android:elevation="2dp"
-    android:orientation="horizontal">
-
+    android:background="@color/colorPrimaryLight">
     <TextView
       android:id="@+id/textview_details_item_header_title"
       style="@android:style/TextAppearance.Material.Widget.ActionBar.Title.Inverse"
-      android:layout_width="0dp"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_weight="1"
       android:paddingTop="8dp"
       android:paddingBottom="8dp"
       android:paddingStart="@dimen/item_start_margin"
+      android:paddingEnd="8dp"
+      android:background="?android:attr/selectableItemBackground"
+      android:drawableEnd="@drawable/asl_checkable_expandcollapse"
+      android:elevation="2dp"
+      android:foreground="?android:attr/selectableItemBackground"
       android:gravity="center_vertical"
       android:minHeight="@dimen/item_height_small"
       tools:text="Very long title"/>
+  </FrameLayout>
 
-    <ImageButton
-      android:id="@+id/imagebutton_details_item_dropdown"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="top"
-      android:padding="12dp"
-      android:background="?android:attr/selectableItemBackgroundBorderless"
-      android:tint="@color/colorPrimaryTextDark"
-      android:visibility="gone"
-      app:srcCompat="@drawable/asl_checkable_expandcollapse"
-      tools:visibility="visible"/>
-  </LinearLayout>
 </merge>
