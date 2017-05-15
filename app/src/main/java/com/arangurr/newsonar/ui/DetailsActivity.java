@@ -648,30 +648,35 @@ public class DetailsActivity extends AppCompatActivity implements
 
       int voters = q.getNumberOfVotes();
       int sum = 0;
+      int[] rainbowColors = getResources().getIntArray(R.array.progress_rainbow);
 
-      for (int i = q.getAllOptions().size() - 1; i >= 0; i--) {
+      for (int i = 0; i < q.getAllOptions().size(); i++) {
         Option option = q.getOption(i);
         View rowView = holder.container.findViewWithTag(option.getKey());
         if (rowView == null) {
           rowView = LayoutInflater.from(holder.container.getContext())
-              .inflate(android.R.layout.simple_list_item_2, holder.container, false);
+              .inflate(R.layout.item_twolines_with_progress, holder.container, false);
           rowView.setTag(option.getKey());
-          rowView.setBackgroundResource(R.drawable.dw_level_start);
-          holder.container.addView(rowView);
+          holder.container.addView(rowView, 0);
+          ((ProgressBar) holder.container.findViewById(R.id.progressbar_item_card_option_progress))
+              .getProgressDrawable().setTint(rainbowColors[i]);
         }
         sum += Integer.parseInt(option.getOptionName()) * option.getNumberOfVotes();
 
         TextView text1 = (TextView) rowView.findViewById(android.R.id.text1);
+        TextView text2 = (TextView) rowView.findViewById(android.R.id.text2);
+        ProgressBar progressBar = (ProgressBar) rowView
+            .findViewById(R.id.progressbar_item_card_option_progress);
+
         text1.setText(option.getOptionName());
         Drawable star = getDrawable(R.drawable.ic_star_24dp);
         star.setTint(ContextCompat.getColor(text1.getContext(), R.color.colorRatePrimary));
         text1.setCompoundDrawablePadding(8);
         text1.setCompoundDrawablesWithIntrinsicBounds(star, null, null, null);
-        ((TextView) rowView.findViewById(android.R.id.text2))
-            .setText(String.format("Votes: %d", option.getNumberOfVotes()));
+        text2.setText(String.format("Votes: %d", option.getNumberOfVotes()));
 
-        int level = (int) ((float) option.getNumberOfVotes() / voters * 10000);
-        rowView.getBackground().setLevel(level);
+        progressBar.setMax(voters);
+        progressBar.setProgress(option.getNumberOfVotes());
       }
 
       float average = voters > 0 ? ((float) sum / voters) : 0;
