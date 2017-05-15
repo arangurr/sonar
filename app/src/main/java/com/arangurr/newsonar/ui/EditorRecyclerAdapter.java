@@ -77,7 +77,9 @@ public class EditorRecyclerAdapter extends
     if (mPoll.getPollTitle() != null) {
       holder.mPollTitle.setText(mPoll.getPollTitle());
     } else {
-      holder.mPollTitle.requestFocus();
+      if (holder.mPollTitle.getText().length() == 0) {
+        holder.mPollTitle.requestFocus();
+      }
     }
 
     holder.mPollTitle.addTextChangedListener(new TextWatcher() {
