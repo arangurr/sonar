@@ -31,7 +31,9 @@ import android.transition.ArcMotion;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewAnimationUtils;
 import android.view.WindowManager.LayoutParams;
 import android.view.animation.AnimationUtils;
@@ -107,6 +109,27 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
     mAdapter = new EditorRecyclerAdapter(mPoll);
     recyclerView.setAdapter(mAdapter);
+
+    recyclerView.setOnTouchListener(new OnTouchListener() {
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+          if (mConfigCard.getVisibility() == View.VISIBLE && !mIsCardAnimating) {
+            float y = event.getY();
+
+            if (y > (mConfigCard.getY() + mConfigCard.getHeight())) {
+              // FIXME: 15/05/2017 not working on landscape when password is enabled
+              reverseRevealSettingsCard();
+            }
+          }
+          if (mFabCard.getVisibility() == View.VISIBLE && !mIsFabAnimating) {
+            reverseFabTransform();
+          }
+          return true;
+        }
+        return false;
+      }
+    });
 
     mPasswordSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
       @Override
