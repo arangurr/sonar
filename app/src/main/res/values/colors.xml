@@ -52,4 +52,9 @@
     <item>@color/teal200</item>
     <item>@color/purple200</item>
   </array>
+
+  <array name="progress_like_dislike">
+    <item>@color/colorDislike</item>
+    <item>@color/colorLike</item>
+  </array>
 </resources>

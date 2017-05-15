@@ -548,12 +548,14 @@ public class DetailsActivity extends AppCompatActivity implements
       holder.dislike.setText(String.valueOf(voteDislike));
 
       if (voteDislike + voteLike > 0) {
-        int[] progressColors = getResources().getIntArray(R.array.progress_rainbow);
+        int[] progressColors = getResources().getIntArray(R.array.progress_like_dislike);
         for (Option o : q.getAllOptions()) {
           View view = holder.progress.findViewWithTag(o.getKey());
           if (view == null) {
             view = new View(holder.progress.getContext());
-            view.setBackgroundColor(progressColors[o.getKey()]);
+            if (o.getKey() < progressColors.length) {
+              view.setBackgroundColor(progressColors[o.getKey()]);
+            }
             view.setTag(o.getKey());
             holder.progress.addView(view);
           }
