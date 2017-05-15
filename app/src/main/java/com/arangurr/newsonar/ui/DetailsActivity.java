@@ -530,7 +530,7 @@ public class DetailsActivity extends AppCompatActivity implements
         rowView.getBackground().setLevel(level);
       }
 
-      float average = voters > 0 ? sum / voters : 0;
+      float average = voters > 0 ? ((float) sum / voters) : 0;
 
       holder.summary.setText(String.format("Average rating: %.2f", average));
     }
@@ -674,7 +674,7 @@ public class DetailsActivity extends AppCompatActivity implements
         rowView.getBackground().setLevel(level);
       }
 
-      float average = voters > 0 ? sum / voters : 0;
+      float average = voters > 0 ? ((float) sum / voters) : 0;
 
       holder.summary.setText(String.valueOf(average));
       holder.stars.setRating(average);
