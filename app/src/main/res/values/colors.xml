@@ -27,4 +27,29 @@
   <color name="colorDislike">#ff7043</color>
 
   <color name="colorBackgroundTranslucent">#99323232</color>
+
+  <color name="red200">#ef9a9a</color>
+  <color name="pink200">#f48fb1</color>
+  <color name="purple200">#ce93d8</color>
+  <color name="deeppurple200">#b39ddb</color>
+  <color name="indigo200">#9fa8da</color>
+  <color name="blue200">#90caf9</color>
+  <color name="lightblue200">#81d4fa</color>
+  <color name="cyan200">#80deea</color>
+  <color name="teal200">#80cbc4</color>
+  <color name="green200">#a5d6a7</color>
+  <color name="lightgreen200">#c5e1a5</color>
+
+  <array name="progress_rainbow">
+    <item>@color/cyan200</item>
+    <item>@color/deeppurple200</item>
+    <item>@color/red200</item>
+    <item>@color/lightblue200</item>
+    <item>@color/green200</item>
+    <item>@color/indigo200</item>
+    <item>@color/lightgreen200</item>
+    <item>@color/pink200</item>
+    <item>@color/teal200</item>
+    <item>@color/purple200</item>
+  </array>
 </resources>

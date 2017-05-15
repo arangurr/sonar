@@ -25,6 +25,7 @@ import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -458,14 +459,21 @@ public class DetailsActivity extends AppCompatActivity implements
       int vote2 = q.getOption(1).getNumberOfVotes();
 
       if (vote1 + vote2 > 0) {
-        holder.counter1.setVisibility(View.VISIBLE);
-        holder.counter2.setVisibility(View.VISIBLE);
-
-        int level1 = (int) (vote1 / ((float) vote1 + vote2) * 10000);
-        int level2 = (int) (vote2 / ((float) vote1 + vote2) * 10000);
-
-        holder.option1.getBackground().setLevel(level1);
-        holder.option2.getBackground().setLevel(level2);
+        int[] progressColors = getResources().getIntArray(R.array.progress_rainbow);
+        for (Option o : q.getAllOptions()) {
+          View view = holder.progress.findViewWithTag(o.getKey());
+          if (view == null) {
+            view = new View(holder.progress.getContext());
+            view.setBackgroundColor(progressColors[o.getKey()]);
+            view.setTag(o.getKey());
+            holder.progress.addView(view);
+          }
+          LayoutParams params = new LayoutParams(
+              0,
+              LayoutParams.MATCH_PARENT);
+          params.weight = o.getNumberOfVotes() / ((float) vote1 + vote2);
+          view.setLayoutParams(params);
+        }
 
         if (vote1 == vote2) {
           holder.option1.setTypeface(holder.option1.getTypeface(), Typeface.BOLD);
@@ -477,6 +485,7 @@ public class DetailsActivity extends AppCompatActivity implements
               vote1 > vote2 ? Typeface.NORMAL : Typeface.BOLD);
         }
       } else {
+        holder.progress.setVisibility(View.GONE);
         holder.counter1.setVisibility(View.GONE);
         holder.counter2.setVisibility(View.GONE);
       }
@@ -529,6 +538,7 @@ public class DetailsActivity extends AppCompatActivity implements
     private void bindLikeDislike(LikeDislikeHolder holder, int position) {
       Question q = mCurrentPoll.getQuestionList().get(position);
       holder.header.setText(String.format("%s. %s", String.valueOf(position + 1), q.getTitle()));
+
       holder.header.setCompoundDrawables(null, null, null, null);
 
       int voteDislike = q.getOption(0).getNumberOfVotes();
@@ -538,12 +548,21 @@ public class DetailsActivity extends AppCompatActivity implements
       holder.dislike.setText(String.valueOf(voteDislike));
 
       if (voteDislike + voteLike > 0) {
-
-        int levelDislike = (int) (voteDislike / ((float) voteDislike + voteLike) * 10000);
-        int levelLike = (int) (voteLike / ((float) voteDislike + voteLike) * 10000);
-
-        holder.like.getBackground().setLevel(levelLike);
-        holder.dislike.getBackground().setLevel(levelDislike);
+        int[] progressColors = getResources().getIntArray(R.array.progress_rainbow);
+        for (Option o : q.getAllOptions()) {
+          View view = holder.progress.findViewWithTag(o.getKey());
+          if (view == null) {
+            view = new View(holder.progress.getContext());
+            view.setBackgroundColor(progressColors[o.getKey()]);
+            view.setTag(o.getKey());
+            holder.progress.addView(view);
+          }
+          LayoutParams params = new LayoutParams(
+              0,
+              LayoutParams.MATCH_PARENT);
+          params.weight = o.getNumberOfVotes() / ((float) voteLike + voteDislike);
+          view.setLayoutParams(params);
+        }
 
         if (voteDislike == voteLike) {
           holder.dislike.setTypeface(holder.dislike.getTypeface(), Typeface.BOLD);
@@ -554,6 +573,8 @@ public class DetailsActivity extends AppCompatActivity implements
           holder.like.setTypeface(holder.like.getTypeface(),
               voteDislike > voteLike ? Typeface.NORMAL : Typeface.BOLD);
         }
+      } else {
+        holder.progress.setVisibility(View.GONE);
       }
     }
 
@@ -665,6 +686,7 @@ public class DetailsActivity extends AppCompatActivity implements
       TextView option2;
       TextView counter1;
       TextView counter2;
+      LinearLayout progress;
 
       public DualItemHolder(View itemView) {
         super(itemView);
@@ -676,6 +698,8 @@ public class DetailsActivity extends AppCompatActivity implements
             .findViewById(R.id.textview_details_item_binary_option1_count);
         counter2 = (TextView) itemView
             .findViewById(R.id.textview_details_item_binary_option2_count);
+        progress = (LinearLayout) itemView
+            .findViewById(R.id.linearlayout_details_item_progress);
       }
     }
 
@@ -702,6 +726,7 @@ public class DetailsActivity extends AppCompatActivity implements
       TextView header;
       TextView like;
       TextView dislike;
+      LinearLayout progress;
 
       public LikeDislikeHolder(View itemView) {
         super(itemView);
@@ -711,6 +736,7 @@ public class DetailsActivity extends AppCompatActivity implements
             .findViewById(R.id.textview_details_item_likedislike_like_counter);
         dislike = (TextView) itemView
             .findViewById(R.id.textview_details_item_likedislike_dislike_counter);
+        progress = (LinearLayout) itemView.findViewById(R.id.linearlayout_details_item_progress);
       }
     }
 
