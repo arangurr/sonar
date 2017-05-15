@@ -33,7 +33,6 @@
       android:background="@android:color/transparent"
       android:scaleType="fitCenter"
       android:stateListAnimator="@animator/selected"
-      android:tint="@color/colorDislike"
       app:srcCompat="@drawable/ic_thumb_down_24dp"/>
 
     <ImageButton
@@ -45,7 +44,6 @@
       android:background="@android:color/transparent"
       android:scaleType="fitCenter"
       android:stateListAnimator="@animator/selected"
-      android:tint="@color/colorLike"
       app:srcCompat="@drawable/ic_thumb_up_24dp"/>
   </LinearLayout>
 </android.support.v7.widget.CardView>
