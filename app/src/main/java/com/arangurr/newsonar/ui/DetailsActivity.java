@@ -1,6 +1,7 @@
 package com.arangurr.newsonar.ui;
 
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetBehavior.BottomSheetCallback;
 import android.support.transition.TransitionManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +26,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -374,9 +377,10 @@ public class DetailsActivity extends AppCompatActivity implements
           return R.layout.details_card_twoitems;
         case Constants.RATE_MODE_LIKEDISLIKE:
           return R.layout.details_card_likedislike;
+        case Constants.RATE_MODE_STARS:
+          return R.layout.details_card_stars;
         case Constants.RATE_MODE_CUSTOM:
         case Constants.RATE_MODE_SCORE:
-        case Constants.RATE_MODE_STARS:
         case Constants.MULTI_MODE_EXCLUSIVE:
         case Constants.MULTI_MODE_MULTIPLE:
           return R.layout.details_card_multiple;
@@ -400,6 +404,10 @@ public class DetailsActivity extends AppCompatActivity implements
           inflatedView = LayoutInflater.from(parent.getContext())
               .inflate(R.layout.details_card_multiple, parent, false);
           return new MultipleItemHolder(inflatedView);
+        case R.layout.details_card_stars:
+          inflatedView = LayoutInflater.from(parent.getContext())
+              .inflate(R.layout.details_card_stars, parent, false);
+          return new StarsItemHolder(inflatedView);
       }
       inflatedView = LayoutInflater.from(parent.getContext())
           .inflate(android.R.layout.simple_list_item_1, parent, false);
@@ -422,6 +430,9 @@ public class DetailsActivity extends AppCompatActivity implements
           break;
         case R.layout.details_card_likedislike:
           bindLikeDislike((LikeDislikeHolder) holder, position);
+          break;
+        case R.layout.details_card_stars:
+          bindStars((StarsItemHolder) holder, position);
           break;
         default:
           ((SimpleHolder) holder).mText1.setText(String.valueOf(position));
@@ -600,6 +611,57 @@ public class DetailsActivity extends AppCompatActivity implements
       }
     }
 
+    private void bindStars(final StarsItemHolder holder, int position) {
+      Question q = mCurrentPoll.getQuestionList().get(position);
+      holder.header.setText(String.format("%s. %s", String.valueOf(position + 1), q.getTitle()));
+
+      int voters = q.getNumberOfVotes();
+
+      holder.header.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          boolean isExpanded = holder.header.isSelected();
+          TransitionManager.beginDelayedTransition(mRecyclerView);
+
+          holder.header.setSelected(!isExpanded);
+          holder.switcher.setDisplayedChild(isExpanded ? 0 : 1);
+        }
+      });
+
+      int sum = 0;
+
+      for (int i = q.getAllOptions().size() - 1; i >= 0; i--) {
+        Option option = q.getOption(i);
+        View rowView = holder.container.findViewWithTag(option.getKey());
+        if (rowView == null) {
+          rowView = LayoutInflater.from(holder.container.getContext())
+              .inflate(android.R.layout.simple_list_item_2, holder.container, false);
+          rowView.setTag(option.getKey());
+          rowView.setBackgroundResource(R.drawable.dw_level_start);
+          holder.container.addView(rowView);
+        }
+        sum += Integer.parseInt(option.getOptionName()) * option.getNumberOfVotes();
+
+        TextView text1 = (TextView) rowView.findViewById(android.R.id.text1);
+        text1.setText(option.getOptionName());
+        Drawable star = getDrawable(R.drawable.ic_star_24dp);
+        star.setTint(ContextCompat.getColor(text1.getContext(), R.color.colorRatePrimary));
+        text1.setCompoundDrawablePadding(8);
+        text1.setCompoundDrawablesWithIntrinsicBounds(star, null, null, null);
+        ((TextView) rowView.findViewById(android.R.id.text2))
+            .setText(String.format("Votes: %d", option.getNumberOfVotes()));
+
+        int level = (int) ((float) option.getNumberOfVotes() / voters * 10000);
+        rowView.getBackground().setLevel(level);
+      }
+
+      float average = voters > 0 ? sum / voters : 0;
+
+      holder.summary.setText(String.valueOf(average));
+      holder.stars.setRating(average);
+    }
+
+
     class DualItemHolder extends RecyclerView.ViewHolder {
 
       TextView header;
@@ -654,6 +716,25 @@ public class DetailsActivity extends AppCompatActivity implements
         dislike = (TextView) itemView
             .findViewById(R.id.textview_details_item_likedislike_dislike_counter);
 
+      }
+    }
+
+    class StarsItemHolder extends RecyclerView.ViewHolder {
+
+      TextView header;
+      LinearLayout container;
+      ViewSwitcher switcher;
+      TextView summary;
+      RatingBar stars;
+
+      public StarsItemHolder(View itemView) {
+        super(itemView);
+
+        header = (TextView) itemView.findViewById(R.id.textview_details_item_header_title);
+        container = (LinearLayout) itemView.findViewById(R.id.linearlayout_item_card_container);
+        switcher = (ViewSwitcher) itemView.findViewById(R.id.viewswitcher_item_card);
+        summary = (TextView) itemView.findViewById(R.id.textview_item_card_summary);
+        stars = (RatingBar) itemView.findViewById(R.id.ratingbar_item_card_summary);
       }
     }
 
