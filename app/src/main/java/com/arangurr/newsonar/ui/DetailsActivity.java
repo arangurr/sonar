@@ -513,7 +513,7 @@ public class DetailsActivity extends AppCompatActivity implements
         rowView = holder.container.findViewWithTag(o.getKey());
         if (rowView == null) {
           rowView = LayoutInflater.from(holder.container.getContext())
-              .inflate(android.R.layout.simple_list_item_2, holder.container, false);
+              .inflate(R.layout.item_twolines_with_progress, holder.container, false);
           rowView.setBackgroundResource(R.drawable.dw_level_start);
           rowView.setTag(o.getKey());
           holder.container.addView(rowView);
@@ -521,18 +521,21 @@ public class DetailsActivity extends AppCompatActivity implements
 
         sum += Integer.parseInt(o.getOptionName()) * o.getNumberOfVotes();
 
-        ((TextView) rowView.findViewById(android.R.id.text1))
-            .setText(o.getOptionName());
-        ((TextView) rowView.findViewById(android.R.id.text2))
-            .setText(String.format("Votes: %d", o.getNumberOfVotes()));
+        TextView text1 = ((TextView) rowView.findViewById(android.R.id.text1));
+        TextView text2 = ((TextView) rowView.findViewById(android.R.id.text2));
+        ProgressBar progressBar = (ProgressBar) rowView
+            .findViewById(R.id.progressbar_item_card_option_progress);
 
-        int level = (int) ((float) o.getNumberOfVotes() / voters * 10000);
-        rowView.getBackground().setLevel(level);
+        text1.setText("Rating: " + o.getOptionName());
+        text2.setText(String.valueOf(o.getNumberOfVotes()));
+
+        progressBar.setMax(voters);
+        progressBar.setProgress(o.getNumberOfVotes());
       }
 
       float average = voters > 0 ? ((float) sum / voters) : 0;
 
-      holder.summary.setText(String.format("Average rating: %.2f", average));
+      holder.summary.setText("Average rating: " + String.valueOf(average));
     }
 
     private void bindLikeDislike(LikeDislikeHolder holder, int position) {
@@ -599,18 +602,21 @@ public class DetailsActivity extends AppCompatActivity implements
         View rowView = holder.container.findViewWithTag(option.getKey());
         if (rowView == null) {
           rowView = LayoutInflater.from(holder.container.getContext())
-              .inflate(android.R.layout.simple_list_item_2, holder.container, false);
+              .inflate(R.layout.item_twolines_with_progress, holder.container, false);
           rowView.setTag(option.getKey());
           rowView.setBackgroundResource(R.drawable.dw_level_start);
           holder.container.addView(rowView);
         }
 
-        ((TextView) rowView.findViewById(android.R.id.text1)).setText(option.getOptionName());
-        ((TextView) rowView.findViewById(android.R.id.text2))
-            .setText(String.format("Votes: %d", option.getNumberOfVotes()));
+        TextView text1 = ((TextView) rowView.findViewById(android.R.id.text1));
+        TextView text2 = ((TextView) rowView.findViewById(android.R.id.text2));
+        ProgressBar progressBar = (ProgressBar) rowView
+            .findViewById(R.id.progressbar_item_card_option_progress);
 
-        int level = (int) ((float) option.getNumberOfVotes() / voters * 10000);
-        rowView.getBackground().setLevel(level);
+        text1.setText(option.getOptionName());
+        text2.setText(String.valueOf(option.getNumberOfVotes()));
+        progressBar.setMax(voters);
+        progressBar.setProgress(option.getNumberOfVotes());
       }
       if (voters > 0) {
         List<Option> mostVoted = q.getMostVotedOptions();
@@ -648,7 +654,6 @@ public class DetailsActivity extends AppCompatActivity implements
 
       int voters = q.getNumberOfVotes();
       int sum = 0;
-      int[] rainbowColors = getResources().getIntArray(R.array.progress_rainbow);
 
       for (int i = 0; i < q.getAllOptions().size(); i++) {
         Option option = q.getOption(i);
@@ -658,8 +663,6 @@ public class DetailsActivity extends AppCompatActivity implements
               .inflate(R.layout.item_twolines_with_progress, holder.container, false);
           rowView.setTag(option.getKey());
           holder.container.addView(rowView, 0);
-          ((ProgressBar) holder.container.findViewById(R.id.progressbar_item_card_option_progress))
-              .getProgressDrawable().setTint(rainbowColors[i]);
         }
         sum += Integer.parseInt(option.getOptionName()) * option.getNumberOfVotes();
 
@@ -673,7 +676,7 @@ public class DetailsActivity extends AppCompatActivity implements
         star.setTint(ContextCompat.getColor(text1.getContext(), R.color.colorRatePrimary));
         text1.setCompoundDrawablePadding(8);
         text1.setCompoundDrawablesWithIntrinsicBounds(star, null, null, null);
-        text2.setText(String.format("Votes: %d", option.getNumberOfVotes()));
+        text2.setText(String.valueOf(option.getNumberOfVotes()));
 
         progressBar.setMax(voters);
         progressBar.setProgress(option.getNumberOfVotes());
