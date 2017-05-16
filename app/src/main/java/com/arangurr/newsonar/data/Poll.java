@@ -161,6 +161,6 @@ public class Poll {
   }
 
   public int getNumberOfVotes() {
-    return mQuestionList.get(0).getNumberOfVotes();
+    return mQuestionList.size() == 0 ? 0 : mQuestionList.get(0).getNumberOfVotes();
   }
 }
