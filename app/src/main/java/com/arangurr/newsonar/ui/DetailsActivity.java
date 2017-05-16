@@ -521,8 +521,8 @@ public class DetailsActivity extends AppCompatActivity implements
 
         sum += Integer.parseInt(o.getOptionName()) * o.getNumberOfVotes();
 
-        TextView text1 = ((TextView) rowView.findViewById(android.R.id.text1));
-        TextView text2 = ((TextView) rowView.findViewById(android.R.id.text2));
+        TextView text1 = ((TextView) rowView.findViewById(R.id.textview_item_card_option_text1));
+        TextView text2 = ((TextView) rowView.findViewById(R.id.textview_item_card_option_text2));
         ProgressBar progressBar = (ProgressBar) rowView
             .findViewById(R.id.progressbar_item_card_option_progress);
 
@@ -608,8 +608,8 @@ public class DetailsActivity extends AppCompatActivity implements
           holder.container.addView(rowView);
         }
 
-        TextView text1 = ((TextView) rowView.findViewById(android.R.id.text1));
-        TextView text2 = ((TextView) rowView.findViewById(android.R.id.text2));
+        TextView text1 = ((TextView) rowView.findViewById(R.id.textview_item_card_option_text1));
+        TextView text2 = ((TextView) rowView.findViewById(R.id.textview_item_card_option_text2));
         ProgressBar progressBar = (ProgressBar) rowView
             .findViewById(R.id.progressbar_item_card_option_progress);
 
@@ -666,8 +666,8 @@ public class DetailsActivity extends AppCompatActivity implements
         }
         sum += Integer.parseInt(option.getOptionName()) * option.getNumberOfVotes();
 
-        TextView text1 = (TextView) rowView.findViewById(android.R.id.text1);
-        TextView text2 = (TextView) rowView.findViewById(android.R.id.text2);
+        TextView text1 = (TextView) rowView.findViewById(R.id.textview_item_card_option_text1);
+        TextView text2 = (TextView) rowView.findViewById(R.id.textview_item_card_option_text2);
         ProgressBar progressBar = (ProgressBar) rowView
             .findViewById(R.id.progressbar_item_card_option_progress);
 
