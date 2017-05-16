@@ -204,17 +204,23 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onBindViewHolder(final DashboardRecyclerAdapter.ViewHolder viewHolder, int i) {
+      final Poll poll = mPolls.get(i);
 
-      viewHolder.mTitle.setText(mPolls.get(i).getPollTitle());
+      viewHolder.mTitle.setText(poll.getPollTitle());
       viewHolder.mSubtitle
-          .setText(String.format("%d questions", mPolls.get(i).getQuestionList().size()));
+          .setText(String.format("%d questions", poll.getQuestionList().size()));
       Date date = new Date(mPolls.get(i).getStartDate());
       viewHolder.mDate.setText(DateUtils.getRelativeTimeSpanString(
           date.getTime(),
           System.currentTimeMillis(),
           DateUtils.MINUTE_IN_MILLIS,
           DateUtils.FORMAT_ABBREV_ALL));
-      viewHolder.mCircle.setText(String.valueOf(mPolls.get(i).getNumberOfVotes()));
+      viewHolder.mCircle.setText(String.valueOf(poll.getNumberOfVotes()));
+      //viewHolder.mCircle.getBackground().setAlpha(96);
+
+      int[] rainbow = getResources().getIntArray(R.array.rainbow);
+      int index = Math.abs(poll.getUuid().hashCode()) % rainbow.length;
+      viewHolder.mCircle.getBackground().mutate().setTint(rainbow[index]);
 
       viewHolder.itemView.setOnClickListener(new OnClickListener() {
         @Override
@@ -238,8 +244,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             public boolean onMenuItemClick(MenuItem menuItem) {
               switch (menuItem.getItemId()) {
                 case R.id.action_popup_delete:
-                  int position = viewHolder.getAdapterPosition();
-                  UUID pollToRemove = mPolls.get(position).getUuid();
+                  UUID pollToRemove = poll.getUuid();
                   PersistenceUtils.deletePoll(getApplicationContext(), pollToRemove);
                   return true;
                 default:

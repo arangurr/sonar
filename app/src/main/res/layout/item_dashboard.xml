@@ -18,8 +18,8 @@
     android:background="@drawable/shape_circle"
     android:fontFamily="sans-serif-condensed"
     android:gravity="center"
-    android:textAllCaps="false"
     android:textAppearance="?android:attr/textAppearanceLarge"
+    android:textColor="@color/colorPrimaryTextDark"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     tools:text="12"/>
