@@ -39,18 +39,24 @@
   <color name="teal200">#80cbc4</color>
   <color name="green200">#a5d6a7</color>
   <color name="lightgreen200">#c5e1a5</color>
+  <color name="lime200">#e6ee9c</color>
+  <color name="yellow200">#fff59d</color>
+  <color name="amber200">#ffe082</color>
+  <color name="orange200">#ffcc80</color>
+  <color name="deeporange200">#ffab91</color>
+  <color name="brown200">#bcaaa4</color>
 
   <array name="progress_rainbow">
-    <item>@color/cyan200</item>
-    <item>@color/deeppurple200</item>
+    <item>@color/blue200</item>
+    <item>@color/yellow200</item>
     <item>@color/red200</item>
-    <item>@color/lightblue200</item>
     <item>@color/green200</item>
     <item>@color/indigo200</item>
-    <item>@color/lightgreen200</item>
-    <item>@color/pink200</item>
+    <item>@color/lime200</item>
+    <item>@color/deeporange200</item>
     <item>@color/teal200</item>
-    <item>@color/purple200</item>
+    <item>@color/deeppurple200</item>
+    <item>@color/brown200</item>
   </array>
 
   <array name="progress_like_dislike">
