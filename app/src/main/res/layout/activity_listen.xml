@@ -37,9 +37,11 @@
 
   <Button
     android:id="@+id/testButton"
+    style="@style/Widget.AppCompat.Button.Colored"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
+    android:backgroundTint="@color/colorDislike"
     android:drawableLeft="@drawable/ic_bug_report_24dp"
     android:onClick="launchVotingUi"
     android:text="Debugging Voting"
