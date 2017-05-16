@@ -6,6 +6,10 @@
     <item name="colorPrimary">@color/colorPrimaryIntermediate</item>
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     <item name="colorAccent">@color/colorAccentIntermediate</item>
+    <item name="android:windowContentTransitions">true</item>
+
+    <item name="android:windowEnterTransition">@transition/fade_no_toolbar</item>
+    <item name="android:windowExitTransition">@transition/fade_no_toolbar</item>
   </style>
 
   <style name="AppTheme.NoActionBar">

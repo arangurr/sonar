@@ -99,12 +99,12 @@ public class DetailsActivity extends AppCompatActivity implements
       finish();
     }
 
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_details);
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    getSupportActionBar().setTitle(mCurrentPoll.getPollTitle());
-
+    getSupportActionBar().setTitle("");
+    TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.textview_details_toolbar_title);
     mStatusTextView = (TextView) findViewById(R.id.textview_details_status);
     mStatusProgressBar = (ProgressBar) findViewById(R.id.progressbar_details_status);
     mToggleButton = (ToggleButton) findViewById(R.id.toggle_details);
@@ -112,6 +112,8 @@ public class DetailsActivity extends AppCompatActivity implements
     LinearLayout bottomSheet = (LinearLayout) findViewById(R.id.bottomsheet_details);
     mChronometer = (Chronometer) findViewById(R.id.chronometer_details);
     mCounterTextView = (TextView) findViewById(R.id.textview_details_counter);
+
+    toolbarTitle.setText(mCurrentPoll.getPollTitle());
 
     final BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
     behavior.setBottomSheetCallback(new BottomSheetCallback() {
@@ -230,7 +232,7 @@ public class DetailsActivity extends AppCompatActivity implements
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case android.R.id.home:
-        finish();
+        supportFinishAfterTransition();
         return true;
       default:
         return super.onOptionsItemSelected(item);
