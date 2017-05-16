@@ -28,7 +28,8 @@
       android:label="@string/title_activity_editor"
       android:name=".ui.EditorActivity"
       android:parentActivityName=".ui.DashboardActivity"
-      android:theme="@style/AppTheme.NoActionBar">
+      android:theme="@style/AppTheme.NoActionBar"
+      android:windowSoftInputMode="stateHidden">
       <meta-data
         android:name="android.support.PARENT_ACTIVITY"
         android:value="com.arangurr.newsonar.ui.DashboardActivity"/>
