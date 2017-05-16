@@ -31,8 +31,6 @@
     android:layout_marginTop="0dp"
     android:layout_marginStart="16dp"
     android:layout_marginEnd="8dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="8dp"
     android:gravity="center_vertical"
     android:textAppearance="?android:attr/textAppearanceListItem"
     app:layout_constraintLeft_toRightOf="@+id/textview_dashboard_item_circle"
@@ -41,25 +39,26 @@
     tools:text="This is the poll title "/>
   <TextView
     android:id="@+id/textview_dashboard_item_date"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="4dp"
-    android:layout_marginRight="8dp"
-    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-    app:layout_constraintRight_toLeftOf="@+id/button_dashboard_item_popup"
-    app:layout_constraintTop_toBottomOf="@+id/textview_dashboard_item_title"
-    tools:text="10/04/2017"/>
-
-  <TextView
-    android:id="@+id/textview_dashboard_item_subtitle"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginTop="4dp"
+    android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
-    app:layout_constraintLeft_toLeftOf="@+id/textview_dashboard_item_title"
-    app:layout_constraintRight_toLeftOf="@+id/textview_dashboard_item_date"
+    android:gravity="end"
+    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+    app:layout_constraintLeft_toRightOf="@+id/textview_dashboard_item_subtitle"
+    app:layout_constraintRight_toLeftOf="@+id/button_dashboard_item_popup"
     app:layout_constraintTop_toBottomOf="@+id/textview_dashboard_item_title"
-    tools:text="Additional info"/>
+    tools:text="10 minutes ago 04:20"/>
+
+  <TextView
+    android:id="@+id/textview_dashboard_item_subtitle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    app:layout_constraintLeft_toLeftOf="@+id/textview_dashboard_item_title"
+    app:layout_constraintTop_toBottomOf="@+id/textview_dashboard_item_title"
+    tools:text="18 questions"/>
   <ImageButton
     android:id="@+id/button_dashboard_item_popup"
     android:layout_width="wrap_content"

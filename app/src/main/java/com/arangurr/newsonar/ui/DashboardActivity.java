@@ -209,13 +209,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
       viewHolder.mSubtitle
           .setText(String.format("%d questions", mPolls.get(i).getQuestionList().size()));
       Date date = new Date(mPolls.get(i).getStartDate());
-      viewHolder.mDate
-          .setText(DateUtils.getRelativeDateTimeString(
-              viewHolder.itemView.getContext(),
-              date.getTime(),
-              DateUtils.MINUTE_IN_MILLIS,
-              DateUtils.DAY_IN_MILLIS,
-              DateUtils.FORMAT_ABBREV_ALL));
+      viewHolder.mDate.setText(DateUtils.getRelativeTimeSpanString(
+          date.getTime(),
+          System.currentTimeMillis(),
+          DateUtils.MINUTE_IN_MILLIS,
+          DateUtils.FORMAT_ABBREV_ALL));
       viewHolder.mCircle.setText(String.valueOf(mPolls.get(i).getNumberOfVotes()));
 
       viewHolder.itemView.setOnClickListener(new OnClickListener() {
