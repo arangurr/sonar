@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,11 +24,9 @@ import com.arangurr.newsonar.PersistenceUtils;
 import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.Poll;
 import com.arangurr.newsonar.data.Question;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
@@ -207,9 +206,16 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public void onBindViewHolder(final DashboardRecyclerAdapter.ViewHolder viewHolder, int i) {
 
       viewHolder.mTitle.setText(mPolls.get(i).getPollTitle());
+      viewHolder.mSubtitle
+          .setText(String.format("%d questions", mPolls.get(i).getQuestionList().size()));
       Date date = new Date(mPolls.get(i).getStartDate());
-      SimpleDateFormat sdf = new SimpleDateFormat("dd MMM HH:mm", Locale.getDefault());
-      viewHolder.mSubtitle.setText(sdf.format(date));
+      viewHolder.mDate
+          .setText(DateUtils.getRelativeDateTimeString(
+              viewHolder.itemView.getContext(),
+              date.getTime(),
+              DateUtils.MINUTE_IN_MILLIS,
+              DateUtils.DAY_IN_MILLIS,
+              DateUtils.FORMAT_ABBREV_ALL));
       viewHolder.mCircle.setText(String.valueOf(mPolls.get(i).getNumberOfVotes()));
 
       viewHolder.itemView.setOnClickListener(new OnClickListener() {
@@ -257,6 +263,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
       private TextView mTitle;
       private TextView mSubtitle;
+      private TextView mDate;
       private TextView mCircle;
       private ImageButton mPopupButton;
 
@@ -264,6 +271,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         super(itemView);
 
         mTitle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_title);
+        mDate = (TextView) itemView.findViewById(R.id.textview_dashboard_item_date);
         mSubtitle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_subtitle);
         mCircle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_circle);
         mPopupButton = (ImageButton) itemView.findViewById(R.id.button_dashboard_item_popup);
