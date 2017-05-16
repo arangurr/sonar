@@ -10,5 +10,6 @@
   android:clipToPadding="false"
   app:layoutManager="android.support.v7.widget.LinearLayoutManager"
   app:layout_behavior="@string/appbar_scrolling_view_behavior"
-  tools:context="com.arangurr.newsonar.ui.EditorActivity">
+  tools:context="com.arangurr.newsonar.ui.EditorActivity"
+  tools:listitem="@layout/details_card_multiple">
 </android.support.v7.widget.RecyclerView>

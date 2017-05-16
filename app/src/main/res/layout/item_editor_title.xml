@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.TextInputLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
@@ -8,26 +9,18 @@
   android:paddingStart="@dimen/item_start_margin"
   android:paddingEnd="@dimen/item_end_margin"
   android:background="@color/colorPrimaryDark"
-  android:focusable="true"
-  android:focusableInTouchMode="true"
-  android:orientation="vertical">
+  android:minHeight="@dimen/item_height_small"
+  android:textColorHint="@color/colorPrimaryLight">
 
-  <android.support.design.widget.TextInputLayout
+  <android.support.design.widget.TextInputEditText
+    android:id="@+id/edittext_editor_title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="@dimen/item_height_small"
-    android:textColorHint="@color/colorPrimaryLight">
+    android:hint="Title"
+    android:imeOptions="flagNoExtractUi|actionDone"
+    android:inputType="text|textCapSentences|textAutoCorrect"
+    android:selectAllOnFocus="true"
+    android:textColor="@color/colorPrimaryTextDark"
+    tools:text="This is a very long title that should not fit in a single line. Blablabla. "/>
+</android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputEditText
-      android:id="@+id/edittext_editor_title"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:hint="Title"
-      android:imeOptions="flagNoExtractUi|actionDone"
-      android:inputType="text|textCapSentences|textAutoCorrect"
-      android:selectAllOnFocus="true"
-      android:textColor="@color/colorPrimaryTextDark"
-      tools:text="This is a very long title that should not fit in a single line. Blablabla. "/>
-  </android.support.design.widget.TextInputLayout>
-
-</FrameLayout>
