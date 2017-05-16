@@ -68,7 +68,7 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
           prefs.getString(Constants.KEY_USERNAME, null));
     }
 
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_voting);
     mViewPager = (ViewPager) findViewById(R.id.viewpager_voting);
     mNextButton = (ImageButton) findViewById(R.id.button_voting_next);
     mPreviousButton = (ImageButton) findViewById(R.id.button_voting_previous);

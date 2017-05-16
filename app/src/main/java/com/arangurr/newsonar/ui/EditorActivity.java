@@ -77,7 +77,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_editor);
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_editor);
     setSupportActionBar(toolbar);
 
     if (savedInstanceState == null

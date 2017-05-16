@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -226,12 +225,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         @Override
         public void onClick(View view) {
           Intent detailsIntent = new Intent(DashboardActivity.this, DetailsActivity.class);
-          ActivityOptionsCompat options = ActivityOptionsCompat
-              .makeSceneTransitionAnimation(DashboardActivity.this, (View) (viewHolder.mTitle),
-                  "toActionBarTitle");
           detailsIntent.putExtra(Constants.EXTRA_POLL_ID,
               mPolls.get(viewHolder.getAdapterPosition()).getUuid());
-          startActivity(detailsIntent, options.toBundle());
+          startActivity(detailsIntent);
         }
       });
 
