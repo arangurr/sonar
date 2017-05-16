@@ -502,7 +502,6 @@ public class DetailsActivity extends AppCompatActivity implements
         if (rowView == null) {
           rowView = LayoutInflater.from(holder.container.getContext())
               .inflate(R.layout.item_twolines_with_progress, holder.container, false);
-          rowView.setBackgroundResource(R.drawable.dw_level_start);
           rowView.setTag(o.getKey());
           holder.container.addView(rowView);
         }
@@ -602,7 +601,6 @@ public class DetailsActivity extends AppCompatActivity implements
           rowView = LayoutInflater.from(holder.container.getContext())
               .inflate(R.layout.item_twolines_with_progress, holder.container, false);
           rowView.setTag(option.getKey());
-          rowView.setBackgroundResource(R.drawable.dw_level_start);
           holder.container.addView(rowView);
         }
 

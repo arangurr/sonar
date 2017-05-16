@@ -244,7 +244,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             }
           });
           popup.show();
-          // TODO: 16/05/2017 popup
         }
       });
     }

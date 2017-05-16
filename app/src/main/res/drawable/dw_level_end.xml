@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<scale
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:drawable="@color/colorStat"
-  android:scaleGravity="end|fill_vertical"
-  android:scaleHeight="100%"
-  android:scaleWidth="100%"
-  tools:level="5000"/>
