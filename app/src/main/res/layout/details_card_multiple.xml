@@ -22,16 +22,29 @@
       android:layout_height="wrap_content"
       android:measureAllChildren="false">
 
-      <TextView
-        android:id="@+id/textview_item_card_summary"
-        style="@android:style/TextAppearance.Material.Medium"
+      <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:gravity="center_vertical"
-        android:minHeight="@dimen/item_height_small"
-        tools:text="Summary"/>
+        android:layout_height="wrap_content">
+        <LinearLayout
+          android:id="@+id/linearlayout_details_item_progress"
+          android:layout_width="match_parent"
+          android:layout_height="8dp"
+          android:layout_gravity="top"
+          android:alpha="0.5"
+          tools:background="@color/teal200"
+          android:orientation="horizontal"
+          android:visibility="gone"
+          tools:visibility="visible"/>
+        <TextView
+          android:id="@+id/textview_item_card_summary"
+          style="@android:style/TextAppearance.Material.Medium"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:padding="8dp"
+          android:gravity="center_vertical"
+          android:minHeight="@dimen/item_height_small"
+          tools:text="Summary"/>
+      </FrameLayout>
       <LinearLayout
         android:id="@+id/linearlayout_item_card_container"
         android:layout_width="match_parent"

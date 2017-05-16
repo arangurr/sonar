@@ -24,6 +24,7 @@
       android:layout_gravity="bottom"
       android:alpha="0.5"
       android:orientation="horizontal"
+      android:visibility="gone"
       tools:background="@color/teal200"/>
 
     <LinearLayout

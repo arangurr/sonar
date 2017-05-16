@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
@@ -54,6 +55,7 @@ import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -460,20 +462,7 @@ public class DetailsActivity extends AppCompatActivity implements
 
       if (vote1 + vote2 > 0) {
         int[] progressColors = getResources().getIntArray(R.array.progress_rainbow);
-        for (Option o : q.getAllOptions()) {
-          View view = holder.progress.findViewWithTag(o.getKey());
-          if (view == null) {
-            view = new View(holder.progress.getContext());
-            view.setBackgroundColor(progressColors[o.getKey()]);
-            view.setTag(o.getKey());
-            holder.progress.addView(view);
-          }
-          LayoutParams params = new LayoutParams(
-              0,
-              LayoutParams.MATCH_PARENT);
-          params.weight = o.getNumberOfVotes() / ((float) vote1 + vote2);
-          view.setLayoutParams(params);
-        }
+        setProgressProportions(holder.progress, q.getAllOptions(), progressColors, vote1 + vote2);
 
         if (vote1 == vote2) {
           holder.option1.setTypeface(holder.option1.getTypeface(), Typeface.BOLD);
@@ -485,7 +474,6 @@ public class DetailsActivity extends AppCompatActivity implements
               vote1 > vote2 ? Typeface.NORMAL : Typeface.BOLD);
         }
       } else {
-        holder.progress.setVisibility(View.GONE);
         holder.counter1.setVisibility(View.GONE);
         holder.counter2.setVisibility(View.GONE);
       }
@@ -521,13 +509,15 @@ public class DetailsActivity extends AppCompatActivity implements
 
         sum += Integer.parseInt(o.getOptionName()) * o.getNumberOfVotes();
 
-        TextView text1 = ((TextView) rowView.findViewById(R.id.textview_item_card_option_text1));
-        TextView text2 = ((TextView) rowView.findViewById(R.id.textview_item_card_option_text2));
+        TextView text1 = (TextView) rowView.findViewById(R.id.textview_item_card_option_text1);
+        TextView text2 = (TextView) rowView.findViewById(R.id.textview_item_card_option_text2);
+        ImageView imageColor = (ImageView) rowView.findViewById(R.id.imageview_item_card_option);
         ProgressBar progressBar = (ProgressBar) rowView
             .findViewById(R.id.progressbar_item_card_option_progress);
 
         text1.setText("Rating: " + o.getOptionName());
         text2.setText(String.valueOf(o.getNumberOfVotes()));
+        imageColor.setVisibility(View.GONE);
 
         progressBar.setMax(voters);
         progressBar.setProgress(o.getNumberOfVotes());
@@ -552,22 +542,9 @@ public class DetailsActivity extends AppCompatActivity implements
 
       if (voteDislike + voteLike > 0) {
         int[] progressColors = getResources().getIntArray(R.array.progress_like_dislike);
-        for (Option o : q.getAllOptions()) {
-          View view = holder.progress.findViewWithTag(o.getKey());
-          if (view == null) {
-            view = new View(holder.progress.getContext());
-            if (o.getKey() < progressColors.length) {
-              view.setBackgroundColor(progressColors[o.getKey()]);
-            }
-            view.setTag(o.getKey());
-            holder.progress.addView(view);
-          }
-          LayoutParams params = new LayoutParams(
-              0,
-              LayoutParams.MATCH_PARENT);
-          params.weight = o.getNumberOfVotes() / ((float) voteLike + voteDislike);
-          view.setLayoutParams(params);
-        }
+
+        setProgressProportions(holder.progress, q.getAllOptions(), progressColors,
+            voteDislike + voteLike);
 
         if (voteDislike == voteLike) {
           holder.dislike.setTypeface(holder.dislike.getTypeface(), Typeface.BOLD);
@@ -578,8 +555,27 @@ public class DetailsActivity extends AppCompatActivity implements
           holder.like.setTypeface(holder.like.getTypeface(),
               voteDislike > voteLike ? Typeface.NORMAL : Typeface.BOLD);
         }
-      } else {
-        holder.progress.setVisibility(View.GONE);
+      }
+    }
+
+    private void setProgressProportions(LinearLayout progress, ArrayList<Option> options,
+        int[] progressColors, int total) {
+      progress.setVisibility(View.VISIBLE);
+      for (Option o : options) {
+        View view = progress.findViewWithTag(o.getKey());
+        if (view == null) {
+          view = new View(progress.getContext());
+          if (o.getKey() < progressColors.length) {
+            view.setBackgroundColor(progressColors[o.getKey()]);
+          }
+          view.setTag(o.getKey());
+          progress.addView(view);
+        }
+        LayoutParams params = new LayoutParams(
+            0,
+            LayoutParams.MATCH_PARENT);
+        params.weight = o.getNumberOfVotes() / ((float) total);
+        view.setLayoutParams(params);
       }
     }
 
@@ -598,6 +594,8 @@ public class DetailsActivity extends AppCompatActivity implements
       });
       int voters = q.getNumberOfVotes();
 
+      int[] rainbowColors = getResources().getIntArray(R.array.progress_rainbow);
+
       for (Option option : q.getAllOptions()) {
         View rowView = holder.container.findViewWithTag(option.getKey());
         if (rowView == null) {
@@ -610,14 +608,22 @@ public class DetailsActivity extends AppCompatActivity implements
 
         TextView text1 = ((TextView) rowView.findViewById(R.id.textview_item_card_option_text1));
         TextView text2 = ((TextView) rowView.findViewById(R.id.textview_item_card_option_text2));
+        ImageView imageColor = (ImageView) rowView.findViewById(R.id.imageview_item_card_option);
         ProgressBar progressBar = (ProgressBar) rowView
             .findViewById(R.id.progressbar_item_card_option_progress);
 
         text1.setText(option.getOptionName());
         text2.setText(String.valueOf(option.getNumberOfVotes()));
+        imageColor.getDrawable().setTint(rainbowColors[option.getKey()]);
         progressBar.setMax(voters);
         progressBar.setProgress(option.getNumberOfVotes());
       }
+
+      if (voters > 0) {
+        setProgressProportions(holder.progress, q.getAllOptions(),
+            getResources().getIntArray(R.array.progress_rainbow), voters);
+      }
+
       if (voters > 0) {
         List<Option> mostVoted = q.getMostVotedOptions();
         if (mostVoted.size() != 1) {
@@ -668,6 +674,7 @@ public class DetailsActivity extends AppCompatActivity implements
 
         TextView text1 = (TextView) rowView.findViewById(R.id.textview_item_card_option_text1);
         TextView text2 = (TextView) rowView.findViewById(R.id.textview_item_card_option_text2);
+        ImageView colorImage = (ImageView) rowView.findViewById(R.id.imageview_item_card_option);
         ProgressBar progressBar = (ProgressBar) rowView
             .findViewById(R.id.progressbar_item_card_option_progress);
 
@@ -677,6 +684,7 @@ public class DetailsActivity extends AppCompatActivity implements
         text1.setCompoundDrawablePadding(8);
         text1.setCompoundDrawablesWithIntrinsicBounds(star, null, null, null);
         text2.setText(String.valueOf(option.getNumberOfVotes()));
+        colorImage.setVisibility(View.GONE);
 
         progressBar.setMax(voters);
         progressBar.setProgress(option.getNumberOfVotes());
@@ -719,6 +727,8 @@ public class DetailsActivity extends AppCompatActivity implements
       LinearLayout container;
       ViewSwitcher switcher;
       TextView summary;
+      LinearLayout progress;
+
 
       public MultipleItemHolder(View itemView) {
         super(itemView);
@@ -728,6 +738,8 @@ public class DetailsActivity extends AppCompatActivity implements
             .findViewById(R.id.linearlayout_item_card_container);
         switcher = (ViewSwitcher) itemView.findViewById(R.id.viewswitcher_item_card);
         summary = (TextView) itemView.findViewById(R.id.textview_item_card_summary);
+        progress = (LinearLayout) itemView
+            .findViewById(R.id.linearlayout_details_item_progress);
       }
     }
 
