@@ -210,7 +210,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
       Date date = new Date(mPolls.get(i).getStartDate());
       SimpleDateFormat sdf = new SimpleDateFormat("dd MMM HH:mm", Locale.getDefault());
       viewHolder.mSubtitle.setText(sdf.format(date));
-      viewHolder.mCircle.setText(String.valueOf(i + 1));
+      viewHolder.mCircle.setText(String.valueOf(mPolls.get(i).getNumberOfVotes()));
 
       viewHolder.itemView.setOnClickListener(new OnClickListener() {
         @Override

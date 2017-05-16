@@ -160,4 +160,7 @@ public class Poll {
     return false;
   }
 
+  public int getNumberOfVotes() {
+    return mQuestionList.get(0).getNumberOfVotes();
+  }
 }
