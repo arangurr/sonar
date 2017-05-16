@@ -1,6 +1,7 @@
 package com.arangurr.newsonar.ui;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+import static android.view.inputmethod.EditorInfo.IME_ACTION_DONE;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -12,8 +13,11 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.R;
 
@@ -27,7 +31,7 @@ public class IntroActivity extends AppCompatActivity {
     final TextInputLayout usernameTextInput =
         (TextInputLayout) findViewById(R.id.textinputlayout_intro);
     final EditText usernameEditText = (EditText) findViewById(R.id.edittext_intro_username);
-    FloatingActionButton doneFab = (FloatingActionButton) findViewById(R.id.fab_intro_done);
+    final FloatingActionButton doneFab = (FloatingActionButton) findViewById(R.id.fab_intro_done);
 
     doneFab.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -35,9 +39,9 @@ public class IntroActivity extends AppCompatActivity {
         int editTextLength = usernameEditText.getText().length();
         if (editTextLength < 4) {
           if (editTextLength == 0) {
-            usernameTextInput.setError("You need to enter a name");
+            usernameTextInput.setError(getString(R.string.intro_error_empty_name));
           } else {
-            usernameTextInput.setError("You need to enter a longer name");
+            usernameTextInput.setError(getString(R.string.intro_error_short_name));
           }
         } else {
           SharedPreferences preferences = getDefaultSharedPreferences
@@ -55,6 +59,17 @@ public class IntroActivity extends AppCompatActivity {
           startActivity(new Intent(IntroActivity.this, DashboardActivity.class));
           finish();
         }
+      }
+    });
+
+    usernameEditText.setOnEditorActionListener(new OnEditorActionListener() {
+      @Override
+      public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == IME_ACTION_DONE) {
+          doneFab.performClick();
+          return true;
+        }
+        return false;
       }
     });
 
