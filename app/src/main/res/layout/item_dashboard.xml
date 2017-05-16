@@ -1,65 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:padding="16dp"
-  android:background="@drawable/background_selectable"
+  android:background="?android:attr/selectableItemBackground"
   android:clipToPadding="false"
-  android:foreground="?selectableItemBackground"
-  android:minHeight="?listPreferredItemHeight"
-  android:stateListAnimator="@animator/raise">
+  android:minHeight="?android:attr/listPreferredItemHeight">
 
-  <android.support.constraint.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+  <TextView
+    android:id="@+id/textview_dashboard_item_circle"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:layout_marginLeft="0dp"
+    android:background="@drawable/shape_circle"
+    android:gravity="center"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="1"/>
 
-    <TextView
-      android:id="@+id/textview_dashboard_item_circle"
-      android:layout_width="40dp"
-      android:layout_height="40dp"
-      android:layout_marginLeft="0dp"
-      android:background="@drawable/shape_circle"
-      android:gravity="center"
-      android:textAppearance="?android:attr/textAppearanceLarge"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      tools:text="1"/>
+  <TextView
+    android:id="@+id/textview_dashboard_item_title"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintLeft_toRightOf="@+id/textview_dashboard_item_circle"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/textview_dashboard_item_circle"
+    tools:text="This is the poll title "/>
+  <TextView
+    android:id="@+id/textview_dashboard_item_subtitle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+    app:layout_constraintLeft_toLeftOf="@+id/textview_dashboard_item_title"
+    app:layout_constraintTop_toBottomOf="@+id/textview_dashboard_item_title"
+    tools:text="Created 10/04/2017"/>
 
-    <TextView
-      android:id="@+id/textview_dashboard_item_title"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginLeft="16dp"
-      android:gravity="center_vertical"
-      android:orientation="vertical"
-      android:textAppearance="?android:attr/textAppearanceListItemSmall"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintLeft_toRightOf="@+id/textview_dashboard_item_circle"
-      app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintTop_toTopOf="@+id/textview_dashboard_item_circle"
-      tools:text="This is the poll title "/>
-    <TextView
-      android:id="@+id/textview_dashboard_item_subtitle"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
-      android:textAppearance="?android:attr/textAppearanceListItemSecondary"
-      app:layout_constraintLeft_toLeftOf="@+id/textview_dashboard_item_title"
-      app:layout_constraintTop_toBottomOf="@+id/textview_dashboard_item_title"
-      tools:text="Created 10/04/2017"/>
-
-    <ImageButton
-      android:id="@+id/button_dashboard_item_delete"
-      android:layout_width="wrap_content"
-      android:layout_height="40dp"
-      android:padding="8dp"
-      android:background="?android:attr/selectableItemBackgroundBorderless"
-      android:visibility="gone"
-      app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/textview_dashboard_item_subtitle"
-      app:srcCompat="@drawable/ic_delete_24dp"
-      tools:visibility="visible"/>
-  </android.support.constraint.ConstraintLayout>
-</FrameLayout>
+  <ImageButton
+    android:id="@+id/button_dashboard_item_delete"
+    android:layout_width="wrap_content"
+    android:layout_height="40dp"
+    android:padding="8dp"
+    android:background="?android:attr/selectableItemBackgroundBorderless"
+    android:visibility="gone"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/textview_dashboard_item_subtitle"
+    app:srcCompat="@drawable/ic_delete_24dp"
+    tools:visibility="visible"/>
+</android.support.constraint.ConstraintLayout>

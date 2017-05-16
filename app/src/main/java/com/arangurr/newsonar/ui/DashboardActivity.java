@@ -214,10 +214,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
       viewHolder.mCircle.setText(String.valueOf(i + 1));
 
       if (i == mExpandedPosition) {
-        viewHolder.itemView.setActivated(true);
+        viewHolder.itemView.setSelected(true);
         viewHolder.mDeleteButton.setVisibility(View.VISIBLE);
       } else {
-        viewHolder.itemView.setActivated(false);
+        viewHolder.itemView.setSelected(false);
         viewHolder.mDeleteButton.setVisibility(View.GONE);
       }
 
@@ -269,10 +269,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
       if (payloads.contains(EXPANDCOLLAPSE)) {
         if (position == mExpandedPosition) {
-          holder.itemView.setActivated(true);
+          holder.itemView.setSelected(true);
           holder.mDeleteButton.setVisibility(View.VISIBLE);
         } else {
-          holder.itemView.setActivated(false);
+          holder.itemView.setSelected(false);
           holder.mDeleteButton.setVisibility(View.GONE);
         }
       } else {
