@@ -34,16 +34,16 @@
         android:name="android.support.PARENT_ACTIVITY"
         android:value="com.arangurr.newsonar.ui.DashboardActivity"/>
     </activity>
-    <activity android:name=".ui.DetailsActivity">
-    </activity>
     <activity
-      android:name=".ui.ListenActivity"
+      android:name=".ui.DetailsActivity"
       android:parentActivityName=".ui.DashboardActivity"
-      android:theme="@style/AppTheme.NoActionBar">
+      android:theme="@style/AppTheme">
       <meta-data
         android:name="android.support.PARENT_ACTIVITY"
         android:value="com.arangurr.newsonar.ui.DashboardActivity"/>
     </activity>
+    <activity
+      android:name=".ui.ListenActivity"/>
     <activity
       android:name=".ui.VotingActivity"
       android:parentActivityName=".ui.ListenActivity"
