@@ -5,13 +5,15 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -153,10 +155,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
   class DashboardRecyclerAdapter extends RecyclerView.Adapter<DashboardRecyclerAdapter.ViewHolder> {
 
-    private static final int EXPANDCOLLAPSE = 0x1;
-
     private List<Poll> mPolls;
-    private int mExpandedPosition = RecyclerView.NO_POSITION;
 
     public DashboardRecyclerAdapter(List<Poll> polls) {
       mPolls = polls;
@@ -213,14 +212,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
       viewHolder.mSubtitle.setText(sdf.format(date));
       viewHolder.mCircle.setText(String.valueOf(i + 1));
 
-      if (i == mExpandedPosition) {
-        viewHolder.itemView.setSelected(true);
-        viewHolder.mDeleteButton.setVisibility(View.VISIBLE);
-      } else {
-        viewHolder.itemView.setSelected(false);
-        viewHolder.mDeleteButton.setVisibility(View.GONE);
-      }
-
       viewHolder.itemView.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -231,53 +222,31 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
       });
 
-      viewHolder.itemView.setOnLongClickListener(new OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-
-          //TransitionManager.beginDelayedTransition(mPollRecyclerView);
-
-          // There is an expanded item
-          if (mExpandedPosition != RecyclerView.NO_POSITION) {
-            int prev = mExpandedPosition;
-            notifyItemChanged(prev, EXPANDCOLLAPSE);
-          }
-          if (mExpandedPosition != viewHolder.getAdapterPosition()) {
-            mExpandedPosition = viewHolder.getAdapterPosition();
-            notifyItemChanged(mExpandedPosition, EXPANDCOLLAPSE);
-          } else {
-            mExpandedPosition = RecyclerView.NO_POSITION;
-          }
-          return true;
-        }
-      });
-
-      viewHolder.mDeleteButton.setOnClickListener(new OnClickListener() {
+      viewHolder.mPopupButton.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
-          int position = viewHolder.getAdapterPosition();
-          UUID pollToRemove = mPolls.get(position).getUuid();
-          PersistenceUtils.deletePoll(getApplicationContext(), pollToRemove);
-          if (position == mExpandedPosition) {
-            mExpandedPosition = RecyclerView.NO_POSITION;
-          }
+          PopupMenu popup = new PopupMenu(v.getContext(), v);
+          MenuInflater menuInflater = popup.getMenuInflater();
+          menuInflater.inflate(R.menu.popup_dashboard, popup.getMenu());
+
+          popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+              switch (menuItem.getItemId()) {
+                case R.id.action_popup_delete:
+                  int position = viewHolder.getAdapterPosition();
+                  UUID pollToRemove = mPolls.get(position).getUuid();
+                  PersistenceUtils.deletePoll(getApplicationContext(), pollToRemove);
+                  return true;
+                default:
+                  return false;
+              }
+            }
+          });
+          popup.show();
+          // TODO: 16/05/2017 popup
         }
       });
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
-      if (payloads.contains(EXPANDCOLLAPSE)) {
-        if (position == mExpandedPosition) {
-          holder.itemView.setSelected(true);
-          holder.mDeleteButton.setVisibility(View.VISIBLE);
-        } else {
-          holder.itemView.setSelected(false);
-          holder.mDeleteButton.setVisibility(View.GONE);
-        }
-      } else {
-        onBindViewHolder(holder, position);
-      }
     }
 
     @Override
@@ -290,7 +259,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
       private TextView mTitle;
       private TextView mSubtitle;
       private TextView mCircle;
-      private ImageButton mDeleteButton;
+      private ImageButton mPopupButton;
 
       public ViewHolder(View itemView) {
         super(itemView);
@@ -298,7 +267,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         mTitle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_title);
         mSubtitle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_subtitle);
         mCircle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_circle);
-        mDeleteButton = (ImageButton) itemView.findViewById(R.id.button_dashboard_item_delete);
+        mPopupButton = (ImageButton) itemView.findViewById(R.id.button_dashboard_item_popup);
       }
     }
   }
