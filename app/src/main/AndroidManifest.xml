@@ -13,7 +13,9 @@
       android:name="com.google.android.nearby.messages.API_KEY"
       android:value="@string/nearby_api_key"/>
 
-    <activity android:name=".ui.DashboardActivity"/>
+    <activity
+      android:name=".ui.DashboardActivity"
+      android:theme="@style/AppTheme"/>
     <activity
       android:name=".ui.IntroActivity"
       android:theme="@style/AppTheme.NoActionBar"/>
@@ -33,7 +35,13 @@
         android:name="android.support.PARENT_ACTIVITY"
         android:value="com.arangurr.newsonar.ui.DashboardActivity"/>
     </activity>
-    <activity android:name=".ui.DetailsActivity">
+    <activity
+      android:name=".ui.DetailsActivity"
+      android:parentActivityName=".ui.DashboardActivity"
+      android:theme="@style/AppTheme.NoActionBar">
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value="com.arangurr.newsonar.ui.DashboardActivity"/>
     </activity>
     <activity android:name=".ui.ListenActivity">
     </activity>

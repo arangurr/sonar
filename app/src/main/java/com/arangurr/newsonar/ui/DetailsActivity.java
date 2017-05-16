@@ -14,8 +14,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -97,6 +99,10 @@ public class DetailsActivity extends AppCompatActivity implements
       finish();
     }
 
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_details);
+    setSupportActionBar(toolbar);
+
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setTitle(mCurrentPoll.getPollTitle());
 
     mStatusTextView = (TextView) findViewById(R.id.textview_details_status);
@@ -218,6 +224,17 @@ public class DetailsActivity extends AppCompatActivity implements
     super.onRestoreInstanceState(savedInstanceState);
     mVoteCount = savedInstanceState.getInt(EXTRA_COUNTER);
     mChronometer.setBase(savedInstanceState.getLong(EXTRA_CHRONO));
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        finish();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
 
   @Override
