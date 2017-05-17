@@ -1,5 +1,7 @@
 package com.arangurr.newsonar.ui;
 
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Editable;
@@ -8,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.R;
 import com.arangurr.newsonar.data.Option;
 import com.arangurr.newsonar.data.Poll;
@@ -41,7 +45,7 @@ public class EditorRecyclerAdapter extends
             .inflate(R.layout.item_editor_title, parent, false));
       case TYPE_QUESTION:
         return new SimpleHolder(LayoutInflater.from(parent.getContext())
-            .inflate(android.R.layout.simple_list_item_2, parent, false));
+            .inflate(R.layout.item_editor, parent, false));
     }
     return null;
   }
@@ -102,8 +106,36 @@ public class EditorRecyclerAdapter extends
   }
 
   private void bindQuestion(SimpleHolder holder, int position) {
-    holder.mQuestionTitle.setText(
-        String.format("%d. %s", position, mItems.get(position - 1).getTitle()));
+    Question q = mItems.get(position - 1);
+
+    holder.mQuestionTitle.setText(String.format("%d. %s", position, q.getTitle()));
+
+    Drawable drawable;
+
+    switch (q.getQuestionMode()) {
+      case Constants.BINARY_MODE_CUSTOM:
+      case Constants.BINARY_MODE_TRUEFALSE:
+      case Constants.BINARY_MODE_YESNO:
+        drawable = ContextCompat
+            .getDrawable(holder.itemView.getContext(), R.drawable.ic_binary_24dp);
+        break;
+      case Constants.MULTI_MODE_EXCLUSIVE:
+      case Constants.MULTI_MODE_MULTIPLE:
+        drawable = ContextCompat
+            .getDrawable(holder.itemView.getContext(), R.drawable.ic_multiple_24dp);
+        break;
+      case Constants.RATE_MODE_CUSTOM:
+      case Constants.RATE_MODE_LIKEDISLIKE:
+      case Constants.RATE_MODE_SCORE:
+      case Constants.RATE_MODE_STARS:
+        drawable = ContextCompat
+            .getDrawable(holder.itemView.getContext(), R.drawable.ic_thumbs_24dp);
+        break;
+      default:
+        drawable = ContextCompat
+            .getDrawable(holder.itemView.getContext(), R.drawable.ic_circle_24dp);
+    }
+    holder.mImageView.setImageDrawable(drawable);
 
     StringBuilder sb = new StringBuilder();
     sb.append("Options:");
@@ -122,13 +154,15 @@ public class EditorRecyclerAdapter extends
 
   public class SimpleHolder extends RecyclerView.ViewHolder {
 
+    private ImageView mImageView;
     private TextView mQuestionTitle;
     private TextView mQuestionSubtitle;
 
     public SimpleHolder(View itemView) {
       super(itemView);
-      mQuestionTitle = (TextView) itemView.findViewById(android.R.id.text1);
-      mQuestionSubtitle = (TextView) itemView.findViewById(android.R.id.text2);
+      mImageView = (ImageView) itemView.findViewById(R.id.imageview_editor_item);
+      mQuestionTitle = (TextView) itemView.findViewById(R.id.textview_editor_item_text1);
+      mQuestionSubtitle = (TextView) itemView.findViewById(R.id.textview_editor_item_text2);
     }
 
   }
