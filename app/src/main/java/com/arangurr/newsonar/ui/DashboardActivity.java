@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,8 +35,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
   private SharedPreferences.OnSharedPreferenceChangeListener mPreferenceChangeListener;
 
   private DashboardRecyclerAdapter mAdapter;
-  private RecyclerView mPollRecyclerView;
-
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -62,14 +61,14 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
       }
     };
 
-    mPollRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_dashboard_polls);
+    RecyclerView pollRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_dashboard_polls);
 
     if (BuildConfig.DEBUG) {
       findViewById(R.id.fab_dashboard_add_debug).setVisibility(View.VISIBLE);
     }
 
     mAdapter = new DashboardRecyclerAdapter(PersistenceUtils.fetchAllPolls(this));
-    mPollRecyclerView.setAdapter(mAdapter);
+    pollRecyclerView.setAdapter(mAdapter);
   }
 
   @Override
@@ -152,15 +151,18 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
   }
 
-  class DashboardRecyclerAdapter extends RecyclerView.Adapter<DashboardRecyclerAdapter.ViewHolder> {
+  private class DashboardRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int TYPE_EMPTY = 0;
+    private static final int TYPE_NORMAL = 1;
 
     private List<Poll> mPolls;
 
-    public DashboardRecyclerAdapter(List<Poll> polls) {
+    DashboardRecyclerAdapter(List<Poll> polls) {
       mPolls = polls;
     }
 
-    public void swapArray(ArrayList<Poll> newArray) {
+    void swapArray(ArrayList<Poll> newArray) {
       mPolls.clear();
       mPolls.addAll(newArray);
       notifyDataSetChanged();
@@ -168,7 +170,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     public void add(Poll poll) {
       mPolls.add(poll);
-      notifyItemInserted(mPolls.size() - 1);
+      if (mPolls.size() == 1) {
+        notifyDataSetChanged();
+      } else {
+        notifyItemInserted(mPolls.size() - 1);
+      }
     }
 
     private boolean containsWithId(UUID uuid) {
@@ -193,76 +199,92 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
-    public DashboardRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-      View inflatedView = LayoutInflater.from(viewGroup.getContext())
-          .inflate(R.layout.item_dashboard, viewGroup, false);
-
-      final ViewHolder holder = new ViewHolder(inflatedView);
-
-      return holder;
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+      View inflatedView;
+      if (i == TYPE_EMPTY) {
+        inflatedView = LayoutInflater.from(viewGroup.getContext())
+            .inflate(R.layout.recyclerview_empty, viewGroup, false);
+        return new EmptyHolder(inflatedView);
+      } else {
+        inflatedView = LayoutInflater.from(viewGroup.getContext())
+            .inflate(R.layout.item_dashboard, viewGroup, false);
+        return new PollHolder(inflatedView);
+      }
     }
 
     @Override
-    public void onBindViewHolder(final DashboardRecyclerAdapter.ViewHolder viewHolder, int i) {
-      final Poll poll = mPolls.get(i);
+    public void onBindViewHolder(ViewHolder holder, int i) {
+      if (getItemViewType(i) == TYPE_EMPTY) {
+        EmptyHolder emptyHolder = (EmptyHolder) holder;
+        emptyHolder.text.setText("Welcome!\nStart by creating a new poll");
+      } else {
+        final Poll poll = mPolls.get(i);
+        final PollHolder pollHolder = (PollHolder) holder;
 
-      viewHolder.mTitle.setText(poll.getPollTitle());
-      viewHolder.mSubtitle
-          .setText(String.format("%d questions", poll.getQuestionList().size()));
-      Date date = new Date(mPolls.get(i).getStartDate());
-      viewHolder.mDate.setText(DateUtils.getRelativeTimeSpanString(
-          date.getTime(),
-          System.currentTimeMillis(),
-          DateUtils.MINUTE_IN_MILLIS,
-          DateUtils.FORMAT_ABBREV_ALL));
-      viewHolder.mCircle.setText(String.valueOf(poll.getNumberOfVotes()));
-      //viewHolder.mCircle.getBackground().setAlpha(96);
+        pollHolder.mTitle.setText(poll.getPollTitle());
+        pollHolder.mSubtitle
+            .setText(String.format("%d questions", poll.getQuestionList().size()));
+        Date date = new Date(mPolls.get(i).getStartDate());
+        pollHolder.mDate.setText(DateUtils.getRelativeTimeSpanString(
+            date.getTime(),
+            System.currentTimeMillis(),
+            DateUtils.MINUTE_IN_MILLIS,
+            DateUtils.FORMAT_ABBREV_ALL));
+        pollHolder.mCircle.setText(String.valueOf(poll.getNumberOfVotes()));
+        //pollHolder.mCircle.getBackground().setAlpha(96);
 
-      int[] rainbow = getResources().getIntArray(R.array.rainbow);
-      int index = Math.abs(poll.getUuid().hashCode()) % rainbow.length;
-      viewHolder.mCircle.getBackground().mutate().setTint(rainbow[index]);
+        int[] rainbow = getResources().getIntArray(R.array.rainbow);
+        int index = Math.abs(poll.getUuid().hashCode()) % rainbow.length;
+        pollHolder.mCircle.getBackground().mutate().setTint(rainbow[index]);
 
-      viewHolder.itemView.setOnClickListener(new OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          Intent detailsIntent = new Intent(DashboardActivity.this, DetailsActivity.class);
-          detailsIntent.putExtra(Constants.EXTRA_POLL_ID,
-              mPolls.get(viewHolder.getAdapterPosition()).getUuid());
-          startActivity(detailsIntent);
-        }
-      });
+        pollHolder.itemView.setOnClickListener(new OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            Intent detailsIntent = new Intent(DashboardActivity.this, DetailsActivity.class);
+            detailsIntent.putExtra(Constants.EXTRA_POLL_ID,
+                mPolls.get(pollHolder.getAdapterPosition()).getUuid());
+            startActivity(detailsIntent);
+          }
+        });
 
-      viewHolder.mPopupButton.setOnClickListener(new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          PopupMenu popup = new PopupMenu(v.getContext(), v);
-          MenuInflater menuInflater = popup.getMenuInflater();
-          menuInflater.inflate(R.menu.popup_dashboard, popup.getMenu());
+        pollHolder.mPopupButton.setOnClickListener(new OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            PopupMenu popup = new PopupMenu(v.getContext(), v);
+            MenuInflater menuInflater = popup.getMenuInflater();
+            menuInflater.inflate(R.menu.popup_dashboard, popup.getMenu());
 
-          popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-              switch (menuItem.getItemId()) {
-                case R.id.action_popup_delete:
-                  UUID pollToRemove = poll.getUuid();
-                  PersistenceUtils.deletePoll(getApplicationContext(), pollToRemove);
-                  return true;
-                default:
-                  return false;
+            popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+              @Override
+              public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                  case R.id.action_popup_delete:
+                    UUID pollToRemove = poll.getUuid();
+                    PersistenceUtils.deletePoll(getApplicationContext(), pollToRemove);
+                    return true;
+                  default:
+                    return false;
+                }
               }
-            }
-          });
-          popup.show();
-        }
-      });
+            });
+            popup.show();
+          }
+        });
+      }
+
     }
 
     @Override
     public int getItemCount() {
-      return mPolls.size();
+      return mPolls.size() == 0 ? 1 : mPolls.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public int getItemViewType(int position) {
+      return mPolls.size() == 0 ? TYPE_EMPTY : TYPE_NORMAL;
+    }
+
+    class PollHolder extends RecyclerView.ViewHolder {
 
       private TextView mTitle;
       private TextView mSubtitle;
@@ -270,7 +292,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
       private TextView mCircle;
       private ImageButton mPopupButton;
 
-      public ViewHolder(View itemView) {
+      PollHolder(View itemView) {
         super(itemView);
 
         mTitle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_title);
@@ -278,6 +300,16 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         mSubtitle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_subtitle);
         mCircle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_circle);
         mPopupButton = (ImageButton) itemView.findViewById(R.id.button_dashboard_item_popup);
+      }
+    }
+
+    class EmptyHolder extends RecyclerView.ViewHolder {
+
+      TextView text;
+
+      public EmptyHolder(View itemView) {
+        super(itemView);
+        text = (TextView) itemView.findViewById(R.id.textview_empty);
       }
     }
   }
