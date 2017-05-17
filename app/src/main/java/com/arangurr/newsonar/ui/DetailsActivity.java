@@ -8,7 +8,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetBehavior.BottomSheetCallback;
+import android.support.transition.ChangeBounds;
+import android.support.transition.Fade;
 import android.support.transition.TransitionManager;
+import android.support.transition.TransitionSet;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -499,10 +502,7 @@ public class DetailsActivity extends AppCompatActivity implements
       holder.header.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View view) {
-          TransitionManager.beginDelayedTransition(mRecyclerView);
-          boolean isExpanded = holder.header.isSelected();
-          holder.header.setSelected(!isExpanded);
-          holder.switcher.setDisplayedChild(isExpanded ? 0 : 1);
+          expandOrCollapseWithAnimation(holder.header, holder.switcher);
         }
       });
 
@@ -538,6 +538,19 @@ public class DetailsActivity extends AppCompatActivity implements
       float average = voters > 0 ? ((float) sum / voters) : 0;
 
       holder.summary.setText("Average rating: " + String.valueOf(average));
+    }
+
+    private void expandOrCollapseWithAnimation(TextView header, ViewSwitcher switcher) {
+      TransitionSet set = new TransitionSet();
+      set.addTransition(new Fade());
+      set.addTransition(new ChangeBounds());
+      set.setDuration(50);
+      TransitionManager
+          .beginDelayedTransition(mRecyclerView, set);
+
+      boolean isExpanded = header.isSelected();
+      header.setSelected(!isExpanded);
+      switcher.setDisplayedChild(isExpanded ? 0 : 1);
     }
 
     private void bindLikeDislike(LikeDislikeHolder holder, int position) {
@@ -598,10 +611,7 @@ public class DetailsActivity extends AppCompatActivity implements
       holder.header.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
-          boolean isExpanded = holder.header.isSelected();
-          TransitionManager.beginDelayedTransition(mRecyclerView);
-          holder.header.setSelected(!isExpanded);
-          holder.switcher.setDisplayedChild(isExpanded ? 0 : 1);
+          expandOrCollapseWithAnimation(holder.header, holder.switcher);
         }
       });
       int voters = q.getNumberOfVotes();
@@ -661,11 +671,7 @@ public class DetailsActivity extends AppCompatActivity implements
       holder.header.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
-          boolean isExpanded = holder.header.isSelected();
-          TransitionManager.beginDelayedTransition(mRecyclerView);
-
-          holder.header.setSelected(!isExpanded);
-          holder.switcher.setDisplayedChild(isExpanded ? 0 : 1);
+          expandOrCollapseWithAnimation(holder.header, holder.switcher);
         }
       });
 
