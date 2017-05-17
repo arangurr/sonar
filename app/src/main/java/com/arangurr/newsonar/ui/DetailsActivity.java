@@ -635,7 +635,7 @@ public class DetailsActivity extends AppCompatActivity implements
 
         text1.setText(option.getOptionName());
         text2.setText(String.valueOf(option.getNumberOfVotes()));
-        imageColor.getDrawable().setTint(rainbowColors[option.getKey()]);
+        imageColor.getDrawable().mutate().setTint(rainbowColors[option.getKey()]);
         progressBar.setMax(voters);
         progressBar.setProgress(option.getNumberOfVotes());
       }
