@@ -40,7 +40,6 @@
           android:paddingTop="16dp"
           android:paddingBottom="16dp"
           android:numStars="5"
-          android:progressTint="@color/colorRatePrimary"
           android:stepSize="1"
           android:theme="@style/AppTheme.RatingBar"
           tools:rating="3"/>

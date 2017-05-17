@@ -20,14 +20,12 @@
 
       <RatingBar
         android:id="@+id/ratingbar_card_rate_vote"
-        style="?android:attr/ratingBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:numStars="5"
-        android:progressTint="@color/colorRatePrimary"
         android:stepSize="1"
         android:theme="@style/AppTheme.RatingBar"
         tools:rating="3"/>
