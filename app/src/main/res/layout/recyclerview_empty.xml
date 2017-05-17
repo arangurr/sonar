@@ -5,6 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:gravity="center"
-  tools:text="This is an empty recyclerview">
+  android:lineSpacingExtra="8sp"
+  tools:text="This is an empty recyclerview\nNow it has two lines">
 
 </TextView>
