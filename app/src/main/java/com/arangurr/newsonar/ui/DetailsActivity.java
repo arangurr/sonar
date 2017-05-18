@@ -72,8 +72,7 @@ public class DetailsActivity extends AppCompatActivity implements
   private static final String TAG = "DetailsActivity";
   private static final String EXTRA_COUNTER = "counter";
   private static final String EXTRA_CHRONO = "chrono";
-
-
+  
   private GoogleApiClient mGoogleApiClient;
   private Message mActiveMessage;
   private MessageListener mMessageListener;
@@ -509,7 +508,7 @@ public class DetailsActivity extends AppCompatActivity implements
       holder.counter1.setClickable(vote1 > 0);
       holder.counter2.setClickable(vote2 > 0);
 
-      // TODO: 18/05/2017 disable click if poll is private 
+      // TODO: 18/05/2017 disable click if poll is private
 
       if (vote1 + vote2 > 0) {
         int[] progressColors = getResources().getIntArray(R.array.progress_rainbow);
@@ -541,7 +540,7 @@ public class DetailsActivity extends AppCompatActivity implements
       int voters = q.getNumberOfVotes();
       int sum = 0;
 
-      for (Option o : q.getAllOptions()) {
+      for (final Option o : q.getAllOptions()) {
         View rowView;
         rowView = holder.container.findViewWithTag(o.getKey());
         if (rowView == null) {
@@ -553,14 +552,24 @@ public class DetailsActivity extends AppCompatActivity implements
 
         sum += Integer.parseInt(o.getOptionName()) * o.getNumberOfVotes();
 
-        TextView text1 = (TextView) rowView.findViewById(R.id.textview_item_card_option_text1);
-        TextView text2 = (TextView) rowView.findViewById(R.id.textview_item_card_option_text2);
+        TextView name = (TextView) rowView.findViewById(R.id.textview_item_card_option_name);
+        TextView counter = (TextView) rowView.findViewById(R.id.textview_item_card_option_counter);
         ImageView imageColor = (ImageView) rowView.findViewById(R.id.imageview_item_card_option);
         ProgressBar progressBar = (ProgressBar) rowView
             .findViewById(R.id.progressbar_item_card_option_progress);
 
-        text1.setText("Rating: " + o.getOptionName());
-        text2.setText(String.valueOf(o.getNumberOfVotes()));
+        name.setText("Rating: " + o.getOptionName());
+        counter.setText(String.valueOf(o.getNumberOfVotes()));
+
+        counter.setOnClickListener(new OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            showVotersDialog(o.getVoterList());
+          }
+        });
+
+        counter.setClickable(o.getNumberOfVotes() > 0);
+
         imageColor.setVisibility(View.GONE);
 
         progressBar.setMax(voters);
@@ -586,7 +595,7 @@ public class DetailsActivity extends AppCompatActivity implements
     }
 
     private void bindLikeDislike(LikeDislikeHolder holder, int position) {
-      Question q = mCurrentPoll.getQuestionList().get(position);
+      final Question q = mCurrentPoll.getQuestionList().get(position);
       holder.header.setText(String.format("%s. %s", String.valueOf(position + 1), q.getTitle()));
 
       holder.header.setCompoundDrawables(null, null, null, null);
@@ -596,6 +605,24 @@ public class DetailsActivity extends AppCompatActivity implements
 
       holder.like.setText(String.valueOf(voteLike));
       holder.dislike.setText(String.valueOf(voteDislike));
+
+      holder.dislike.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          showVotersDialog(q.getOption(0).getVoterList());
+        }
+      });
+      holder.like.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          showVotersDialog(q.getOption(1).getVoterList());
+        }
+      });
+
+      holder.dislike.setClickable(voteDislike > 0);
+      holder.like.setClickable(voteLike > 0);
+
+      // TODO: 18/05/2017 disable click if poll is private
 
       if (voteDislike + voteLike > 0) {
         int[] progressColors = getResources().getIntArray(R.array.progress_like_dislike);
@@ -650,7 +677,7 @@ public class DetailsActivity extends AppCompatActivity implements
 
       int[] rainbowColors = getResources().getIntArray(R.array.progress_rainbow);
 
-      for (Option option : q.getAllOptions()) {
+      for (final Option option : q.getAllOptions()) {
         View rowView = holder.container.findViewWithTag(option.getKey());
         if (rowView == null) {
           rowView = LayoutInflater.from(holder.container.getContext())
@@ -659,14 +686,25 @@ public class DetailsActivity extends AppCompatActivity implements
           holder.container.addView(rowView);
         }
 
-        TextView text1 = ((TextView) rowView.findViewById(R.id.textview_item_card_option_text1));
-        TextView text2 = ((TextView) rowView.findViewById(R.id.textview_item_card_option_text2));
+        TextView name = ((TextView) rowView.findViewById(R.id.textview_item_card_option_name));
+        TextView counter = ((TextView) rowView
+            .findViewById(R.id.textview_item_card_option_counter));
         ImageView imageColor = (ImageView) rowView.findViewById(R.id.imageview_item_card_option);
         ProgressBar progressBar = (ProgressBar) rowView
             .findViewById(R.id.progressbar_item_card_option_progress);
 
-        text1.setText(option.getOptionName());
-        text2.setText(String.valueOf(option.getNumberOfVotes()));
+        name.setText(option.getOptionName());
+        counter.setText(String.valueOf(option.getNumberOfVotes()));
+
+        counter.setOnClickListener(new OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            showVotersDialog(option.getVoterList());
+          }
+        });
+
+        counter.setClickable(option.getNumberOfVotes() > 0);
+
         imageColor.getDrawable().mutate().setTint(rainbowColors[option.getKey()]);
         progressBar.setMax(voters);
         progressBar.setProgress(option.getNumberOfVotes());
@@ -721,8 +759,8 @@ public class DetailsActivity extends AppCompatActivity implements
         }
         sum += Integer.parseInt(option.getOptionName()) * option.getNumberOfVotes();
 
-        TextView text1 = (TextView) rowView.findViewById(R.id.textview_item_card_option_text1);
-        TextView text2 = (TextView) rowView.findViewById(R.id.textview_item_card_option_text2);
+        TextView text1 = (TextView) rowView.findViewById(R.id.textview_item_card_option_name);
+        TextView text2 = (TextView) rowView.findViewById(R.id.textview_item_card_option_counter);
         ImageView colorImage = (ImageView) rowView.findViewById(R.id.imageview_item_card_option);
         ProgressBar progressBar = (ProgressBar) rowView
             .findViewById(R.id.progressbar_item_card_option_progress);
