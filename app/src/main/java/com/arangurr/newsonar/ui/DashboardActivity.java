@@ -170,11 +170,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     public void add(Poll poll) {
       mPolls.add(poll);
-      if (mPolls.size() == 1) {
-        notifyDataSetChanged();
-      } else {
-        notifyItemInserted(mPolls.size() - 1);
-      }
+      notifyItemInserted(mPolls.size());
     }
 
     private boolean containsWithId(UUID uuid) {
