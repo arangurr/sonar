@@ -13,6 +13,7 @@ import android.support.transition.Fade;
 import android.support.transition.TransitionManager;
 import android.support.transition.TransitionSet;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -45,6 +47,7 @@ import com.arangurr.newsonar.data.Option;
 import com.arangurr.newsonar.data.Poll;
 import com.arangurr.newsonar.data.Question;
 import com.arangurr.newsonar.data.Vote;
+import com.arangurr.newsonar.data.VoterIdPair;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -383,6 +386,19 @@ public class DetailsActivity extends AppCompatActivity implements
         .build();
   }
 
+  private void showVotersDialog(ArrayList<VoterIdPair> voterList) {
+    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        android.R.layout.simple_list_item_1);
+    for (VoterIdPair voter : voterList) {
+      adapter.add(voter.getUserName());
+    }
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setTitle("Voted by");
+    builder.setAdapter(adapter, null);
+    builder.show();
+  }
+
   class SimpleRecyclerViewAdapter extends
       RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -464,17 +480,36 @@ public class DetailsActivity extends AppCompatActivity implements
     }
 
     private void bindDualItem(DualItemHolder holder, int position) {
-      Question q = mCurrentPoll.getQuestionList().get(position);
+      final Question q = mCurrentPoll.getQuestionList().get(position);
       holder.header.setText(String.format("%s. %s", String.valueOf(position + 1), q.getTitle()));
       holder.option1.setText(q.getOption(0).getOptionName());
       holder.option2.setText(q.getOption(1).getOptionName());
-      holder.counter1.setText(String.valueOf(q.getOption(0).getNumberOfVotes()));
-      holder.counter2.setText(String.valueOf(q.getOption(1).getNumberOfVotes()));
 
       holder.header.setCompoundDrawables(null, null, null, null);
 
       int vote1 = q.getOption(0).getNumberOfVotes();
       int vote2 = q.getOption(1).getNumberOfVotes();
+
+      holder.counter1.setText(String.valueOf(vote1));
+      holder.counter2.setText(String.valueOf(vote2));
+
+      holder.counter1.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          showVotersDialog(q.getOption(0).getVoterList());
+        }
+      });
+      holder.counter2.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          showVotersDialog(q.getOption(1).getVoterList());
+        }
+      });
+
+      holder.counter1.setClickable(vote1 > 0);
+      holder.counter2.setClickable(vote2 > 0);
+
+      // TODO: 18/05/2017 disable click if poll is private 
 
       if (vote1 + vote2 > 0) {
         int[] progressColors = getResources().getIntArray(R.array.progress_rainbow);
