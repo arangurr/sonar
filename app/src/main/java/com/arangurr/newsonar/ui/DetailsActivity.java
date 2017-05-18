@@ -489,9 +489,6 @@ public class DetailsActivity extends AppCompatActivity implements
           holder.option2.setTypeface(holder.option2.getTypeface(),
               vote1 > vote2 ? Typeface.NORMAL : Typeface.BOLD);
         }
-      } else {
-        holder.counter1.setVisibility(View.GONE);
-        holder.counter2.setVisibility(View.GONE);
       }
     }
 
@@ -729,10 +726,8 @@ public class DetailsActivity extends AppCompatActivity implements
         header = (TextView) itemView.findViewById(R.id.textview_details_item_header_title);
         option1 = (TextView) itemView.findViewById(R.id.textview_details_item_binary_option1);
         option2 = (TextView) itemView.findViewById(R.id.textview_details_item_binary_option2);
-        counter1 = (TextView) itemView
-            .findViewById(R.id.textview_details_item_count1);
-        counter2 = (TextView) itemView
-            .findViewById(R.id.textview_details_item_count2);
+        counter1 = (TextView) itemView.findViewById(R.id.textview_details_item_count1);
+        counter2 = (TextView) itemView.findViewById(R.id.textview_details_item_count2);
         progress = (LinearLayout) itemView
             .findViewById(R.id.linearlayout_details_item_progress);
       }
@@ -771,10 +766,8 @@ public class DetailsActivity extends AppCompatActivity implements
         super(itemView);
 
         header = (TextView) itemView.findViewById(R.id.textview_details_item_header_title);
-        like = (TextView) itemView
-            .findViewById(R.id.textview_details_item_count2);
-        dislike = (TextView) itemView
-            .findViewById(R.id.textview_details_item_count1);
+        like = (TextView) itemView.findViewById(R.id.textview_details_item_count2);
+        dislike = (TextView) itemView.findViewById(R.id.textview_details_item_count1);
         progress = (LinearLayout) itemView.findViewById(R.id.linearlayout_details_item_progress);
       }
     }
