@@ -15,6 +15,8 @@ import android.graphics.Path;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +28,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.transition.ArcMotion;
 import android.view.LayoutInflater;
@@ -930,5 +933,32 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   @Override
   public void onDismiss(DialogInterface dialog) {
 
+  }
+
+  public void showHelpDialog(View view) {
+
+    String html;
+    if (view.getId() == R.id.imagebutton_card_config_password) {
+      html = getString(R.string.help_password);
+    } else if (view.getId() == R.id.imagebutton_card_config_privacy) {
+      html = getString(R.string.help_privacy);
+    } else {
+      return;
+    }
+
+    CharSequence message;
+    if (VERSION.SDK_INT >= VERSION_CODES.N) {
+      message = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT);
+    } else {
+      message = Html.fromHtml(html);
+    }
+
+    Builder builder = new Builder(this);
+    builder.setTitle("What's this?")
+        .setMessage(message)
+        .setPositiveButton("Understood", null);
+
+    AlertDialog dialog = builder.create();
+    dialog.show();
   }
 }
