@@ -225,7 +225,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         pollHolder.mTitle.setText(poll.getPollTitle());
         pollHolder.mSubtitle
             .setText(String.format("%d questions", poll.getQuestionList().size()));
-        Date date = new Date(mPolls.get(i).getStartDate());
+        Date date = new Date(poll.getStartDate());
         pollHolder.mDate.setText(DateUtils.getRelativeTimeSpanString(
             date.getTime(),
             System.currentTimeMillis(),
@@ -243,7 +243,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
           public void onClick(View view) {
             Intent detailsIntent = new Intent(DashboardActivity.this, DetailsActivity.class);
             detailsIntent.putExtra(Constants.EXTRA_POLL_ID,
-                mPolls.get(pollHolder.getAdapterPosition()).getUuid());
+                poll.getUuid());
             startActivity(detailsIntent);
           }
         });
