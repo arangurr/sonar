@@ -730,9 +730,9 @@ public class DetailsActivity extends AppCompatActivity implements
         option1 = (TextView) itemView.findViewById(R.id.textview_details_item_binary_option1);
         option2 = (TextView) itemView.findViewById(R.id.textview_details_item_binary_option2);
         counter1 = (TextView) itemView
-            .findViewById(R.id.textview_details_item_binary_option1_count);
+            .findViewById(R.id.textview_details_item_count1);
         counter2 = (TextView) itemView
-            .findViewById(R.id.textview_details_item_binary_option2_count);
+            .findViewById(R.id.textview_details_item_count2);
         progress = (LinearLayout) itemView
             .findViewById(R.id.linearlayout_details_item_progress);
       }
@@ -772,9 +772,9 @@ public class DetailsActivity extends AppCompatActivity implements
 
         header = (TextView) itemView.findViewById(R.id.textview_details_item_header_title);
         like = (TextView) itemView
-            .findViewById(R.id.textview_details_item_likedislike_like_counter);
+            .findViewById(R.id.textview_details_item_count2);
         dislike = (TextView) itemView
-            .findViewById(R.id.textview_details_item_likedislike_dislike_counter);
+            .findViewById(R.id.textview_details_item_count1);
         progress = (LinearLayout) itemView.findViewById(R.id.linearlayout_details_item_progress);
       }
     }

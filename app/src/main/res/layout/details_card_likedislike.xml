@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
@@ -31,36 +32,52 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:gravity="center_horizontal">
+      <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="start"
+        android:padding="12dp"
+        android:scaleType="fitStart"
+        app:srcCompat="@drawable/ic_thumb_down_24dp"/>
+
       <TextView
-        android:id="@+id/textview_details_item_likedislike_dislike_counter"
-        style="@android:style/TextAppearance.Material.Medium"
+        android:id="@+id/textview_details_item_count1"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:drawableEnd="@drawable/ic_thumb_down_24dp"
-        android:drawablePadding="16dp"
-        android:gravity="center_vertical|start"
-        android:minHeight="@dimen/item_height_small"
-        android:textAlignment="textStart"
-        tools:text="15"/>
+        android:layout_gravity="center_vertical"
+        android:padding="8dp"
+        android:drawableEnd="@drawable/ic_person_24dp"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        tools:text="8"/>
       <View
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:background="@color/colorDivider"/>
+      <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="start"
+        android:padding="12dp"
+        android:scaleType="fitStart"
+        app:srcCompat="@drawable/ic_thumb_up_24dp"/>
+
       <TextView
-        android:id="@+id/textview_details_item_likedislike_like_counter"
-        style="@android:style/TextAppearance.Material.Medium"
+        android:id="@+id/textview_details_item_count2"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:drawablePadding="16dp"
-        android:drawableStart="@drawable/ic_thumb_up_24dp"
-        android:gravity="center_vertical|end"
-        android:minHeight="@dimen/item_height_small"
-        android:textAlignment="textEnd"
-        tools:text="32"/>
+        android:layout_gravity="center_vertical"
+        android:padding="8dp"
+        android:drawableEnd="@drawable/ic_person_24dp"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        tools:text="21"/>
     </LinearLayout>
 
   </LinearLayout>
