@@ -7,7 +7,6 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
@@ -57,8 +56,7 @@ import com.arangurr.newsonar.data.Poll;
 import com.arangurr.newsonar.data.Question;
 import java.util.UUID;
 
-public class EditorActivity extends AppCompatActivity implements View.OnClickListener,
-    OnDismissListener {
+public class EditorActivity extends AppCompatActivity implements View.OnClickListener {
 
   private CheckBox mPasswordCheckbox;
   private EditText mPasswordEditText;
@@ -360,8 +358,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         })
         .setNegativeButton(android.R.string.cancel, null)
         .setView(dialogView)
-        .setTitle("Binary Question")
-        .setOnDismissListener(this);
+        .setTitle("Binary Question");
 
     final AlertDialog dialog = dialogBuilder.create();
     dialog.show();
@@ -928,11 +925,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       }
     });
     reveal.start();
-  }
-
-  @Override
-  public void onDismiss(DialogInterface dialog) {
-
   }
 
   public void showHelpDialog(View view) {
