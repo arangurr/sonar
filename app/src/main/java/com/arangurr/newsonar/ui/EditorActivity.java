@@ -46,7 +46,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import com.arangurr.newsonar.Constants;
 import com.arangurr.newsonar.PersistenceUtils;
@@ -58,7 +57,7 @@ import java.util.UUID;
 public class EditorActivity extends AppCompatActivity implements View.OnClickListener,
     OnDismissListener {
 
-  private Switch mPasswordSwitch;
+  private CheckBox mPasswordCheckbox;
   private EditText mPasswordEditText;
   private TextView mPrivacyTextView;
   private Spinner mPrivacySpinner;
@@ -98,7 +97,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_24dp);
     toolbar.getNavigationIcon().mutate().setColorFilter(Color.WHITE, Mode.SRC_IN);
 
-    mPasswordSwitch = (Switch) findViewById(R.id.switch_card_config_password);
+    mPasswordCheckbox = (CheckBox) findViewById(R.id.checkbox_card_config_password);
     mPasswordEditText = (EditText) findViewById(R.id.edittext_card_config_password);
     mPrivacyTextView = (TextView) findViewById(R.id.textview_card_config_privacy_description);
     mPrivacySpinner = (Spinner) findViewById(R.id.spinner_card_config_privacy);
@@ -131,10 +130,9 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       }
     });
 
-    mPasswordSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    mPasswordCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        mPasswordEditText.setVisibility(isChecked ? View.VISIBLE : View.GONE);
         mPoll.setPasswordProtected(isChecked);
       }
     });
@@ -152,17 +150,43 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
       @Override
       public void afterTextChanged(Editable s) {
-        mPoll.setPassword(s.toString());
+        if (s.length() == 0) {
+          mPasswordCheckbox.setChecked(false);
+          mPoll.setPassword(null);
+        } else {
+          if (!mPasswordCheckbox.isChecked()) {
+            mPasswordCheckbox.setChecked(true);
+          }
+          mPoll.setPassword(s.toString());
+        }
       }
     });
 
     mPrivacySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String[] privacyStrings = getResources().getStringArray(R.array
-            .array_privacy_explained);
 
-        mPrivacyTextView.setText(privacyStrings[position]);
+        int[] privacyDrawables = {
+            R.drawable.ic_public_24dp,
+            R.drawable.ic_visibility_off_24dp,
+            R.drawable.ic_incognito,
+        };
+
+        mPrivacyTextView
+            .setCompoundDrawablesWithIntrinsicBounds(privacyDrawables[position], 0, 0, 0);
+
+        switch (position) {
+          case 1:
+            mPoll.setPrivacySetting(Constants.PRIVACY_PRIVATE);
+            break;
+          case 2:
+            mPoll.setPrivacySetting(Constants.PRIVACY_SECRET);
+            break;
+          case 0:
+          default:
+            mPoll.setPrivacySetting(Constants.PRIVACY_PUBLIC);
+            break;
+        }
       }
 
       @Override
@@ -179,8 +203,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         mAdapter.notifyDataSetChanged();
       }
     };
-
-    setDefaultCardConfig();
   }
 
   @Override
@@ -903,11 +925,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       }
     });
     reveal.start();
-  }
-
-  private void setDefaultCardConfig() {
-    mPrivacySpinner.setSelection(1); // By default all votes will be anonymous
-    mPrivacyTextView.setText(getResources().getStringArray(R.array.array_privacy_explained)[1]);
   }
 
   @Override
