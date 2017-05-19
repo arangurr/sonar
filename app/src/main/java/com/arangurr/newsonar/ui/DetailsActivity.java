@@ -72,7 +72,7 @@ public class DetailsActivity extends AppCompatActivity implements
   private static final String TAG = "DetailsActivity";
   private static final String EXTRA_COUNTER = "counter";
   private static final String EXTRA_CHRONO = "chrono";
-  
+
   private GoogleApiClient mGoogleApiClient;
   private Message mActiveMessage;
   private MessageListener mMessageListener;
@@ -505,10 +505,10 @@ public class DetailsActivity extends AppCompatActivity implements
         }
       });
 
-      holder.counter1.setClickable(vote1 > 0);
-      holder.counter2.setClickable(vote2 > 0);
-
-      // TODO: 18/05/2017 disable click if poll is private
+      holder.counter1.setClickable(vote1 > 0
+          && mCurrentPoll.getPrivacySetting() == Constants.PRIVACY_PUBLIC);
+      holder.counter2.setClickable(vote2 > 0
+          && mCurrentPoll.getPrivacySetting() == Constants.PRIVACY_PUBLIC);
 
       if (vote1 + vote2 > 0) {
         int[] progressColors = getResources().getIntArray(R.array.progress_rainbow);
@@ -568,7 +568,8 @@ public class DetailsActivity extends AppCompatActivity implements
           }
         });
 
-        counter.setClickable(o.getNumberOfVotes() > 0);
+        counter.setClickable(o.getNumberOfVotes() > 0
+            && mCurrentPoll.getPrivacySetting() == Constants.PRIVACY_PUBLIC);
 
         imageColor.setVisibility(View.GONE);
 
@@ -619,8 +620,10 @@ public class DetailsActivity extends AppCompatActivity implements
         }
       });
 
-      holder.dislike.setClickable(voteDislike > 0);
-      holder.like.setClickable(voteLike > 0);
+      holder.dislike.setClickable(voteDislike > 0
+          && mCurrentPoll.getPrivacySetting() == Constants.PRIVACY_PUBLIC);
+      holder.like.setClickable(voteLike > 0
+          && mCurrentPoll.getPrivacySetting() == Constants.PRIVACY_PUBLIC);
 
       // TODO: 18/05/2017 disable click if poll is private
 
@@ -703,7 +706,8 @@ public class DetailsActivity extends AppCompatActivity implements
           }
         });
 
-        counter.setClickable(option.getNumberOfVotes() > 0);
+        counter.setClickable(option.getNumberOfVotes() > 0
+            && mCurrentPoll.getPrivacySetting() == Constants.PRIVACY_PUBLIC);
 
         imageColor.getDrawable().mutate().setTint(rainbowColors[option.getKey()]);
         progressBar.setMax(voters);
