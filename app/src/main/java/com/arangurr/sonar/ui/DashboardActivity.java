@@ -220,7 +220,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
         pollHolder.mTitle.setText(poll.getPollTitle());
         pollHolder.mSubtitle
-            .setText(String.format("%d questions", poll.getQuestionList().size()));
+            .setText(String.format(getString(R.string.dashboard_question_counter), poll.getQuestionList().size()));
+        // TODO: 19/05/2017 plural
         Date date = new Date(poll.getStartDate());
         pollHolder.mDate.setText(DateUtils.getRelativeTimeSpanString(
             date.getTime(),
@@ -228,7 +229,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             DateUtils.MINUTE_IN_MILLIS,
             DateUtils.FORMAT_ABBREV_ALL));
         pollHolder.mCircle.setText(String.valueOf(poll.getNumberOfVotes()));
-        //pollHolder.mCircle.getBackground().setAlpha(96);
 
         int[] rainbow = getResources().getIntArray(R.array.rainbow);
         int index = Math.abs(poll.getUuid().hashCode()) % rainbow.length;

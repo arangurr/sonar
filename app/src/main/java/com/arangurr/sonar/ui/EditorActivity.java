@@ -942,6 +942,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     if (VERSION.SDK_INT >= VERSION_CODES.N) {
       message = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT);
     } else {
+      //noinspection deprecation
       message = Html.fromHtml(html);
     }
 

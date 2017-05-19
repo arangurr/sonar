@@ -108,7 +108,8 @@ public class EditorRecyclerAdapter extends
   private void bindQuestion(SimpleHolder holder, int position) {
     Question q = mItems.get(position - 1);
 
-    holder.mQuestionTitle.setText(String.format("%d. %s", position, q.getTitle()));
+    String format = holder.itemView.getContext().getString(R.string.editor_item_title);
+    holder.mQuestionTitle.setText(String.format(format, position, q.getTitle()));
 
     Drawable drawable;
 

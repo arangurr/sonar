@@ -323,10 +323,10 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
           public void onResult(@NonNull Status status) {
             if (status.isSuccess()) {
               Log.d(TAG, "Vote published successfully");
-              mStatusTextView.setText("Sending answers. They might be lost if you close the app.");
+              mStatusTextView.setText(R.string.status_sending_answers);
             } else {
               Log.d(TAG, "Couldn't publish vote due to status = " + status);
-              mStatusTextView.setText("Could not send answers");
+              mStatusTextView.setText(R.string.status_could_not_send);
             }
           }
         });

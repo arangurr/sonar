@@ -32,26 +32,26 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="Yes/No"/>
+        android:text="@string/yes_no"/>
       <RadioButton
         android:id="@+id/radiobutton_binary_truefalse"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="True/False"/>
+        android:text="@string/true_false"/>
       <RadioButton
         android:id="@+id/radiobutton_binary_custom"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="Custom"/>
+        android:text="@string/customize"/>
     </RadioGroup>
 
     <EditText
       android:id="@+id/edittext_binary_option1"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:hint="First Option"
+      android:hint="@string/first_option"
       android:imeOptions="flagNoExtractUi|actionDone"
       android:inputType="text|textCapSentences"
       android:visibility="gone"
@@ -61,7 +61,7 @@
       android:id="@+id/edittext_binary_option2"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:hint="Second Option"
+      android:hint="@string/second_option"
       android:imeOptions="flagNoExtractUi|actionDone"
       android:inputType="text|textCapSentences"
       android:visibility="gone"

@@ -16,7 +16,7 @@
     android:id="@+id/edittext_editor_title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:hint="Title"
+    android:hint="@string/title"
     android:imeOptions="flagNoExtractUi|actionDone"
     android:inputType="text|textCapSentences|textAutoCorrect"
     android:selectAllOnFocus="true"

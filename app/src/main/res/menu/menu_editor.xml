@@ -8,12 +8,12 @@
     android:id="@+id/action_config"
     android:actionViewClass="android.widget.ImageView"
     android:icon="@drawable/action_config"
-    android:title="More Settings"
+    android:title="@string/more_settings"
     app:showAsAction="always"/>
 
   <item
     android:id="@+id/action_done"
     android:icon="@drawable/ic_done_24dp"
-    android:title="Done"
+    android:title="@android:string/ok"
     app:showAsAction="ifRoom"/>
 </menu>

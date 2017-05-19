@@ -147,7 +147,6 @@ public class Poll {
         o.removeVoter(user);
       }
     }
-    return;
   }
 
   private boolean hasVoted(VoterIdPair voter) {
