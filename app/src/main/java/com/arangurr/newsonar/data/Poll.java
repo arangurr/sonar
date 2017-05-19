@@ -161,4 +161,18 @@ public class Poll {
   public int getNumberOfVotes() {
     return mQuestionList.size() == 0 ? 0 : mQuestionList.get(0).getNumberOfVotes();
   }
+
+  public ArrayList<VoterIdPair> getVoterList() {
+    ArrayList<VoterIdPair> voters = new ArrayList<>();
+    for (Question question : mQuestionList) {
+      for (Option option : question.getAllOptions()) {
+        for (VoterIdPair voter : option.getVoterList()) {
+          if (!voters.contains(voter)) {
+            voters.add(voter);
+          }
+        }
+      }
+    }
+    return voters;
+  }
 }

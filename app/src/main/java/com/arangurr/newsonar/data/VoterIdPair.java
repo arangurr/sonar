@@ -25,4 +25,13 @@ public class VoterIdPair {
   public void setUserName(String newName) {
     mUserName = newName;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof VoterIdPair) {
+      return ((VoterIdPair) obj).getUuid().equals(mUuid) && ((VoterIdPair) obj).getUserName().equals(mUserName);
+    } else {
+      return false;
+    }
+  }
 }
