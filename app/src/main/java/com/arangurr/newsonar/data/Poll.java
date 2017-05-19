@@ -35,12 +35,13 @@ public class Poll {
   @SerializedName("qs")
   private ArrayList<Question> mQuestionList;
   @SerializedName("ps")
-  private int mPrivacySetting = Constants.PRIVACY_PUBLIC;
+  private int mPrivacySetting;
 
   public Poll(Context context) {
     mPollId = UUID.randomUUID();
     mQuestionList = new ArrayList<>();
     mStartDate = new Date().getTime();
+    mPrivacySetting = Constants.PRIVACY_PUBLIC;
     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
     mOwnerId = prefs.getString(Constants.KEY_UUID, null);
     mOwnerName = prefs.getString(Constants.KEY_USERNAME, null);
@@ -51,6 +52,7 @@ public class Poll {
     mQuestionList = new ArrayList<>();
     mPollTitle = title;
     mStartDate = new Date().getTime();
+    mPrivacySetting = Constants.PRIVACY_PUBLIC;
     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
     mOwnerId = prefs.getString(Constants.KEY_UUID, null);
     mOwnerName = prefs.getString(Constants.KEY_USERNAME, null);
