@@ -753,7 +753,7 @@ public class DetailsActivity extends AppCompatActivity implements
       int sum = 0;
 
       for (int i = 0; i < q.getAllOptions().size(); i++) {
-        Option option = q.getOption(i);
+        final Option option = q.getOption(i);
         View rowView = holder.container.findViewWithTag(option.getKey());
         if (rowView == null) {
           rowView = LayoutInflater.from(holder.container.getContext())
@@ -763,18 +763,29 @@ public class DetailsActivity extends AppCompatActivity implements
         }
         sum += Integer.parseInt(option.getOptionName()) * option.getNumberOfVotes();
 
-        TextView text1 = (TextView) rowView.findViewById(R.id.textview_item_card_option_name);
-        TextView text2 = (TextView) rowView.findViewById(R.id.textview_item_card_option_counter);
+        TextView name = (TextView) rowView.findViewById(R.id.textview_item_card_option_name);
+        TextView counter = (TextView) rowView.findViewById(R.id.textview_item_card_option_counter);
         ImageView colorImage = (ImageView) rowView.findViewById(R.id.imageview_item_card_option);
         ProgressBar progressBar = (ProgressBar) rowView
             .findViewById(R.id.progressbar_item_card_option_progress);
 
-        text1.setText(option.getOptionName());
+        name.setText(option.getOptionName());
         Drawable star = getDrawable(R.drawable.ic_star_24dp);
-        star.setTint(ContextCompat.getColor(text1.getContext(), R.color.colorRatePrimary));
-        text1.setCompoundDrawablePadding(8);
-        text1.setCompoundDrawablesWithIntrinsicBounds(star, null, null, null);
-        text2.setText(String.valueOf(option.getNumberOfVotes()));
+        star.setTint(ContextCompat.getColor(name.getContext(), R.color.colorRatePrimary));
+        name.setCompoundDrawablePadding(8);
+        name.setCompoundDrawablesWithIntrinsicBounds(star, null, null, null);
+        counter.setText(String.valueOf(option.getNumberOfVotes()));
+
+        counter.setOnClickListener(new OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            showVotersDialog(option.getVoterList());
+          }
+        });
+
+        counter.setClickable(option.getNumberOfVotes() > 0
+            && mCurrentPoll.getPrivacySetting() == Constants.PRIVACY_PUBLIC);
+
         colorImage.setVisibility(View.GONE);
 
         progressBar.setMax(voters);
