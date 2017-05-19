@@ -20,13 +20,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -84,6 +84,8 @@ public class DetailsActivity extends AppCompatActivity implements
   private RecyclerView mRecyclerView;
   private TextView mCounterTextView;
   private Chronometer mChronometer;
+
+  private TextView mToolbarCounter;
 
   private SimpleRecyclerViewAdapter mAdapter;
 
@@ -195,6 +197,7 @@ public class DetailsActivity extends AppCompatActivity implements
             mCounterTextView.setText(String.format("%d votes in this session", mVoteCount));
             PersistenceUtils.storePollInPreferences(getBaseContext(), mCurrentPoll);
             mAdapter.notifyDataSetChanged();
+            supportInvalidateOptionsMenu();
           }
         } else {
           Log.d(TAG, "Could not update Poll with found Vote");
@@ -210,6 +213,29 @@ public class DetailsActivity extends AppCompatActivity implements
     };
 
     buildGoogleApiClient();
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_details, menu);
+
+    MenuItem counterItem = menu.findItem(R.id.action_voters);
+    mToolbarCounter = (TextView) counterItem.getActionView();
+    mToolbarCounter.getCompoundDrawables()[2].mutate()
+        .setTint(ContextCompat.getColor(this, R.color.colorPrimaryTextDark));
+    
+    mToolbarCounter.setText(String.valueOf(mCurrentPoll.getNumberOfVotes()));
+
+    if (mCurrentPoll.getPrivacySetting() != Constants.PRIVACY_SECRET) {
+      mToolbarCounter.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          showVotersDialog(mCurrentPoll.getVoterList());
+        }
+      });
+    }
+
+    return true;
   }
 
   @Override

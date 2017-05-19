@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  tools:context=".ui.DetailsActivity">
+
+  <item
+    android:id="@+id/action_voters"
+    android:title="Voters"
+    app:actionLayout="@layout/action_counter"
+    app:showAsAction="always"/>
+</menu>
