@@ -50,6 +50,7 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
   private ImageButton mNextButton;
   private ImageButton mPreviousButton;
   private Button mSendButton;
+  private TextView mPrivacyTextView;
 
 
   @Override
@@ -73,6 +74,24 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
     mNextButton = (ImageButton) findViewById(R.id.button_voting_next);
     mPreviousButton = (ImageButton) findViewById(R.id.button_voting_previous);
     mSendButton = (Button) findViewById(R.id.button_voting_send);
+    mPrivacyTextView = (TextView) findViewById(R.id.textview_voting_privacy);
+
+    switch (mPoll.getPrivacySetting()) {
+      case Constants.PRIVACY_SECRET:
+        mPrivacyTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_incognito, 0, 0, 0);
+        mPrivacyTextView.setText(R.string.voting_privacy_secret);
+        break;
+      case Constants.PRIVACY_PRIVATE:
+        mPrivacyTextView
+            .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_visibility_off_24dp, 0, 0, 0);
+        mPrivacyTextView.setText(R.string.voting_privacy_anonymous);
+        break;
+      case Constants.PRIVACY_PUBLIC:
+        mPrivacyTextView
+            .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_public_24dp, 0, 0, 0);
+        mPrivacyTextView.setText(R.string.voting_privacy_public);
+        break;
+    }
 
     mQuestionList = mPoll.getQuestionList();
     mQuestionPagerAdapter = new QuestionPagerAdapter();

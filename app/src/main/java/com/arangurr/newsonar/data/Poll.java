@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import com.arangurr.newsonar.Constants;
-import com.arangurr.newsonar.GsonUtils.Exclude;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,7 +34,7 @@ public class Poll {
   private String mPassword;
   @SerializedName("qs")
   private ArrayList<Question> mQuestionList;
-  @Exclude
+  @SerializedName("ps")
   private int mPrivacySetting = Constants.PRIVACY_PUBLIC;
 
   public Poll(Context context) {

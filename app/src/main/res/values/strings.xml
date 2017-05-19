@@ -10,10 +10,13 @@
   <string name="intro_error_short_name">You need to enter a longer name</string>
 
   <string name="help_privacy"><![CDATA[<p>In addition to usual poll responses, you can get more info:
-<div><strong>Private votes</strong>: you will know who and what voted and what.</div>
-<div><strong>Anonymous votes</strong>: you will know who voted, but not what.</div>
+<div><strong>Private votes</strong>: you will know who and what his responses were.</div>
+<div><strong>Anonymous votes</strong>: you will know who sent their responses.</div>
 <div><strong>Secret votes</strong>: you won\'t know who voted.</div></p>]]></string>
   <string name="help_password">You can protect your poll with a password. Users will have to enter it in order to answer.</string>
+  <string name="voting_privacy_public">All questions are mandatory. Your identity and your answers will be shared with the interviewer.</string>
+  <string name="voting_privacy_anonymous">All questions are mandatory. Your identity will only be shared to know if you sent your answers.</string>
+  <string name="voting_privacy_secret">All questions are mandatory. Your answers will be taken into account but your identity is completely hidden.</string>
 
   <string-array name="array_privacy_intervals">
     <item>Public</item>

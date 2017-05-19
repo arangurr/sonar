@@ -26,6 +26,21 @@
         app:popupTheme="@style/AppTheme.PopupOverlay"/>
     </android.support.design.widget.AppBarLayout>
 
+    <TextView
+      android:id="@+id/textview_voting_privacy"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="8dp"
+      android:paddingBottom="8dp"
+      android:paddingStart="16dp"
+      android:paddingEnd="48dp"
+      android:background="#b5000000"
+      android:drawablePadding="8dp"
+      android:gravity="center"
+      android:textColor="@color/colorPrimaryTextDark"
+      tools:drawableStart="@drawable/ic_public_24dp"
+      tools:text="@string/voting_privacy_public"/>
+
     <android.support.v4.view.ViewPager
       android:id="@+id/viewpager_voting"
       android:layout_width="match_parent"
