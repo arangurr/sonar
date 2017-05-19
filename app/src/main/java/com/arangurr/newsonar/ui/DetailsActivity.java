@@ -386,16 +386,17 @@ public class DetailsActivity extends AppCompatActivity implements
   }
 
   private void showVotersDialog(ArrayList<VoterIdPair> voterList) {
-    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-        android.R.layout.simple_list_item_1);
+    StringBuilder stringBuilder = new StringBuilder();
     for (VoterIdPair voter : voterList) {
-      adapter.add(voter.getUserName());
+      stringBuilder.append("\n");
+      stringBuilder.append(voter.getUserName());
+      stringBuilder.append("\n");
     }
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle("Voted by");
-    builder.setAdapter(adapter, null);
-    builder.show();
+    builder.setTitle("Voted by")
+        .setMessage(stringBuilder.toString())
+        .show();
   }
 
   class SimpleRecyclerViewAdapter extends
