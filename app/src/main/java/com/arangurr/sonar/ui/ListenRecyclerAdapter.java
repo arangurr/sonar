@@ -1,4 +1,4 @@
-package com.arangurr.newsonar.ui;
+package com.arangurr.sonar.ui;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,8 +7,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.arangurr.newsonar.R;
-import com.arangurr.newsonar.data.Poll;
+import com.arangurr.sonar.R;
+import com.arangurr.sonar.data.Poll;
 import java.util.List;
 
 /**

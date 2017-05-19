@@ -1,4 +1,4 @@
-package com.arangurr.newsonar.ui;
+package com.arangurr.sonar.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -49,11 +49,11 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.arangurr.newsonar.Constants;
-import com.arangurr.newsonar.PersistenceUtils;
-import com.arangurr.newsonar.R;
-import com.arangurr.newsonar.data.Poll;
-import com.arangurr.newsonar.data.Question;
+import com.arangurr.sonar.Constants;
+import com.arangurr.sonar.PersistenceUtils;
+import com.arangurr.sonar.R;
+import com.arangurr.sonar.data.Poll;
+import com.arangurr.sonar.data.Question;
 import java.util.UUID;
 
 public class EditorActivity extends AppCompatActivity implements View.OnClickListener {

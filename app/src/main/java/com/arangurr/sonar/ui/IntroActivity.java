@@ -1,4 +1,4 @@
-package com.arangurr.newsonar.ui;
+package com.arangurr.sonar.ui;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_DONE;
@@ -18,8 +18,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import com.arangurr.newsonar.Constants;
-import com.arangurr.newsonar.R;
+import com.arangurr.sonar.Constants;
+import com.arangurr.sonar.R;
 
 public class IntroActivity extends AppCompatActivity {
 

@@ -10,7 +10,7 @@
   android:paddingStart="16dp"
   android:paddingEnd="16dp"
   android:animateLayoutChanges="true"
-  tools:context="com.arangurr.newsonar.ui.ListenActivity">
+  tools:context="com.arangurr.sonar.ui.ListenActivity">
 
   <Switch
     android:id="@+id/switch_listen_subscribe"

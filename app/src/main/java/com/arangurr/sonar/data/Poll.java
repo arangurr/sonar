@@ -1,9 +1,9 @@
-package com.arangurr.newsonar.data;
+package com.arangurr.sonar.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import com.arangurr.newsonar.Constants;
+import com.arangurr.sonar.Constants;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.Date;

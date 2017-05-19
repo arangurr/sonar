@@ -1,4 +1,4 @@
-package com.arangurr.newsonar.ui;
+package com.arangurr.sonar.ui;
 
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -12,11 +12,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.arangurr.newsonar.Constants;
-import com.arangurr.newsonar.R;
-import com.arangurr.newsonar.data.Option;
-import com.arangurr.newsonar.data.Poll;
-import com.arangurr.newsonar.data.Question;
+import com.arangurr.sonar.Constants;
+import com.arangurr.sonar.R;
+import com.arangurr.sonar.data.Option;
+import com.arangurr.sonar.data.Poll;
+import com.arangurr.sonar.data.Question;
 import java.util.List;
 
 /**

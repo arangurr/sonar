@@ -6,7 +6,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@color/colorPrimaryIntermediate"
-  tools:context="com.arangurr.newsonar.ui.IntroActivity">
+  tools:context="com.arangurr.sonar.ui.IntroActivity">
 
   <android.support.design.widget.FloatingActionButton
     android:id="@+id/fab_intro_done"

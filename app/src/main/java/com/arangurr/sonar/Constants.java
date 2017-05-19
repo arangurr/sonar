@@ -1,4 +1,4 @@
-package com.arangurr.newsonar;
+package com.arangurr.sonar;
 
 /**
  * Created by Rodrigo on 18/03/2017.

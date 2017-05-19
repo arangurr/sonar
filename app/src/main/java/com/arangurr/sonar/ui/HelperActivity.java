@@ -1,11 +1,11 @@
-package com.arangurr.newsonar.ui;
+package com.arangurr.sonar.ui;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import com.arangurr.newsonar.Constants;
+import com.arangurr.sonar.Constants;
 
 /**
  * Created by Rodrigo on 18/03/2017.

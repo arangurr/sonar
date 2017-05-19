@@ -1,4 +1,4 @@
-package com.arangurr.newsonar;
+package com.arangurr.sonar;
 
 
 import android.util.Log;
