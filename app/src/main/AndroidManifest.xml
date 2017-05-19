@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.arangurr.newsonar">
+  package="com.arangurr.sonar">
 
   <application
     android:allowBackup="true"
@@ -13,11 +13,11 @@
       android:name="com.google.android.nearby.messages.API_KEY"
       android:value="@string/nearby_api_key"/>
 
-    <activity android:name=".ui.DashboardActivity"/>
+    <activity android:name="com.arangurr.sonar.ui.DashboardActivity"/>
     <activity
-      android:name=".ui.IntroActivity"
+      android:name="com.arangurr.sonar.ui.IntroActivity"
       android:theme="@style/AppTheme.NoActionBar"/>
-    <activity android:name=".ui.HelperActivity">
+    <activity android:name="com.arangurr.sonar.ui.HelperActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 
@@ -26,31 +26,31 @@
     </activity>
     <activity
       android:label="@string/title_activity_editor"
-      android:name=".ui.EditorActivity"
-      android:parentActivityName=".ui.DashboardActivity"
+      android:name="com.arangurr.sonar.ui.EditorActivity"
+      android:parentActivityName="com.arangurr.sonar.ui.DashboardActivity"
       android:theme="@style/AppTheme.NoActionBar"
       android:windowSoftInputMode="stateHidden">
       <meta-data
         android:name="android.support.PARENT_ACTIVITY"
-        android:value="com.arangurr.newsonar.ui.DashboardActivity"/>
+        android:value="com.arangurr.sonar.ui.DashboardActivity"/>
     </activity>
     <activity
-      android:name=".ui.DetailsActivity"
-      android:parentActivityName=".ui.DashboardActivity"
+      android:name="com.arangurr.sonar.ui.DetailsActivity"
+      android:parentActivityName="com.arangurr.sonar.ui.DashboardActivity"
       android:theme="@style/AppTheme">
       <meta-data
         android:name="android.support.PARENT_ACTIVITY"
-        android:value="com.arangurr.newsonar.ui.DashboardActivity"/>
+        android:value="com.arangurr.sonar.ui.DashboardActivity"/>
     </activity>
     <activity
-      android:name=".ui.ListenActivity"/>
+      android:name="com.arangurr.sonar.ui.ListenActivity"/>
     <activity
-      android:name=".ui.VotingActivity"
-      android:parentActivityName=".ui.ListenActivity"
+      android:name="com.arangurr.sonar.ui.VotingActivity"
+      android:parentActivityName="com.arangurr.sonar.ui.ListenActivity"
       android:theme="@style/AppTheme.NoActionBar.Translucent">
       <meta-data
         android:name="android.support.PARENT_ACTIVITY"
-        android:value="com.arangurr.newsonar.ui.ListenActivity"/>
+        android:value="com.arangurr.sonar.ui.ListenActivity"/>
     </activity>
   </application>
 

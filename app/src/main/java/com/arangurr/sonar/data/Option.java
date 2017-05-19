@@ -1,6 +1,6 @@
-package com.arangurr.newsonar.data;
+package com.arangurr.sonar.data;
 
-import com.arangurr.newsonar.GsonUtils.Exclude;
+import com.arangurr.sonar.GsonUtils.Exclude;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 

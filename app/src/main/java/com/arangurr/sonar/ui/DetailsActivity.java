@@ -1,4 +1,4 @@
-package com.arangurr.newsonar.ui;
+package com.arangurr.sonar.ui;
 
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -39,15 +39,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.ViewSwitcher;
-import com.arangurr.newsonar.Constants;
-import com.arangurr.newsonar.GsonUtils;
-import com.arangurr.newsonar.PersistenceUtils;
-import com.arangurr.newsonar.R;
-import com.arangurr.newsonar.data.Option;
-import com.arangurr.newsonar.data.Poll;
-import com.arangurr.newsonar.data.Question;
-import com.arangurr.newsonar.data.Vote;
-import com.arangurr.newsonar.data.VoterIdPair;
+import com.arangurr.sonar.Constants;
+import com.arangurr.sonar.GsonUtils;
+import com.arangurr.sonar.PersistenceUtils;
+import com.arangurr.sonar.R;
+import com.arangurr.sonar.data.Option;
+import com.arangurr.sonar.data.Poll;
+import com.arangurr.sonar.data.Question;
+import com.arangurr.sonar.data.Vote;
+import com.arangurr.sonar.data.VoterIdPair;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -223,7 +223,7 @@ public class DetailsActivity extends AppCompatActivity implements
     mToolbarCounter = (TextView) counterItem.getActionView();
     mToolbarCounter.getCompoundDrawables()[2].mutate()
         .setTint(ContextCompat.getColor(this, R.color.colorPrimaryTextDark));
-    
+
     mToolbarCounter.setText(String.valueOf(mCurrentPoll.getNumberOfVotes()));
 
     if (mCurrentPoll.getPrivacySetting() != Constants.PRIVACY_SECRET) {

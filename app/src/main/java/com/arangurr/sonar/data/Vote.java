@@ -1,4 +1,4 @@
-package com.arangurr.newsonar.data;
+package com.arangurr.sonar.data;
 
 import java.util.ArrayList;
 import java.util.UUID;

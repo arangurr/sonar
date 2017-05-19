@@ -1,4 +1,4 @@
-package com.arangurr.newsonar.ui;
+package com.arangurr.sonar.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,14 +29,14 @@ import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import com.arangurr.newsonar.Constants;
-import com.arangurr.newsonar.GsonUtils;
-import com.arangurr.newsonar.PersistenceUtils;
-import com.arangurr.newsonar.R;
-import com.arangurr.newsonar.data.Option;
-import com.arangurr.newsonar.data.Poll;
-import com.arangurr.newsonar.data.Question;
-import com.arangurr.newsonar.data.Vote;
+import com.arangurr.sonar.Constants;
+import com.arangurr.sonar.GsonUtils;
+import com.arangurr.sonar.PersistenceUtils;
+import com.arangurr.sonar.R;
+import com.arangurr.sonar.data.Option;
+import com.arangurr.sonar.data.Poll;
+import com.arangurr.sonar.data.Question;
+import com.arangurr.sonar.data.Vote;
 import java.util.ArrayList;
 import java.util.List;
 

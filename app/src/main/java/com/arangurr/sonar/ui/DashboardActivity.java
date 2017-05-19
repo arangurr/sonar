@@ -1,4 +1,4 @@
-package com.arangurr.newsonar.ui;
+package com.arangurr.sonar.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,12 +19,12 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import com.arangurr.newsonar.BuildConfig;
-import com.arangurr.newsonar.Constants;
-import com.arangurr.newsonar.PersistenceUtils;
-import com.arangurr.newsonar.R;
-import com.arangurr.newsonar.data.Poll;
-import com.arangurr.newsonar.data.Question;
+import com.arangurr.sonar.BuildConfig;
+import com.arangurr.sonar.Constants;
+import com.arangurr.sonar.PersistenceUtils;
+import com.arangurr.sonar.R;
+import com.arangurr.sonar.data.Poll;
+import com.arangurr.sonar.data.Question;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

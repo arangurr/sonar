@@ -1,10 +1,10 @@
-package com.arangurr.newsonar;
+package com.arangurr.sonar;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
-import com.arangurr.newsonar.data.Poll;
-import com.arangurr.newsonar.data.Vote;
+import com.arangurr.sonar.data.Poll;
+import com.arangurr.sonar.data.Vote;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
