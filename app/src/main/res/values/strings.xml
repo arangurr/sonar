@@ -1,8 +1,7 @@
 <resources>
-  <string name="sonar_app_name">Sonar</string>
+  <string name="sonar_app_name" translatable="false">Sonar</string>
   <string name="action_settings">Settings</string>
   <string name="title_activity_editor">Editor</string>
-  <string name="card_config_password_description">You can restrict who can answer you survey by protecting it with a password. Only users who enter the password can submit their answer</string>
   <string name="voting_card_title">%1$d of %2$d</string>
   <string name="question_title">Question title</string>
   <string name="option_name">Option name</string>
@@ -19,9 +18,9 @@
   <string name="voting_privacy_secret">All questions are mandatory. Your answers will be taken into account but your identity is completely hidden.</string>
   <string name="intro_need_username">In order to use this app you need a username</string>
   <string name="intro_app_description">Sonar allows you to make small questionnaires and polls to users in your proximity.</string>
-  <string name="subscribe">Listen for nearby polls</string>
+  <string name="subscribe">Discover nearby polls</string>
   <string name="intro_hint_your_username">Your username</string>
-  <string name="debug_voting_ui">Voting UI</string>
+  <string name="debug_voting_ui" translatable="false">Voting UI</string>
   <string name="send">Send</string>
   <string name="activate">Activate</string>
   <string name="deactivate">Deactivate</string>
@@ -34,52 +33,38 @@
   <string name="yes_no">Yes/No</string>
   <string name="true_false">True/False</string>
   <string name="customize">Customize</string>
-  <string name="first_option">First Option</string>
+  <string name="first_option">First option</string>
   <string name="second_option">Second Option</string>
   <string name="password_unlock">This poll is password protected. Please enter the password below to unlock it.</string>
   <string name="delete">Delete</string>
-  <string name="more_settings">More Settings</string>
+  <string name="more_settings">More settings</string>
   <string name="voters">Voters</string>
   <string name="create_poll">New poll</string>
   <string name="title">Title</string>
   <string name="option_stars">1 to 5 stars</string>
   <string name="option_like_dislike">Like/Dislike</string>
-  <string name="option_zero_ten">0 to 10</string>
+  <string name="option_zero_ten">Rate from 0 to 10</string>
   <string name="minimum">Minimum</string>
   <string name="maximum">Maximum</string>
-  <string name="can_check_multiple_options">Can check multiple options</string>
+  <string name="can_check_multiple_options">Allow checking multiple options</string>
   <string name="status_stopping">Stopping…</string>
   <string name="status_poll_available">Poll is available</string>
   <string name="status_trying_poll_available">Trying to make poll available</string>
   <string name="details_rate_name">Rating: %s</string>
   <string name="rating_details_average">Average rating: %s</string>
   <string name="summary_most_voted">Most voted: </string>
-  <string name="summary_no_votes">No votes yet</string>
+  <string name="summary_no_votes">No respones yet</string>
   <string name="status_sending_answers">Sending answers. They might be lost if you close the app.</string>
   <string name="status_could_not_send">Could not send answers</string>
   <string name="dashboard_question_counter">%d questions</string>
   <string name="received_vote_from">Got vote from %s</string>
   <string name="received_votes_counter">%d votes in this session</string>
-  <string formatted="false" name="editor_item_title">%d. %s</string>
+  <string name="editor_item_title" translatable="false">%1$d. %2$s</string>
 
   <string-array name="array_privacy_intervals">
     <item>Public</item>
     <item>Anonymous</item>
     <item>Secret</item>
   </string-array>
-
-  <string-array name="array_privacy_explained">
-    <item>Votes will be public. You will be able to know if someone completed the questionnaire and the answers.</item>
-    <item>Votes will be anonymous. You will if someone did complete the questionnaire, but not the answers.</item>
-    <item>Votes will be secret. You will only be able to know how many completed the questionnaire.</item>
-  </string-array>
-
-  <string-array name="array_rate_modes">
-    <item>1 to 5 stars</item>
-    <item>Like/Dislike</item>
-    <item>Score from 0 to 10</item>
-    <item>Customized range</item>
-  </string-array>
-
 
 </resources>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="intro_need_username">In order to use this app you need a username</string>
+  <string name="action_settings">Ajustes</string>
+  <string name="activate">Activar</string>
+  <string name="binary">Pregunta binaria</string>
+  <string name="can_check_multiple_options">Permitir selección múltiple</string>
+  <string name="option_stars">1 a 5 estrellas</string>
+  <string name="option_zero_ten">Calificar de 0 a 10</string>
+  <string name="password">Contraseña</string>
+  <string name="help_password">Puedes restringir quién puede contestar tu cuestionario protegiéndolo con una contraseña. Sólo los usuarios con la contraseña correcta pueden ver las preguntas.</string>
+  <string name="create_poll">Nuevo cuestionario</string>
+  <string name="customize">Personalizar</string>
+  <string name="dashboard_question_counter">%d preguntas</string>
+  <string name="deactivate">Desactivar</string>
+  <string name="delete">Borrar</string>
+  <string name="first_option">Primera opción</string>
+  <string name="multiple_options">Múltiples opciones</string>
+  <string name="more_settings">Más ajustes</string>
+  <string name="maximum">Máximo</string>
+  <string name="minimum">Mínimo</string>
+  <string name="intro_app_description">Sonar te permite realizar cuestionarios cortos y encuestas a usuarios que tengas cerca.</string>
+  <string name="yes_no">Sí o no</string>
+  <string name="vote_privacy">Privacidad de voto</string>
+  <string name="status_stopping">Parando…</string>
+  <string name="status_sending_answers">Enviando respuestas. No se recibirán si se cierra la aplicación.</string>
+  <string name="status_trying_poll_available">Intentando poner disponible</string>
+  <string name="subscribe">Descubrir encuestas cercanas</string>
+  <string name="summary_most_voted">Con más votos:</string>
+  <string name="summary_no_votes">Sin respuestas aún</string>
+  <string name="title">Título</string>
+  <string name="title_activity_editor">Editor</string>
+  <string name="true_false">Verdadero o falso</string>
+  <string name="voters">Votantes</string>
+  <string name="voting_card_title">%1$d de %2$d</string>
+  <string name="received_vote_from">Recibidas las respuestas de %s</string>
+  <string name="rate">Pregunta de valoración</string>
+  <string name="question_title">Título de la pregunta</string>
+  <string name="password_unlock">Este cuestionario está protegido por una contraseña. Introdúcela para desbloquearla.</string>
+  <string name="option_like_dislike">Me gusta/No me gusta</string>
+  <string name="details_rate_name">Puntuación: %s</string>
+  <string name="intro_error_empty_name">Es necesario introducir un nombre</string>
+  <string name="intro_error_short_name">Es necesario introducir un nombre más largo</string>
+  <string name="intro_hint_your_username">Tu nombre de usuario</string>
+  <string name="option_name">Nombre de la pregunta</string>
+  <string name="rating_details_average">Puntuación media: %s</string>
+  <string name="received_votes_counter">%d votos en esta sesión</string>
+  <string name="second_option">Segunda opción</string>
+  <string name="send">Enviar</string>
+  <string name="status_could_not_send">No se han podido enviar las respuestas</string>
+  <string name="status_no_votes_received">No se han recibido votos en esta sesión</string>
+  <string name="status_poll_available">El cuestionario está disponible</string>
+  <string name="help_privacy"><![CDATA[<p>Además de las respuestas a los cuestionarios, puedes obtener más información:
+<div><strong>Votos privados</strong>: sabrás quién ha votado y sus respuestas.</div>
+<div><strong>Votos anónimos</strong>: sabrás quién ha enviado sus respuestas.</div>
+<div><strong>Votos secretas</strong>: no podrás saber quién ha enviado sus respuestas.</div></p>]]></string>
+  <string name="voting_privacy_anonymous">Todas las preguntas son obligatorias. El encuestador sabrá si has votado a la encuesta, pero no tus respuestas.</string>
+  <string name="voting_privacy_public">Todas las preguntas son obligatorias. El encuestador tendrá en cuenta tus respuestas pero no sabrá si son tuyas.</string>
+  <string name="voting_privacy_secret">Todas las preguntas son obligatorias. Tus respuestas se tendrán en cuenta pero tu identidad está completamente oculta.</string>
+
+  <string-array name="array_privacy_intervals">
+    <item>Público</item>
+    <item>Anónimo</item>
+    <item>Secreto</item>
+  </string-array>
+</resources>
