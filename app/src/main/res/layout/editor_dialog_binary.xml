@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:paddingLeft="16dp"
+  android:paddingRight="16dp">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+    <EditText
+      android:id="@+id/edittext_binary_title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="@string/question_title"
+      android:imeOptions="flagNoExtractUi|actionDone"
+      android:inputType="text|textCapSentences"
+      android:minHeight="@dimen/item_height_small"/>
+
+    <RadioGroup
+      android:id="@+id/radiogroup_binary"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:checkedButton="@+id/radiobutton_binary_yesno"
+      android:minHeight="@dimen/item_height_small"
+      android:orientation="horizontal">
+      <RadioButton
+        android:id="@+id/radiobutton_binary_yesno"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Yes/No"/>
+      <RadioButton
+        android:id="@+id/radiobutton_binary_truefalse"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="True/False"/>
+      <RadioButton
+        android:id="@+id/radiobutton_binary_custom"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Custom"/>
+    </RadioGroup>
+
+    <EditText
+      android:id="@+id/edittext_binary_option1"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="First Option"
+      android:imeOptions="flagNoExtractUi|actionDone"
+      android:inputType="text|textCapSentences"
+      android:visibility="gone"
+      tools:visibility="visible"/>
+
+    <EditText
+      android:id="@+id/edittext_binary_option2"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="Second Option"
+      android:imeOptions="flagNoExtractUi|actionDone"
+      android:inputType="text|textCapSentences"
+      android:visibility="gone"
+      tools:visibility="visible"/>
+
+  </LinearLayout>
+</ScrollView>

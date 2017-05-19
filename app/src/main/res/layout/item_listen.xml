@@ -1,0 +1,46 @@
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+  android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+  android:background="?selectableItemBackground"
+  android:minHeight="?attr/listPreferredItemHeight"
+  android:orientation="horizontal">
+
+  <LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:orientation="vertical">
+
+    <TextView
+      android:id="@+id/textview_listen_text1"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="?attr/textAppearanceListItem"
+      android:textColor="@color/colorPrimaryText"
+      tools:text="Text1"/>
+
+    <TextView
+      android:id="@+id/textview_listen_text2"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+      android:textColor="@color/colorSecondaryText"
+      tools:text="Text2"/>
+  </LinearLayout>
+
+  <ImageView
+    android:id="@+id/button_listen_item_lock"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:tint="@android:color/holo_red_dark"
+    app:srcCompat="@drawable/ic_lock_24dp"/>
+
+
+</LinearLayout>

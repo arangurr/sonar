@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:orientation="horizontal">
+
+    <include layout="@layout/card_vote_header"/>
+
+    <TextView
+      android:id="@+id/textview_card_vote_content"
+      style="@style/TextAppearance.AppCompat.Body1"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="3"
+      android:padding="8dp"
+      android:gravity="center"
+      tools:text="Super duper long text with a lot of text. It should not fit in a single line."/>
+
+    <ScrollView
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="3">
+      <LinearLayout
+        android:id="@+id/linearlayout_card_multi_multi_vote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+      </LinearLayout>
+    </ScrollView>
+  </LinearLayout>
+</android.support.v7.widget.CardView>

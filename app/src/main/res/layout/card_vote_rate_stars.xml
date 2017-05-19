@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <include layout="@layout/card_vote_header"/>
+
+    <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="3">
+
+      <RatingBar
+        android:id="@+id/ratingbar_card_rate_vote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:numStars="5"
+        android:stepSize="1"
+        android:theme="@style/AppTheme.RatingBar"
+        tools:rating="3"/>
+    </FrameLayout>
+  </LinearLayout>
+</android.support.v7.widget.CardView>

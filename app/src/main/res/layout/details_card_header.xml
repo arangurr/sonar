@@ -1,0 +1,27 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  tools:showIn="@layout/details_card_likedislike">
+
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimaryLight"
+    android:elevation="2dp">
+    <TextView
+      android:id="@+id/textview_details_item_header_title"
+      style="@android:style/TextAppearance.Material.Widget.ActionBar.Title.Inverse"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="8dp"
+      android:paddingBottom="8dp"
+      android:paddingStart="@dimen/item_start_margin"
+      android:paddingEnd="8dp"
+      android:background="?android:attr/selectableItemBackground"
+      android:drawableEnd="@drawable/asl_checkable_expandcollapse"
+      android:foreground="?android:attr/selectableItemBackground"
+      android:gravity="center_vertical"
+      android:minHeight="@dimen/item_height_small"
+      tools:text="Very long title"/>
+  </FrameLayout>
+
+</merge>

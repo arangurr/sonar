@@ -1,0 +1,41 @@
+<resources>
+  <string name="app_name">Sonar</string>
+  <string name="action_settings">Settings</string>
+  <string name="title_activity_editor">Editor</string>
+  <string name="card_config_password_description">You can restrict who can answer you survey by protecting it with a password. Only users who enter the password can submit their answer</string>
+  <string name="voting_card_title">%1$d of %2$d</string>
+  <string name="question_title">Question title</string>
+  <string name="option_name">Option name</string>
+  <string name="intro_error_empty_name">You need to enter a name</string>
+  <string name="intro_error_short_name">You need to enter a longer name</string>
+
+  <string name="help_privacy"><![CDATA[<p>In addition to usual poll responses, you can get more info:
+<div><strong>Private votes</strong>: you will know who and what his responses were.</div>
+<div><strong>Anonymous votes</strong>: you will know who sent their responses.</div>
+<div><strong>Secret votes</strong>: you won\'t know who voted.</div></p>]]></string>
+  <string name="help_password">You can protect your poll with a password. Users will have to enter it in order to answer.</string>
+  <string name="voting_privacy_public">All questions are mandatory. Your identity and your answers will be shared with the interviewer.</string>
+  <string name="voting_privacy_anonymous">All questions are mandatory. Your identity will only be shared to know if you sent your answers.</string>
+  <string name="voting_privacy_secret">All questions are mandatory. Your answers will be taken into account but your identity is completely hidden.</string>
+
+  <string-array name="array_privacy_intervals">
+    <item>Public</item>
+    <item>Anonymous</item>
+    <item>Secret</item>
+  </string-array>
+
+  <string-array name="array_privacy_explained">
+    <item>Votes will be public. You will be able to know if someone completed the questionnaire and the answers.</item>
+    <item>Votes will be anonymous. You will if someone did complete the questionnaire, but not the answers.</item>
+    <item>Votes will be secret. You will only be able to know how many completed the questionnaire.</item>
+  </string-array>
+
+  <string-array name="array_rate_modes">
+    <item>1 to 5 stars</item>
+    <item>Like/Dislike</item>
+    <item>Score from 0 to 10</item>
+    <item>Customized range</item>
+  </string-array>
+
+
+</resources>
