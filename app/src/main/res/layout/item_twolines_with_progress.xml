@@ -29,7 +29,7 @@
     android:layout_height="wrap_content"
     android:layout_marginRight="8dp"
     android:drawablePadding="8dp"
-    android:drawableRight="@drawable/ic_person_24dp"
+    android:drawableRight="@drawable/ic_group"
     android:gravity="center_vertical"
     android:textAppearance="?android:attr/textAppearanceSmall"
     app:layout_constraintBaseline_toBaselineOf="@id/textview_item_card_option_name"

@@ -55,7 +55,7 @@
       android:layout_weight="1"
       android:padding="8dp"
       android:drawablePadding="8dp"
-      android:drawableTop="@drawable/ic_person_24dp"
+      android:drawableTop="@drawable/ic_person_add"
       android:text="No votes received in this session"
       android:textAlignment="center"
       android:textAppearance="@android:style/TextAppearance.Material.Small"
