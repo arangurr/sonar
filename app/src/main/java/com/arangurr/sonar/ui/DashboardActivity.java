@@ -212,15 +212,14 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public void onBindViewHolder(ViewHolder holder, int i) {
       if (getItemViewType(i) == TYPE_EMPTY) {
         EmptyHolder emptyHolder = (EmptyHolder) holder;
-        emptyHolder.text.setText(
-            "Welcome!\n\nYou can start by creating a new poll\nor by listening for nearby ones");
+        emptyHolder.text.setText(R.string.dashboard_welcome);
       } else {
         final Poll poll = mPolls.get(i);
         final PollHolder pollHolder = (PollHolder) holder;
 
         pollHolder.mTitle.setText(poll.getPollTitle());
-        pollHolder.mSubtitle
-            .setText(String.format(getString(R.string.dashboard_question_counter), poll.getQuestionList().size()));
+        pollHolder.mSubtitle.setText(String
+            .format(getString(R.string.dashboard_question_counter), poll.getQuestionList().size()));
         // TODO: 19/05/2017 plural
         Date date = new Date(poll.getStartDate());
         pollHolder.mDate.setText(DateUtils.getRelativeTimeSpanString(

@@ -343,7 +343,7 @@ public class DetailsActivity extends AppCompatActivity implements
           public void onExpired() {
             Log.d(TAG, "Publish expired");
             mStatusTextView
-                .setText("Poll no longer available.\nWaiting for votes a little longer...");
+                .setText(R.string.status_publish_expired);
             super.onExpired();
           }
         })
@@ -421,7 +421,7 @@ public class DetailsActivity extends AppCompatActivity implements
     }
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle("Voted by")
+    builder.setTitle(R.string.voted_by)
         .setMessage(stringBuilder.toString())
         .show();
   }

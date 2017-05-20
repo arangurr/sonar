@@ -297,7 +297,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
           PersistenceUtils.deletePoll(this, mPoll);
         } else {
           if (mPoll.getPollTitle() == null) {
-            mPoll.setPollTitle("Untitled poll");
+            mPoll.setPollTitle(getString(R.string.untitled_poll));
           }
           PersistenceUtils.storePollInPreferences(this, mPoll);
         }
@@ -358,7 +358,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         })
         .setNegativeButton(android.R.string.cancel, null)
         .setView(dialogView)
-        .setTitle("Binary Question");
+        .setTitle(getString(R.string.binary));
 
     final AlertDialog dialog = dialogBuilder.create();
     dialog.show();
@@ -485,7 +485,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         })
         .setNegativeButton(android.R.string.cancel, null)
         .setView(dialogView)
-        .setTitle("Rate Question");
+        .setTitle(getString(R.string.rate));
 
     final AlertDialog dialog = dialogBuilder.create();
     dialog.show();
@@ -618,7 +618,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
           }
         })
         .setView(dialogView)
-        .setTitle("Multiple Option Question");
+        .setTitle(getString(R.string.multiple_options));
     final AlertDialog dialog = dialogBuilder.create();
 
     dialog.show();
@@ -947,9 +947,9 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     Builder builder = new Builder(this);
-    builder.setTitle("What's this?")
+    builder.setTitle(R.string.help_dialog_title)
         .setMessage(message)
-        .setPositiveButton("Understood", null);
+        .setPositiveButton(R.string.understood, null);
 
     AlertDialog dialog = builder.create();
     dialog.show();

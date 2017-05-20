@@ -63,4 +63,5 @@
     <item>Anónimo</item>
     <item>Secreto</item>
   </string-array>
+  <string name="dashboard_welcome">¡Hola!\n\nPuedes empezar creando una nueva encuesta\no escuchando las que tengas a tu alrededor.</string>
 </resources>

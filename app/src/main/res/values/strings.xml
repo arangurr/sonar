@@ -60,6 +60,17 @@
   <string name="received_vote_from">Got vote from %s</string>
   <string name="received_votes_counter">%d votes in this session</string>
   <string name="editor_item_title" translatable="false">%1$d. %2$s</string>
+  <string name="dashboard_welcome">Welcome!\n\nYou can start by creating a new poll\nor by listening for nearby ones</string>
+  <string name="untitled_poll">Untitled Poll</string>
+  <string name="understood">Understood</string>
+  <string name="help_dialog_title">What\'s this?</string>
+  <string name="unlock_dialog_title">Unlock poll</string>
+  <string name="wrong_password">Wrong password</string>
+  <string name="status_searching">Searching for nearby polls...</string>
+  <string name="cancelling">Cancelling</string>
+  <string name="status_vote_sent">Vote sent. You can exit now.</string>
+  <string name="voted_by">Voted by</string>
+  <string name="status_publish_expired">Poll no longer available. Waiting for votes a little longer...</string>
 
   <string-array name="array_privacy_intervals">
     <item>Public</item>
