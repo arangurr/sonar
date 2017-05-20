@@ -322,7 +322,7 @@ public class DetailsActivity extends AppCompatActivity implements
           public void onResult(@NonNull Status status) {
             if (status.isSuccess()) {
               Log.d(TAG, "Subscribed successfully");
-              mStatusTextView.append("\nNow listening for votes");
+              mStatusTextView.append(getString(R.string.status_listening_votes));
             } else {
               Log.d(TAG, "Couldn't subscribe due to status = " + status);
             }
@@ -330,7 +330,7 @@ public class DetailsActivity extends AppCompatActivity implements
         });
 
     Log.d(TAG, "Trying to subscribe");
-    mStatusTextView.append("\nStarting to listen for votes");
+    mStatusTextView.append(getString(R.string.status_trying_listening_votes));
   }
 
   private void publish() {

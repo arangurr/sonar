@@ -68,4 +68,16 @@
   <string name="edit">Editar</string>
   <string name="help_dialog_title">¿Qué es esto?</string>
   <string name="poll_untitled_editor">Encuesta de %s</string>
+  <string name="discard">Descartar</string>
+  <string name="save">Guardar</string>
+  <string name="status_listening_votes">Buscando respuestas</string>
+  <string name="status_publish_expired">La encuesta ya no está disponible. Recogiendo respuestas un poco más...</string>
+  <string name="status_searching">Buscando cuestionarios cercanos</string>
+  <string name="status_trying_listening_votes">Empezando a buscar votos</string>
+  <string name="status_vote_sent">Voto enviado. Puedes salir ahora.</string>
+  <string name="understood">Entendido</string>
+  <string name="voted_by">Votos de</string>
+  <string name="wrong_password">Contraseña errónea</string>
+  <string name="unlock_dialog_title">Desbloquear encuesta</string>
+  <string name="untitled_poll">Cuestionario sin título</string>
 </resources>
