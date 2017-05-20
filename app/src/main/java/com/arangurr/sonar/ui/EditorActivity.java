@@ -25,6 +25,7 @@ import android.support.v7.app.AlertDialog.Builder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Html;
@@ -37,6 +38,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewAnimationUtils;
+import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
@@ -44,6 +46,7 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -52,8 +55,10 @@ import android.widget.TextView;
 import com.arangurr.sonar.Constants;
 import com.arangurr.sonar.PersistenceUtils;
 import com.arangurr.sonar.R;
+import com.arangurr.sonar.data.Option;
 import com.arangurr.sonar.data.Poll;
 import com.arangurr.sonar.data.Question;
+import java.util.List;
 import java.util.UUID;
 
 public class EditorActivity extends AppCompatActivity implements View.OnClickListener {
@@ -953,5 +958,161 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
     AlertDialog dialog = builder.create();
     dialog.show();
+  }
+
+  private static class EditorRecyclerAdapter extends
+      RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int TYPE_TITLE = 1;
+    private static final int TYPE_QUESTION = 2;
+    private Poll mPoll;
+
+    private List<Question> mItems;
+
+    EditorRecyclerAdapter(Poll p) {
+      mPoll = p;
+      mItems = p.getQuestionList();
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+      switch (viewType) {
+        case TYPE_TITLE:
+          return new TitleHolder(LayoutInflater.from(parent.getContext())
+              .inflate(R.layout.item_editor_title, parent, false));
+        case TYPE_QUESTION:
+          return new SimpleHolder(LayoutInflater.from(parent.getContext())
+              .inflate(R.layout.item_editor, parent, false));
+      }
+      return null;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+      if (position == 0) {
+        return TYPE_TITLE;
+      } else {
+        return TYPE_QUESTION;
+      }
+
+    }
+
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+      switch (getItemViewType(position)) {
+        case TYPE_TITLE:
+          bindTitle((TitleHolder) holder);
+          break;
+        case TYPE_QUESTION:
+          bindQuestion((SimpleHolder) holder, position);
+          break;
+
+      }
+
+    }
+
+    private void bindTitle(final TitleHolder holder) {
+      holder.mPollTitle.setHorizontallyScrolling(false);
+      holder.mPollTitle.setMaxLines(3);
+      if (mPoll.getPollTitle() != null) {
+        holder.mPollTitle.setText(mPoll.getPollTitle());
+      } else {
+        if (holder.mPollTitle.getText().length() == 0) {
+          holder.mPollTitle.requestFocus();
+        }
+      }
+
+      holder.mPollTitle.addTextChangedListener(new TextWatcher() {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+          mPoll.setPollTitle(s.toString());
+        }
+      });
+    }
+
+    private void bindQuestion(SimpleHolder holder, int position) {
+      Question q = mItems.get(position - 1);
+
+      String format = holder.itemView.getContext().getString(R.string.editor_item_title);
+      holder.mQuestionTitle.setText(String.format(format, position, q.getTitle()));
+
+      Drawable drawable;
+
+      switch (q.getQuestionMode()) {
+        case Constants.BINARY_MODE_CUSTOM:
+        case Constants.BINARY_MODE_TRUEFALSE:
+        case Constants.BINARY_MODE_YESNO:
+          drawable = ContextCompat
+              .getDrawable(holder.itemView.getContext(), R.drawable.ic_binary_24dp);
+          break;
+        case Constants.MULTI_MODE_EXCLUSIVE:
+        case Constants.MULTI_MODE_MULTIPLE:
+          drawable = ContextCompat
+              .getDrawable(holder.itemView.getContext(), R.drawable.ic_multiple_24dp);
+          break;
+        case Constants.RATE_MODE_CUSTOM:
+        case Constants.RATE_MODE_LIKEDISLIKE:
+        case Constants.RATE_MODE_SCORE:
+        case Constants.RATE_MODE_STARS:
+          drawable = ContextCompat
+              .getDrawable(holder.itemView.getContext(), R.drawable.ic_thumbs_24dp);
+          break;
+        default:
+          drawable = ContextCompat
+              .getDrawable(holder.itemView.getContext(), R.drawable.ic_circle_24dp);
+      }
+      holder.mImageView.setImageDrawable(drawable);
+
+      StringBuilder sb = new StringBuilder();
+      sb.append("Options:");
+      for (Option o : mItems.get(position - 1).getAllOptions()) {
+        sb.append("\t\t");
+        sb.append(o.getOptionName());
+      }
+      holder.mQuestionSubtitle.setText(sb.toString());
+    }
+
+    @Override
+    public int getItemCount() {
+      return mItems.size() + 1; // Include Title
+    }
+
+
+    class SimpleHolder extends ViewHolder {
+
+      private ImageView mImageView;
+      private TextView mQuestionTitle;
+      private TextView mQuestionSubtitle;
+
+      SimpleHolder(View itemView) {
+        super(itemView);
+        mImageView = (ImageView) itemView.findViewById(R.id.imageview_editor_item);
+        mQuestionTitle = (TextView) itemView.findViewById(R.id.textview_editor_item_text1);
+        mQuestionSubtitle = (TextView) itemView.findViewById(R.id.textview_editor_item_text2);
+      }
+
+    }
+
+    class TitleHolder extends ViewHolder {
+
+      private EditText mPollTitle;
+
+      TitleHolder(View itemView) {
+        super(itemView);
+        mPollTitle = (EditText) itemView.findViewById(R.id.edittext_editor_title);
+      }
+    }
   }
 }
