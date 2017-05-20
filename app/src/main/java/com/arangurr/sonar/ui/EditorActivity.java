@@ -70,6 +70,8 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   private EditorRecyclerAdapter mAdapter;
   private FloatingActionButton mFab;
 
+  private Menu mMenu;
+
   private boolean mIsCardAnimating = false;
   private boolean mIsFabAnimating = false;
 
@@ -248,6 +250,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
+    mMenu = menu;
     getMenuInflater().inflate(R.menu.menu_editor, menu);
     return super.onCreateOptionsMenu(menu);
   }
@@ -257,9 +260,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     switch (item.getItemId()) {
       case R.id.action_config:
         boolean isCardShown = mConfigCard.getVisibility() == View.VISIBLE;
-        Drawable icon = item.getIcon();
         if (!mIsCardAnimating) {
-          rotateIcon(icon, isCardShown);
           if (isCardShown) {
             reverseRevealSettingsCard();
           } else {
@@ -716,7 +717,9 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(enable);
   }
 
-  private void rotateIcon(Drawable icon, boolean reverse) {
+  private void rotateIcon(boolean reverse) {
+    Drawable icon = mMenu.findItem(R.id.action_config).getIcon();
+
     ObjectAnimator animator = ObjectAnimator.ofInt(
         icon,
         "level",
@@ -890,6 +893,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   }
 
   private void revealSettingsCard() {
+    rotateIcon(false);
     View action = findViewById(R.id.action_config);
     int[] location = new int[2];
     action.getLocationOnScreen(location);
@@ -921,6 +925,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   }
 
   private void reverseRevealSettingsCard() {
+    rotateIcon(true);
     View action = findViewById(R.id.action_config);
     int[] location = new int[2];
     action.getLocationOnScreen(location);
