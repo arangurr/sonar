@@ -38,7 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/textview_card_rate_vote_min"
         app:layout_constraintRight_toLeftOf="@+id/textview_card_rate_vote_max"
-        app:layout_constraintTop_toBottomOf="@+id/textview_card_rate_vote_selected"
+        app:layout_constraintTop_toTopOf="parent"
         tools:max="4"
         tools:progress="2"/>
       <TextView
@@ -55,10 +55,10 @@
         android:id="@+id/textview_card_rate_vote_selected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/seekbar_card_rate_vote"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/seekbar_card_rate_vote"
         app:layout_constraintLeft_toLeftOf="@+id/seekbar_card_rate_vote"
-        app:layout_constraintRight_toRightOf="@+id/seekbar_card_rate_vote"
-        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/seekbar_card_rate_vote"
         tools:text="3"/>
     </android.support.constraint.ConstraintLayout>
   </LinearLayout>
