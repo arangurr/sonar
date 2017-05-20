@@ -41,7 +41,7 @@
   <string name="details_rate_name">Puntuación: %s</string>
   <string name="intro_error_empty_name">Es necesario introducir un nombre</string>
   <string name="intro_error_short_name">Es necesario introducir un nombre más largo</string>
-  <string name="intro_hint_your_username">Tu nombre de usuario</string>
+  <string name="intro_hint_your_username">Nombre de usuario</string>
   <string name="option_name">Nombre de la pregunta</string>
   <string name="rating_details_average">Puntuación media: %s</string>
   <string name="received_votes_counter">%d votos en esta sesión</string>
