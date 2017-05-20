@@ -9,9 +9,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.graphics.Color;
 import android.graphics.Path;
-import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build.VERSION;
@@ -100,8 +98,9 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_24dp);
-    toolbar.getNavigationIcon().mutate().setColorFilter(Color.WHITE, Mode.SRC_IN);
+    Drawable clearDrawable = getDrawable(R.drawable.ic_clear_24dp);
+    clearDrawable.mutate().setTint(ContextCompat.getColor(this, R.color.colorPrimaryTextDark));
+    getSupportActionBar().setHomeAsUpIndicator(clearDrawable);
 
     mPasswordCheckbox = (CheckBox) findViewById(R.id.checkbox_card_config_password);
     mPasswordEditText = (EditText) findViewById(R.id.edittext_card_config_password);
