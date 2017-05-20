@@ -64,4 +64,7 @@
     <item>Secreto</item>
   </string-array>
   <string name="dashboard_welcome">¡Hola!\n\nPuedes empezar creando una nueva encuesta\no escuchando las que tengas a tu alrededor.</string>
+  <string name="cancelling">Cancelando</string>
+  <string name="edit">Editar</string>
+  <string name="help_dialog_title">¿Qué es esto?</string>
 </resources>

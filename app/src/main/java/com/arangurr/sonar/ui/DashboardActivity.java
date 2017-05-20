@@ -258,6 +258,12 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     UUID pollToRemove = poll.getUuid();
                     PersistenceUtils.deletePoll(getApplicationContext(), pollToRemove);
                     return true;
+                  case R.id.action_popup_activate:
+                    Intent activate = new Intent(DashboardActivity.this, DetailsActivity.class);
+                    activate.putExtra(Constants.EXTRA_POLL_ID, poll.getUuid());
+                    activate.putExtra(Constants.EXTRA_ACTIVATE, 0b1);
+                    startActivity(activate);
+                    return true;
                   default:
                     return false;
                 }

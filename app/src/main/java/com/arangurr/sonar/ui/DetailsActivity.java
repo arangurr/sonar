@@ -117,6 +117,10 @@ public class DetailsActivity extends AppCompatActivity implements
     mChronometer = (Chronometer) findViewById(R.id.chronometer_details);
     mCounterTextView = (TextView) findViewById(R.id.textview_details_counter);
 
+    if (extras != null && extras.containsKey(Constants.EXTRA_ACTIVATE)) {
+      mToggleButton.setChecked(true);
+    }
+
     final BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
     behavior.setBottomSheetCallback(new BottomSheetCallback() {
       @Override
@@ -187,7 +191,8 @@ public class DetailsActivity extends AppCompatActivity implements
               case Constants.PRIVACY_PUBLIC:
               case Constants.PRIVACY_PRIVATE:
                 mStatusTextView.setText(
-                    String.format(getString(R.string.received_vote_from), v.getVoterIdPair().getUserName()));
+                    String.format(getString(R.string.received_vote_from),
+                        v.getVoterIdPair().getUserName()));
                 break;
               case Constants.PRIVACY_SECRET:
                 // Do nothing
@@ -195,7 +200,8 @@ public class DetailsActivity extends AppCompatActivity implements
             }
             mCurrentPoll.updateWithVote(v);
             mVoteCount++;
-            mCounterTextView.setText(String.format(getString(R.string.received_votes_counter), mVoteCount));
+            mCounterTextView
+                .setText(String.format(getString(R.string.received_votes_counter), mVoteCount));
             PersistenceUtils.storePollInPreferences(getBaseContext(), mCurrentPoll);
             mAdapter.notifyDataSetChanged();
             supportInvalidateOptionsMenu();
@@ -653,8 +659,6 @@ public class DetailsActivity extends AppCompatActivity implements
           && mCurrentPoll.getPrivacySetting() == Constants.PRIVACY_PUBLIC);
       holder.like.setClickable(voteLike > 0
           && mCurrentPoll.getPrivacySetting() == Constants.PRIVACY_PUBLIC);
-
-      // TODO: 18/05/2017 disable click if poll is private
 
       if (voteDislike + voteLike > 0) {
         int[] progressColors = getResources().getIntArray(R.array.progress_like_dislike);

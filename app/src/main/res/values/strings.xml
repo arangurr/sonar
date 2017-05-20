@@ -71,6 +71,7 @@
   <string name="status_vote_sent">Vote sent. You can exit now.</string>
   <string name="voted_by">Voted by</string>
   <string name="status_publish_expired">Poll no longer available. Waiting for votes a little longer...</string>
+  <string name="edit">Edit</string>
 
   <string-array name="array_privacy_intervals">
     <item>Public</item>
