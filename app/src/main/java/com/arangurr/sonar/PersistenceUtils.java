@@ -2,6 +2,7 @@ package com.arangurr.sonar;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import com.arangurr.sonar.data.Poll;
 import com.arangurr.sonar.data.Vote;
@@ -98,5 +99,11 @@ public class PersistenceUtils {
 
     editor.remove("vote");
     editor.apply();
+  }
+
+  @Nullable
+  public static String getUser(Context context) {
+    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+    return prefs.getString(Constants.KEY_USERNAME, null);
   }
 }

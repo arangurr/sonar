@@ -7,8 +7,6 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Path;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -17,6 +15,7 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AlertDialog.Builder;
@@ -51,6 +50,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.arangurr.sonar.Constants;
+import com.arangurr.sonar.GsonUtils;
 import com.arangurr.sonar.PersistenceUtils;
 import com.arangurr.sonar.R;
 import com.arangurr.sonar.data.Option;
@@ -68,13 +68,12 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   private CardView mFabCard;
   private CardView mConfigCard;
   private EditorRecyclerAdapter mAdapter;
+  private FloatingActionButton mFab;
 
   private boolean mIsCardAnimating = false;
   private boolean mIsFabAnimating = false;
 
   private Poll mPoll;
-  private FloatingActionButton mFab;
-  private OnSharedPreferenceChangeListener mPreferenceChangeListener;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -83,18 +82,18 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_editor);
     setSupportActionBar(toolbar);
 
-    if (savedInstanceState == null
-        || savedInstanceState.getSerializable(Constants.EXTRA_POLL_ID) == null) {
-      mPoll = new Poll(this);
-    } else {
-      UUID possibleId = (UUID) savedInstanceState.getSerializable(Constants.EXTRA_POLL_ID);
-      if (possibleId != null) {
-        mPoll = PersistenceUtils.fetchPollWithId(this, possibleId);
+    if (savedInstanceState == null) {
+      Bundle extras = getIntent().getExtras();
+      if (extras != null) {
+        UUID pollId = (UUID) extras.getSerializable(Constants.EXTRA_POLL_ID);
+        mPoll = PersistenceUtils.fetchPollWithId(this, pollId);
+      } else {
+        mPoll = new Poll(this);
       }
-    }
-
-    if (mPoll == null) {
-      mPoll = new Poll(this);
+    } else {
+      mPoll = GsonUtils.deserializeGson(
+          (String) savedInstanceState.getSerializable(Constants.EXTRA_SERIALIZED_POLL),
+          Poll.class);
     }
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -111,7 +110,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     mConfigCard = (CardView) findViewById(R.id.card_editor_config);
     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_editor);
 
-    mAdapter = new EditorRecyclerAdapter(mPoll);
+    mAdapter = new EditorRecyclerAdapter();
     recyclerView.setAdapter(mAdapter);
 
     recyclerView.setOnTouchListener(new OnTouchListener() {
@@ -199,35 +198,12 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
       }
     });
-
     mFab.setOnClickListener(this);
-
-    mPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
-      @Override
-      public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        mAdapter.notifyDataSetChanged();
-      }
-    };
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-    getSharedPreferences(Constants.PREFS_POLLS, MODE_PRIVATE)
-        .registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
-  }
-
-  @Override
-  protected void onPause() {
-    super.onPause();
-    getSharedPreferences(Constants.PREFS_POLLS, MODE_PRIVATE)
-        .unregisterOnSharedPreferenceChangeListener(mPreferenceChangeListener);
   }
 
   @Override
   protected void onSaveInstanceState(Bundle outState) {
-    PersistenceUtils.storePollInPreferences(this, mPoll);
-    outState.putSerializable(Constants.EXTRA_POLL_ID, mPoll.getUuid());
+    outState.putSerializable(Constants.EXTRA_SERIALIZED_POLL, GsonUtils.serialize(mPoll));
     super.onSaveInstanceState(outState);
   }
 
@@ -293,29 +269,25 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         }
         return true;
       case android.R.id.home:
-        PersistenceUtils.deletePoll(this, mPoll.getUuid());
         finish();
         return true;
       case R.id.action_done:
-        if (mPoll.getQuestionList().size() == 0) {
-          PersistenceUtils.deletePoll(this, mPoll);
-        } else {
-          if (mPoll.getPollTitle() == null) {
-            mPoll.setPollTitle(getString(R.string.untitled_poll));
+        String pollTitle = mPoll.getPollTitle();
+        if (pollTitle == null || pollTitle.isEmpty()) {
+          String username = PersistenceUtils.getUser(this);
+          TextInputEditText editText = (TextInputEditText) findViewById(
+              R.id.edittext_editor_title);
+          if (username != null) {
+            editText.setText(String.format(getString(R.string.poll_untitled_editor), username));
+            editText.selectAll();
           }
+          editText.requestFocus();
+        } else {
           PersistenceUtils.storePollInPreferences(this, mPoll);
+          finish();
         }
-        finish();
       default:
         return super.onOptionsItemSelected(item);
-    }
-  }
-
-  @Override
-  protected void onStop() {
-    super.onStop();
-    if (mPoll.getPollTitle() == null && mPoll.getQuestionList().size() == 0) {
-      PersistenceUtils.deletePoll(this, mPoll);
     }
   }
 
@@ -356,8 +328,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
                 question.addOption(option1.getText().toString());
                 question.addOption(option2.getText().toString());
             }
-            mPoll.addQuestion(question);
-            mAdapter.notifyDataSetChanged();
+            inlineAddQuestion(question);
           }
         })
         .setNegativeButton(android.R.string.cancel, null)
@@ -438,6 +409,11 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     });
   }
 
+  private void inlineAddQuestion(Question question) {
+    mPoll.addQuestion(question);
+    mAdapter.notifyItemInserted(mPoll.getQuestionList().size());
+  }
+
   private void showRateDialog(Context context) {
     final boolean[] flags = {
         false, // Has Title
@@ -483,8 +459,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
                     Integer.valueOf(max.getText().toString()));
                 break;
             }
-            mPoll.addQuestion(rateQuestion);
-            mAdapter.notifyDataSetChanged();
+            inlineAddQuestion(rateQuestion);
           }
         })
         .setNegativeButton(android.R.string.cancel, null)
@@ -617,8 +592,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
                 question.addOption(nameText);
               }
             }
-            mPoll.addQuestion(question);
-            mAdapter.notifyDataSetChanged();
+            inlineAddQuestion(question);
           }
         })
         .setView(dialogView)
@@ -959,18 +933,16 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     dialog.show();
   }
 
-  private static class EditorRecyclerAdapter extends
+  private class EditorRecyclerAdapter extends
       RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_TITLE = 1;
     private static final int TYPE_QUESTION = 2;
-    private Poll mPoll;
 
     private List<Question> mItems;
 
-    EditorRecyclerAdapter(Poll p) {
-      mPoll = p;
-      mItems = p.getQuestionList();
+    EditorRecyclerAdapter() {
+      mItems = mPoll.getQuestionList();
     }
 
     @Override
@@ -993,9 +965,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       } else {
         return TYPE_QUESTION;
       }
-
     }
-
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
@@ -1006,9 +976,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         case TYPE_QUESTION:
           bindQuestion((SimpleHolder) holder, position);
           break;
-
       }
-
     }
 
     private void bindTitle(final TitleHolder holder) {
@@ -1087,7 +1055,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     public int getItemCount() {
       return mItems.size() + 1; // Include Title
     }
-
 
     class SimpleHolder extends ViewHolder {
 
