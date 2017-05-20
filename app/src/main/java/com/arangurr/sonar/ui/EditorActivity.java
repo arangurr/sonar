@@ -340,7 +340,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
   private void inlineAddQuestion(Question question) {
     mPoll.addQuestion(question);
-    mAdapter.notifyItemInserted(mPoll.getQuestionList().size());
+    mAdapter.notifyItemInserted(mPoll.getQuestionList().size() + 1);
   }
 
   private void showBinaryDialog(Context context) {
@@ -987,6 +987,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   private class EditorRecyclerAdapter extends
       RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final int TYPE_EMPTY = 0;
     private static final int TYPE_TITLE = 1;
     private static final int TYPE_QUESTION = 2;
 
@@ -1003,8 +1004,11 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
           return new TitleHolder(LayoutInflater.from(parent.getContext())
               .inflate(R.layout.item_editor_title, parent, false));
         case TYPE_QUESTION:
-          return new SimpleHolder(LayoutInflater.from(parent.getContext())
+          return new QuestionHolder(LayoutInflater.from(parent.getContext())
               .inflate(R.layout.item_editor, parent, false));
+        case TYPE_EMPTY:
+          return new EmptyHolder(LayoutInflater.from(parent.getContext())
+              .inflate(R.layout.recyclerview_empty, parent, false));
       }
       return null;
     }
@@ -1014,7 +1018,11 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       if (position == 0) {
         return TYPE_TITLE;
       } else {
-        return TYPE_QUESTION;
+        if (mItems.size() == 0) {
+          return TYPE_EMPTY;
+        } else {
+          return TYPE_QUESTION;
+        }
       }
     }
 
@@ -1025,8 +1033,11 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
           bindTitle((TitleHolder) holder);
           break;
         case TYPE_QUESTION:
-          bindQuestion((SimpleHolder) holder, position);
+          bindQuestion((QuestionHolder) holder, position);
           break;
+        case TYPE_EMPTY:
+          EmptyHolder emptyHolder = (EmptyHolder) holder;
+          emptyHolder.text.setText("test");
       }
     }
 
@@ -1060,7 +1071,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       });
     }
 
-    private void bindQuestion(SimpleHolder holder, int position) {
+    private void bindQuestion(QuestionHolder holder, int position) {
       Question q = mItems.get(position - 1);
 
       String format = holder.itemView.getContext().getString(R.string.editor_item_title);
@@ -1104,16 +1115,16 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public int getItemCount() {
-      return mItems.size() + 1; // Include Title
+      return mItems.size() == 0 ? 2 : mItems.size() + 1;
     }
 
-    class SimpleHolder extends ViewHolder {
+    class QuestionHolder extends ViewHolder {
 
       private ImageView mImageView;
       private TextView mQuestionTitle;
       private TextView mQuestionSubtitle;
 
-      SimpleHolder(View itemView) {
+      QuestionHolder(View itemView) {
         super(itemView);
         mImageView = (ImageView) itemView.findViewById(R.id.imageview_editor_item);
         mQuestionTitle = (TextView) itemView.findViewById(R.id.textview_editor_item_text1);

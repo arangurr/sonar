@@ -304,15 +304,5 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         mPopupButton = (ImageButton) itemView.findViewById(R.id.button_dashboard_item_popup);
       }
     }
-
-    class EmptyHolder extends RecyclerView.ViewHolder {
-
-      TextView text;
-
-      public EmptyHolder(View itemView) {
-        super(itemView);
-        text = (TextView) itemView.findViewById(R.id.textview_empty);
-      }
-    }
   }
 }
