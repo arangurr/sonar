@@ -269,8 +269,14 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         }
         return true;
       case android.R.id.home:
-        finish();
-        return true;
+        String title = mPoll.getPollTitle();
+        if (!mPoll.getQuestionList().isEmpty() || (title != null && !title.isEmpty())) {
+          showConfirmationDialog();
+          return true;
+        } else {
+          finish();
+          return true;
+        }
       case R.id.action_done:
         String pollTitle = mPoll.getPollTitle();
         if (pollTitle == null || pollTitle.isEmpty()) {
@@ -282,6 +288,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
             editText.selectAll();
           }
           editText.requestFocus();
+          return true;
         } else {
           PersistenceUtils.storePollInPreferences(this, mPoll);
           finish();
@@ -289,6 +296,50 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       default:
         return super.onOptionsItemSelected(item);
     }
+  }
+
+  @Override
+  public void onBackPressed() {
+    if (mConfigCard.getVisibility() == View.VISIBLE) {
+      reverseRevealSettingsCard();
+      return;
+    }
+    if (mFabCard.getVisibility() == View.VISIBLE) {
+      reverseFabTransform();
+      return;
+    }
+
+    if (!mPoll.getQuestionList().isEmpty() ||
+        (mPoll.getPollTitle() != null && !mPoll.getPollTitle().isEmpty())) {
+      showConfirmationDialog();
+      return;
+    }
+    super.onBackPressed();
+  }
+
+  private void showConfirmationDialog() {
+    AlertDialog.Builder builder = new Builder(this);
+    builder.setMessage("Your changes will be lost. Do you really want to exit?")
+        .setPositiveButton(R.string.save, new OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            PersistenceUtils.storePollInPreferences(EditorActivity.this, mPoll);
+            finish();
+          }
+        })
+        .setNegativeButton(R.string.discard, new OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            EditorActivity.super.onBackPressed();
+          }
+        });
+    AlertDialog dialog = builder.create();
+    dialog.show();
+  }
+
+  private void inlineAddQuestion(Question question) {
+    mPoll.addQuestion(question);
+    mAdapter.notifyItemInserted(mPoll.getQuestionList().size());
   }
 
   private void showBinaryDialog(Context context) {
@@ -407,11 +458,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         enablePositiveButton(dialog, flags);
       }
     });
-  }
-
-  private void inlineAddQuestion(Question question) {
-    mPoll.addQuestion(question);
-    mAdapter.notifyItemInserted(mPoll.getQuestionList().size());
   }
 
   private void showRateDialog(Context context) {
