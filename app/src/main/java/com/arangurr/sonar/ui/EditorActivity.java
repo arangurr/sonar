@@ -1037,7 +1037,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
           break;
         case TYPE_EMPTY:
           EmptyHolder emptyHolder = (EmptyHolder) holder;
-          emptyHolder.text.setText("test");
+          emptyHolder.text.setText(R.string.empty_editor);
       }
     }
 

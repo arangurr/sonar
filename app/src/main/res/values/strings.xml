@@ -39,7 +39,7 @@
   <string name="more_settings">More settings</string>
   <string name="voters">Voters</string>
   <string name="create_poll">New poll</string>
-  <string name="title">Title</string>
+  <string name="poll_title">Poll title</string>
   <string name="option_stars">1 to 5 stars</string>
   <string name="option_like_dislike">Like/Dislike</string>
   <string name="option_zero_ten">Rate from 0 to 10</string>
@@ -66,17 +66,18 @@
   <string name="help_dialog_title">What\'s this?</string>
   <string name="unlock_dialog_title">Unlock poll</string>
   <string name="wrong_password">Wrong password</string>
-  <string name="status_searching">Searching for nearby polls...</string>
+  <string name="status_searching">Searching for nearby polls…</string>
   <string name="cancelling">Cancelling</string>
   <string name="status_vote_sent">Vote sent. You can exit now.</string>
   <string name="voted_by">Voted by</string>
-  <string name="status_publish_expired">Poll no longer available. Waiting for votes a little longer...</string>
+  <string name="status_publish_expired">Poll no longer available. Waiting for votes a little longer…</string>
   <string name="edit">Edit</string>
   <string name="poll_untitled_editor">%s\'s poll</string>
   <string name="save">Save</string>
   <string name="discard">Discard</string>
   <string name="status_listening_votes">Now listening for votes</string>
   <string name="status_trying_listening_votes">Starting to listen for votes</string>
+  <string name="empty_editor">Set up your poll and add questions. They will appear here.</string>
 
   <string-array name="array_privacy_intervals">
     <item>Public</item>
