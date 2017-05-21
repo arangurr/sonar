@@ -227,7 +227,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         }
         break;
       case R.id.textview_card_multiple:
-        showMultiDialog(v.getContext());
+        showMultiDialog(v.getContext(), null);
         if (!mIsFabAnimating) {
           reverseFabTransform();
         }
@@ -634,7 +634,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     });
   }
 
-  private void showMultiDialog(Context context) {
+  private void showMultiDialog(Context context, @Nullable Question question) {
     final boolean[] flags = {
         false,  // Has a title
         false   // Has at least two options
@@ -648,39 +648,60 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     final EditText title = (EditText) dialogView.findViewById(R.id.edittext_multi_title);
     final CheckBox checkBox = (CheckBox) dialogView.findViewById(R.id.checkbox_multi);
 
-    final Question question = new Question();
+    if (question != null) {
+      title.setText(question.getTitle());
+      flags[0] = !question.getTitle().isEmpty();
+      checkBox.setChecked(question.getQuestionMode() == Constants.MULTI_MODE_MULTIPLE);
+      container.removeView(container.findViewById(R.id.edittext_multi_option0));
+      for (Option option : question.getAllOptions()) {
+        EditText editText = (EditText) LayoutInflater.from(context)
+            .inflate(R.layout.editor_dialog_multi_option, container, false);
+        editText.setText(option.getOptionName());
+        container.addView(editText);
+      }
+      flags[1] = container.getChildCount() > 4; // Includes Title. I want at least 2 options.
+      question.getAllOptions().clear();
+    } else {
+      question = new Question();
+    }
 
     AlertDialog.Builder dialogBuilder = new Builder(context);
+    final Question finalQuestion = question;
     dialogBuilder
         .setNegativeButton(android.R.string.cancel, null)
         .setPositiveButton(android.R.string.ok, new OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            question.setMode(checkBox.isChecked()
+            finalQuestion.setMode(checkBox.isChecked()
                 ? Constants.MULTI_MODE_MULTIPLE
                 : Constants.MULTI_MODE_EXCLUSIVE);
-
             for (int i = 1; i < container.getChildCount(); i++) {
               View child = container.getChildAt(i);
               if (child != null) {
                 if (child instanceof EditText) {
                   String nameText = ((EditText) child).getText().toString();
                   if (!nameText.isEmpty()) {
-                    question.addOption(nameText);
+                    finalQuestion.addOption(nameText);
                   }
                 }
               }
             }
-            inlineAddQuestion(question);
+            if (finalQuestion.getKey() == null) {
+              inlineAddQuestion(finalQuestion);
+            } else {
+              substituteQuestion(finalQuestion);
+            }
           }
         })
         .setView(dialogView)
         .setTitle(getString(R.string.multiple_options));
+
     final AlertDialog dialog = dialogBuilder.create();
 
     dialog.show();
     dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+
+    enablePositiveButton(dialog, flags);
 
     final TextWatcher removerWatcher = new TextWatcher() {
 
@@ -717,7 +738,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       }
     };
 
-    final TextWatcher lastEditTextWatcher = new TextWatcher() {
+    final TextWatcher adderWatcher = new TextWatcher() {
       @Override
       public void beforeTextChanged(CharSequence s, int start, int count, int after) {
       }
@@ -752,9 +773,16 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       }
     };
 
-    EditText firstEditText = (EditText) container.findViewById(R.id.edittext_multi_option0);
-    firstEditText.setTag(0);
-    firstEditText.addTextChangedListener(lastEditTextWatcher);
+    for (int i = 1; i < container.getChildCount(); i++) {
+      View view = container.getChildAt(i);
+      if (view instanceof EditText) {
+        if (i == container.getChildCount() - 1) {
+          ((EditText) view).addTextChangedListener(adderWatcher);
+        } else {
+          ((EditText) view).addTextChangedListener(removerWatcher);
+        }
+      }
+    }
 
     title.addTextChangedListener(new TextWatcher() {
       @Override
@@ -768,7 +796,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       @Override
       public void afterTextChanged(Editable s) {
         flags[0] = s.length() > 0;
-        question.setTitle(s.toString());
+        finalQuestion.setTitle(s.toString());
         enablePositiveButton(dialog, flags);
       }
     });
@@ -1200,6 +1228,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
               break;
             case Constants.MULTI_MODE_EXCLUSIVE:
             case Constants.MULTI_MODE_MULTIPLE:
+              showMultiDialog(v.getContext(), clickedQuestion);
               break;
             case Constants.RATE_MODE_CUSTOM:
             case Constants.RATE_MODE_LIKEDISLIKE:
