@@ -608,26 +608,27 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 //      }
 //    };
 
+    final Question question = new Question();
+
     AlertDialog.Builder dialogBuilder = new Builder(context);
     dialogBuilder
         .setNegativeButton(android.R.string.cancel, null)
         .setPositiveButton(android.R.string.ok, new OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            Question question;
-            question = new Question(title.getText().toString(),
-                checkBox.isChecked()
-                    ? Constants.MULTI_MODE_MULTIPLE
-                    : Constants.MULTI_MODE_EXCLUSIVE);
+            question.setMode(checkBox.isChecked()
+                ? Constants.MULTI_MODE_MULTIPLE
+                : Constants.MULTI_MODE_EXCLUSIVE);
 
-            for (int tag = 0; ; tag++) {
-              View child = container.findViewWithTag(tag);
-              if (child == null) {
-                break;
-              }
-              String nameText = ((EditText) child).getText().toString();
-              if (!nameText.isEmpty()) {
-                question.addOption(nameText);
+            for (int i = 0; i < container.getChildCount(); i++) {
+              View child = container.getChildAt(i);
+              if (child != null) {
+                if (child instanceof EditText) {
+                  String nameText = ((EditText) child).getText().toString();
+                  if (!nameText.isEmpty()) {
+                    question.addOption(nameText);
+                  }
+                }
               }
             }
             inlineAddQuestion(question);
@@ -667,7 +668,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
           }
           container.addView(newEditText);
 
-          flags[1] = container.getChildCount() > 3;
+          flags[1] = container.getChildCount() > 4; // Includes EditText. I want at least 2 options.
           enablePositiveButton(dialog, flags);
 
           lastEditText.removeTextChangedListener(this);
@@ -692,6 +693,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       @Override
       public void afterTextChanged(Editable s) {
         flags[0] = s.length() > 0;
+        question.setTitle(s.toString());
         enablePositiveButton(dialog, flags);
       }
     });
