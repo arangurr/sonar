@@ -871,7 +871,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
     // Color Overlay
     ColorDrawable fabColor = new ColorDrawable(
-        ContextCompat.getColor(this, R.color.colorAccentIntermediate));
+        ContextCompat.getColor(this, R.color.colorAccent));
     fabColor.setBounds(0, 0, mFabCard.getWidth(), mFabCard.getHeight());
     mFabCard.getOverlay().add(fabColor);
 
@@ -942,7 +942,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
     // Color Overlay
     ColorDrawable fabColor = new ColorDrawable(
-        ContextCompat.getColor(this, R.color.colorAccentIntermediate));
+        ContextCompat.getColor(this, R.color.colorAccent));
     fabColor.setBounds(0, 0, mFabCard.getWidth(), mFabCard.getHeight());
     fabColor.setAlpha(0);
     mFabCard.getOverlay().add(fabColor);

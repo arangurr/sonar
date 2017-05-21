@@ -8,7 +8,7 @@
     android:layout_height="0dp"
     android:layout_weight="1"
     android:layout_gravity="center_horizontal"
-    android:background="@color/colorAccentIntermediateLight"
+    android:background="@color/colorAccentLight"
     android:elevation="2dp"
     android:gravity="center"
     android:minHeight="?android:attr/actionBarSize"
