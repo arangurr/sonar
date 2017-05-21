@@ -357,27 +357,22 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     final EditText option2 = (EditText) dialogView.findViewById(R.id.edittext_binary_option2);
     final RadioGroup radiogroup = (RadioGroup) dialogView.findViewById(R.id.radiogroup_binary);
 
+    final Question question = new Question();
+
     AlertDialog.Builder dialogBuilder = new Builder(context);
     dialogBuilder
         .setPositiveButton(android.R.string.ok, new OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            Question question;
             switch (radiogroup.getCheckedRadioButtonId()) {
               case R.id.radiobutton_binary_yesno:
-                question = new Question(
-                    title.getText().toString(),
-                    Constants.BINARY_MODE_YESNO);
+                question.setMode(Constants.BINARY_MODE_YESNO);
                 break;
               case R.id.radiobutton_binary_truefalse:
-                question = new Question(
-                    title.getText().toString(),
-                    Constants.BINARY_MODE_TRUEFALSE);
+                question.setMode(Constants.BINARY_MODE_TRUEFALSE);
                 break;
               default:
-                question = new Question(
-                    title.getText().toString(),
-                    Constants.BINARY_MODE_CUSTOM);
+                question.setMode(Constants.BINARY_MODE_CUSTOM);
                 question.addOption(option1.getText().toString());
                 question.addOption(option2.getText().toString());
             }
@@ -423,6 +418,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       @Override
       public void afterTextChanged(Editable s) {
         flags[0] = s.length() > 0;
+        question.setTitle(s.toString());
         enablePositiveButton(dialog, flags);
       }
     });

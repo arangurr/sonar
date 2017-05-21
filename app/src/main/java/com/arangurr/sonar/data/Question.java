@@ -12,7 +12,7 @@ import java.util.List;
 public class Question {
 
   @SerializedName("qm")
-  private final int mQuestionMode;
+  private int mQuestionMode;
   @SerializedName("ops")
   private ArrayList<Option> mOptions;
   @SerializedName("id")
@@ -20,38 +20,49 @@ public class Question {
   @SerializedName("title")
   private String mTitle;
 
+  public Question() {
+    mOptions = new ArrayList<>();
+  }
+
   public Question(String title, int mode) {
     mTitle = title;
-    mQuestionMode = mode;
     mOptions = new ArrayList<>();
-    switch (mode) {
-      case Constants.BINARY_MODE_YESNO:
-        addOption("Yes");
-        addOption("No");
-        break;
-      case Constants.BINARY_MODE_TRUEFALSE:
-        addOption("True");
-        addOption("False");
-        break;
-      case Constants.RATE_MODE_STARS:
-        for (int i = 1; i <= 5; i++) {
-          addOption(String.valueOf(i));
-        }
-        break;
-      case Constants.RATE_MODE_LIKEDISLIKE:
-        addOption(String.valueOf(0));
-        addOption(String.valueOf(1));
-        break;
-      case Constants.RATE_MODE_SCORE:
-        for (int i = 0; i <= 10; i++) {
-          addOption(String.valueOf(i));
-        }
-        break;
-      case Constants.BINARY_MODE_CUSTOM:
-      case Constants.RATE_MODE_CUSTOM:
-        break;
-      default:
-        break;
+    setMode(mode);
+  }
+
+  public void setMode(int mode) {
+    if (mQuestionMode != mode) {
+      mQuestionMode = mode;
+      mOptions.clear();
+      switch (mode) {
+        case Constants.BINARY_MODE_YESNO:
+          addOption("Yes");
+          addOption("No");
+          break;
+        case Constants.BINARY_MODE_TRUEFALSE:
+          addOption("True");
+          addOption("False");
+          break;
+        case Constants.RATE_MODE_STARS:
+          for (int i = 1; i <= 5; i++) {
+            addOption(String.valueOf(i));
+          }
+          break;
+        case Constants.RATE_MODE_LIKEDISLIKE:
+          addOption(String.valueOf(0));
+          addOption(String.valueOf(1));
+          break;
+        case Constants.RATE_MODE_SCORE:
+          for (int i = 0; i <= 10; i++) {
+            addOption(String.valueOf(i));
+          }
+          break;
+        case Constants.BINARY_MODE_CUSTOM:
+        case Constants.RATE_MODE_CUSTOM:
+          break;
+        default:
+          break;
+      }
     }
   }
 
