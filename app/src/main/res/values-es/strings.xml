@@ -82,4 +82,5 @@
   <string name="untitled_poll">Cuestionario sin título</string>
   <string name="empty_editor">Configura tu cuestionario y añade preguntas. Aparecerán aquí.</string>
   <string name="elapsed">%s transcurrido</string>
+  <string name="edit_only_without_answers">Sólo se pueden editar los cuestionarios que no contienen respuestas.</string>
 </resources>

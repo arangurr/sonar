@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.text.SpannableString;
 import android.text.format.DateUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -245,10 +249,19 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
         pollHolder.mPopupButton.setOnClickListener(new OnClickListener() {
           @Override
-          public void onClick(View v) {
+          public void onClick(final View v) {
             PopupMenu popup = new PopupMenu(v.getContext(), v);
             MenuInflater menuInflater = popup.getMenuInflater();
             menuInflater.inflate(R.menu.popup_dashboard, popup.getMenu());
+
+            if (poll.getNumberOfVotes() != 0) {
+              MenuItem editItem = popup.getMenu().findItem(R.id.action_popup_edit);
+              SpannableString s = new SpannableString(editItem.getTitle().toString());
+              s.setSpan(new ForegroundColorSpan(
+                      ContextCompat.getColor(v.getContext(), R.color.colorDisabledText)),
+                  0, s.length(), 0);
+              editItem.setTitle(s);
+            }
 
             popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
               @Override
@@ -263,6 +276,17 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     activate.putExtra(Constants.EXTRA_POLL_ID, poll.getUuid());
                     activate.putExtra(Constants.EXTRA_ACTIVATE, 0b1);
                     startActivity(activate);
+                    return true;
+                  case R.id.action_popup_edit:
+                    if (poll.getNumberOfVotes() > 0) {
+                      Snackbar.make(v, R.string.edit_only_without_answers,
+                          Snackbar.LENGTH_LONG).show();
+                    } else {
+                      Intent editIntent = new Intent(DashboardActivity.this, EditorActivity.class);
+                      editIntent
+                          .putExtra(Constants.EXTRA_POLL_ID, poll.getUuid());
+                      startActivity(editIntent);
+                    }
                     return true;
                   default:
                     return false;
