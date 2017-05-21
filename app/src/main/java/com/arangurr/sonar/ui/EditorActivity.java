@@ -1075,8 +1075,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     private void bindQuestion(final QuestionHolder holder, int position) {
       Question q = mItems.get(position - 1);
 
-      String format = holder.itemView.getContext().getString(R.string.editor_item_title);
-      holder.mQuestionTitle.setText(String.format(format, position, q.getTitle()));
+      holder.mQuestionTitle.setText(q.getTitle());
 
       Drawable drawable;
       switch (q.getQuestionMode()) {
