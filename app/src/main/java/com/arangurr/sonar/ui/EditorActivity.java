@@ -657,12 +657,13 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       flags[0] = !question.getTitle().isEmpty();
       checkBox.setChecked(question.getQuestionMode() == Constants.MULTI_MODE_MULTIPLE);
       container.removeView(container.findViewById(R.id.edittext_multi_option0));
+      EditText editText = (EditText) LayoutInflater.from(context)
+          .inflate(R.layout.editor_dialog_multi_option, container, false);
       for (Option option : question.getAllOptions()) {
-        EditText editText = (EditText) LayoutInflater.from(context)
-            .inflate(R.layout.editor_dialog_multi_option, container, false);
         editText.setText(option.getOptionName());
         container.addView(editText);
       }
+      container.addView(editText);
       flags[1] = container.getChildCount() > 4; // Includes Title. I want at least 2 options.
       question.getAllOptions().clear();
     } else {
