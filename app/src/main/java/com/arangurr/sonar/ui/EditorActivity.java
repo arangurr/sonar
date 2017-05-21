@@ -374,9 +374,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         option2.setVisibility(View.VISIBLE);
         radiogroup.check(R.id.radiobutton_binary_custom);
       }
-
-      question.getAllOptions().clear();
-
     } else {
       question = new Question();
     }
@@ -387,6 +384,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         .setPositiveButton(android.R.string.ok, new OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
+            finalQuestion.getAllOptions().clear();
             switch (radiogroup.getCheckedRadioButtonId()) {
               case R.id.radiobutton_binary_yesno:
                 finalQuestion.setMode(Constants.BINARY_MODE_YESNO);
@@ -526,7 +524,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         min.setVisibility(View.VISIBLE);
         max.setVisibility(View.VISIBLE);
       }
-      question.getAllOptions().clear();
     } else {
       question = new Question();
     }
@@ -537,6 +534,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         .setPositiveButton(android.R.string.ok, new OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
+            finalQuestion.getAllOptions().clear();
             switch (radiogroup.getCheckedRadioButtonId()) {
               case R.id.radiobutton_rate_stars:
                 finalQuestion.setMode(Constants.RATE_MODE_STARS);
@@ -665,7 +663,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       }
       container.addView(editText);
       flags[1] = container.getChildCount() > 4; // Includes Title. I want at least 2 options.
-      question.getAllOptions().clear();
     } else {
       question = new Question();
     }
@@ -677,6 +674,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         .setPositiveButton(android.R.string.ok, new OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
+            finalQuestion.getAllOptions().clear();
             finalQuestion.setMode(checkBox.isChecked()
                 ? Constants.MULTI_MODE_MULTIPLE
                 : Constants.MULTI_MODE_EXCLUSIVE);
