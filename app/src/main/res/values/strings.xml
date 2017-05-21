@@ -78,6 +78,7 @@
   <string name="status_listening_votes">Now listening for votes</string>
   <string name="status_trying_listening_votes">Starting to listen for votes</string>
   <string name="empty_editor">Set up your poll and add questions. They will appear here.</string>
+  <string name="elapsed">%s elapsed</string>
 
   <string-array name="array_privacy_intervals">
     <item>Public</item>
