@@ -14,6 +14,7 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
@@ -50,6 +51,7 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.arangurr.sonar.Constants;
 import com.arangurr.sonar.GsonUtils;
 import com.arangurr.sonar.PersistenceUtils;
@@ -219,7 +221,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         }
         break;
       case R.id.textview_card_binary:
-        showBinaryDialog(v.getContext());
+        showBinaryDialog(v.getContext(), null);
         if (!mIsFabAnimating) {
           reverseFabTransform();
         }
@@ -344,7 +346,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     mAdapter.notifyItemInserted(mPoll.getQuestionList().size() + 1);
   }
 
-  private void showBinaryDialog(Context context) {
+  private void showBinaryDialog(Context context, @Nullable Question question) {
     final boolean[] flags = {
         false,  // Title
         true   // Custom & two options
@@ -357,26 +359,49 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     final EditText option2 = (EditText) dialogView.findViewById(R.id.edittext_binary_option2);
     final RadioGroup radiogroup = (RadioGroup) dialogView.findViewById(R.id.radiogroup_binary);
 
-    final Question question = new Question();
+    if (question != null) {
+      title.setText(question.getTitle());
+      flags[0] = !question.getTitle().isEmpty();
+      int mode = question.getQuestionMode();
+      if (mode == Constants.BINARY_MODE_YESNO) {
+        radiogroup.check(R.id.radiobutton_binary_yesno);
+      } else if (mode == Constants.BINARY_MODE_TRUEFALSE) {
+        radiogroup.check(R.id.radiobutton_binary_truefalse);
+      } else {
+        option1.setText(question.getOption(0).getOptionName());
+        option2.setText(question.getOption(1).getOptionName());
+        radiogroup.check(R.id.radiobutton_binary_custom);
+      }
+
+      question.getAllOptions().clear();
+
+    } else {
+      question = new Question();
+    }
 
     AlertDialog.Builder dialogBuilder = new Builder(context);
+    final Question finalQuestion = question;
     dialogBuilder
         .setPositiveButton(android.R.string.ok, new OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
             switch (radiogroup.getCheckedRadioButtonId()) {
               case R.id.radiobutton_binary_yesno:
-                question.setMode(Constants.BINARY_MODE_YESNO);
+                finalQuestion.setMode(Constants.BINARY_MODE_YESNO);
                 break;
               case R.id.radiobutton_binary_truefalse:
-                question.setMode(Constants.BINARY_MODE_TRUEFALSE);
+                finalQuestion.setMode(Constants.BINARY_MODE_TRUEFALSE);
                 break;
               default:
-                question.setMode(Constants.BINARY_MODE_CUSTOM);
-                question.addOption(option1.getText().toString());
-                question.addOption(option2.getText().toString());
+                finalQuestion.setMode(Constants.BINARY_MODE_CUSTOM);
+                finalQuestion.addOption(option1.getText().toString());
+                finalQuestion.addOption(option2.getText().toString());
             }
-            inlineAddQuestion(question);
+            if (finalQuestion.getKey() == null) {
+              inlineAddQuestion(finalQuestion);
+            } else {
+              substituteQuestion(finalQuestion);
+            }
           }
         })
         .setNegativeButton(android.R.string.cancel, null)
@@ -386,7 +411,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     final AlertDialog dialog = dialogBuilder.create();
     dialog.show();
 
-    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+    enablePositiveButton(dialog, flags);
 
     radiogroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
       @Override
@@ -418,7 +443,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       @Override
       public void afterTextChanged(Editable s) {
         flags[0] = s.length() > 0;
-        question.setTitle(s.toString());
+        finalQuestion.setTitle(s.toString());
         enablePositiveButton(dialog, flags);
       }
     });
@@ -456,6 +481,16 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         enablePositiveButton(dialog, flags);
       }
     });
+  }
+
+  private void substituteQuestion(Question question) {
+    for (Question questionInList : mPoll.getQuestionList()) {
+      if (questionInList.getKey().equals(question.getKey())) {
+        int index = mPoll.getQuestionList().indexOf(questionInList);
+        mPoll.getQuestionList().set(index, question);
+        mAdapter.notifyItemChanged(index + 1);
+      }
+    }
   }
 
   private void showRateDialog(Context context) {
@@ -1109,6 +1144,32 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
           int position = holder.getAdapterPosition();
           mPoll.getQuestionList().remove(position - 1);
           mAdapter.notifyItemRemoved(position);
+        }
+      });
+
+      holder.itemView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          Question clickedQuestion = mItems.get(holder.getAdapterPosition() - 1);
+          int questionType = clickedQuestion.getQuestionMode();
+          switch (questionType) {
+            case Constants.BINARY_MODE_CUSTOM:
+            case Constants.BINARY_MODE_TRUEFALSE:
+            case Constants.BINARY_MODE_YESNO:
+              showBinaryDialog(v.getContext(), clickedQuestion);
+              break;
+            case Constants.MULTI_MODE_EXCLUSIVE:
+            case Constants.MULTI_MODE_MULTIPLE:
+              break;
+            case Constants.RATE_MODE_CUSTOM:
+            case Constants.RATE_MODE_LIKEDISLIKE:
+            case Constants.RATE_MODE_SCORE:
+            case Constants.RATE_MODE_STARS:
+              break;
+            default:
+              Toast.makeText(EditorActivity.this, clickedQuestion.getTitle(), Toast.LENGTH_SHORT)
+                  .show();
+          }
         }
       });
     }
