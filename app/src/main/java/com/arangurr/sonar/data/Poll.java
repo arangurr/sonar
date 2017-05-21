@@ -95,7 +95,13 @@ public class Poll {
   }
 
   public void addQuestion(Question newQuestion) {
-    newQuestion.setKey(mQuestionList.size());
+    int lastKey;
+    if (mQuestionList.size() == 0) {
+      lastKey = -1;
+    } else {
+      lastKey = mQuestionList.get(mQuestionList.size() - 1).getKey();
+    }
+    newQuestion.setKey(lastKey + 1);
     mQuestionList.add(newQuestion);
   }
 
