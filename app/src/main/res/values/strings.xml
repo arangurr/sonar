@@ -60,7 +60,7 @@
   <string name="received_vote_from">Got vote from %s</string>
   <string name="received_votes_counter">%d votes in this session</string>
   <string name="editor_item_title" translatable="false">%1$d. %2$s</string>
-  <string name="dashboard_welcome">Welcome!\n\nYou can start by creating a new poll\nor by listening for nearby ones</string>
+  <string name="dashboard_welcome">Welcome!\n\nYou can start by creating a new poll or by listening for nearby ones</string>
   <string name="untitled_poll">Untitled Poll</string>
   <string name="understood">Got it</string>
   <string name="help_dialog_title">What\'s this?</string>
