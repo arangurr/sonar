@@ -370,6 +370,8 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       } else {
         option1.setText(question.getOption(0).getOptionName());
         option2.setText(question.getOption(1).getOptionName());
+        option1.setVisibility(View.VISIBLE);
+        option2.setVisibility(View.VISIBLE);
         radiogroup.check(R.id.radiobutton_binary_custom);
       }
 
@@ -521,6 +523,8 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         min.setText(question.getOption(0).getOptionName());
         max.setText(question.getOption(question.getAllOptions().size() - 1).getOptionName());
         radiogroup.check(R.id.radiobutton_rate_custom);
+        min.setVisibility(View.VISIBLE);
+        max.setVisibility(View.VISIBLE);
       }
       question.getAllOptions().clear();
     } else {
