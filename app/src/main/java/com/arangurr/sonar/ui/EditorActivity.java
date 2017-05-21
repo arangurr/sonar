@@ -472,38 +472,31 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     final EditText max = (EditText) dialogView.findViewById(R.id.edittext_rate_max);
     final RadioGroup radiogroup = (RadioGroup) dialogView.findViewById(R.id.radiogroup_rate);
 
+    final Question question = new Question();
+
     AlertDialog.Builder dialogBuilder = new Builder(context);
     dialogBuilder
         .setPositiveButton(android.R.string.ok, new OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            Question rateQuestion;
             switch (radiogroup.getCheckedRadioButtonId()) {
               case R.id.radiobutton_rate_stars:
-                rateQuestion = new Question(
-                    title.getText().toString(),
-                    Constants.RATE_MODE_STARS);
+                question.setMode(Constants.RATE_MODE_STARS);
                 break;
               case R.id.radiobutton_rate_likedislike:
-                rateQuestion = new Question(
-                    title.getText().toString(),
-                    Constants.RATE_MODE_LIKEDISLIKE);
+                question.setMode(Constants.RATE_MODE_LIKEDISLIKE);
                 break;
               case R.id.radiobutton_rate_score:
-                rateQuestion = new Question(
-                    title.getText().toString(),
-                    Constants.RATE_MODE_SCORE);
+                question.setMode(Constants.RATE_MODE_SCORE);
                 break;
               default:
-                rateQuestion = new Question(
-                    title.getText().toString(),
-                    Constants.RATE_MODE_CUSTOM);
-                rateQuestion.setRateCustomLowHigh(
+                question.setMode(Constants.RATE_MODE_CUSTOM);
+                question.setRateCustomLowHigh(
                     Integer.valueOf(min.getText().toString()),
                     Integer.valueOf(max.getText().toString()));
                 break;
             }
-            inlineAddQuestion(rateQuestion);
+            inlineAddQuestion(question);
           }
         })
         .setNegativeButton(android.R.string.cancel, null)
@@ -543,6 +536,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       @Override
       public void afterTextChanged(Editable s) {
         flags[0] = s.length() > 0;
+        question.setTitle(s.toString());
         enablePositiveButton(dialog, flags);
       }
     });
