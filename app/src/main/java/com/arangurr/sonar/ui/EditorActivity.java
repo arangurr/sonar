@@ -648,23 +648,37 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     final EditText title = (EditText) dialogView.findViewById(R.id.edittext_multi_title);
     final CheckBox checkBox = (CheckBox) dialogView.findViewById(R.id.checkbox_multi);
 
-//    final TextWatcher removerWatcher = new TextWatcher() {
-//
-//      @Override
-//      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//      }
-//
-//      @Override
-//      public void onTextChanged(CharSequence s, int start, int before, int count) {
-//      }
-//
-//      @Override
-//      public void afterTextChanged(Editable s) {
-//        if (s.length() == 0) {
-//          container.removeViewAt(container.getChildCount() - 1);
-//        }
-//      }
-//    };
+    final TextWatcher removerWatcher = new TextWatcher() {
+
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+        if (s.length() == 0) {
+          for (int i = 1; i < container.getChildCount(); i++) {
+            if (container.getChildAt(i) instanceof EditText) {
+              // It's an editText, and it's not one of the first two. Let's find if it has text.
+              EditText candidate = (EditText) container.getChildAt(i);
+              if (candidate.getText().length() == 0) {
+                if (i == container.getChildCount() - 1) {
+                  // do nothing
+                } else {
+                  // It's empty. Can remove it.
+                  container.removeView(candidate);
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+    };
 
     final Question question = new Question();
 
@@ -678,7 +692,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
                 ? Constants.MULTI_MODE_MULTIPLE
                 : Constants.MULTI_MODE_EXCLUSIVE);
 
-            for (int i = 0; i < container.getChildCount(); i++) {
+            for (int i = 1; i < container.getChildCount(); i++) {
               View child = container.getChildAt(i);
               if (child != null) {
                 if (child instanceof EditText) {
@@ -713,7 +727,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       public void afterTextChanged(Editable s) {
         if (s.length() != 0 && container.getChildCount() <= 11) {
           EditText lastEditText = (EditText) container
-              .findViewWithTag(container.getChildCount() - 3);
+              .getChildAt(container.getChildCount() - 1);
 
           EditText newEditText = (EditText) inflater
               .inflate(R.layout.editor_dialog_multi_option, container, false);
@@ -730,7 +744,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
           enablePositiveButton(dialog, flags);
 
           lastEditText.removeTextChangedListener(this);
-          //lastEditText.addTextChangedListener(removerWatcher);
+          lastEditText.addTextChangedListener(removerWatcher);
         }
       }
     };
