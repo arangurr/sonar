@@ -80,6 +80,7 @@
   <string name="empty_editor">Set up your poll and add questions. They will appear here.</string>
   <string name="elapsed">%s elapsed</string>
   <string name="edit_only_without_answers">You can only edit polls that do not have any answers yet.</string>
+  <string name="do_you_really_want_to_exit">Any changes will be lost. Do you really want to exit?</string>
 
   <string-array name="array_privacy_intervals">
     <item>Public</item>

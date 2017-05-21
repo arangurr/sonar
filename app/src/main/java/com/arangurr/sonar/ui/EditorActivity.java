@@ -323,7 +323,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
   private void showConfirmationDialog() {
     AlertDialog.Builder builder = new Builder(this);
-    builder.setMessage("Your changes will be lost. Do you really want to exit?")
+    builder.setMessage(R.string.do_you_really_want_to_exit)
         .setPositiveButton(R.string.save, new OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
