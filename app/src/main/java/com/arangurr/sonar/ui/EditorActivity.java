@@ -43,6 +43,7 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -1071,14 +1072,13 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       });
     }
 
-    private void bindQuestion(QuestionHolder holder, int position) {
+    private void bindQuestion(final QuestionHolder holder, int position) {
       Question q = mItems.get(position - 1);
 
       String format = holder.itemView.getContext().getString(R.string.editor_item_title);
       holder.mQuestionTitle.setText(String.format(format, position, q.getTitle()));
 
       Drawable drawable;
-
       switch (q.getQuestionMode()) {
         case Constants.BINARY_MODE_CUSTOM:
         case Constants.BINARY_MODE_TRUEFALSE:
@@ -1111,6 +1111,15 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         sb.append(o.getOptionName());
       }
       holder.mQuestionSubtitle.setText(sb.toString());
+
+      holder.mDeleteButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          int position = holder.getAdapterPosition();
+          mPoll.getQuestionList().remove(position - 1);
+          mAdapter.notifyItemRemoved(position);
+        }
+      });
     }
 
     @Override
@@ -1123,12 +1132,14 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       private ImageView mImageView;
       private TextView mQuestionTitle;
       private TextView mQuestionSubtitle;
+      private ImageButton mDeleteButton;
 
       QuestionHolder(View itemView) {
         super(itemView);
         mImageView = (ImageView) itemView.findViewById(R.id.imageview_editor_item);
         mQuestionTitle = (TextView) itemView.findViewById(R.id.textview_editor_item_text1);
         mQuestionSubtitle = (TextView) itemView.findViewById(R.id.textview_editor_item_text2);
+        mDeleteButton = (ImageButton) itemView.findViewById(R.id.imagebutton_editor_item_delete);
       }
 
     }
