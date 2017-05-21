@@ -648,38 +648,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     final EditText title = (EditText) dialogView.findViewById(R.id.edittext_multi_title);
     final CheckBox checkBox = (CheckBox) dialogView.findViewById(R.id.checkbox_multi);
 
-    final TextWatcher removerWatcher = new TextWatcher() {
-
-      @Override
-      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-      }
-
-      @Override
-      public void onTextChanged(CharSequence s, int start, int before, int count) {
-      }
-
-      @Override
-      public void afterTextChanged(Editable s) {
-        if (s.length() == 0) {
-          for (int i = 1; i < container.getChildCount(); i++) {
-            if (container.getChildAt(i) instanceof EditText) {
-              // It's an editText, and it's not one of the first two. Let's find if it has text.
-              EditText candidate = (EditText) container.getChildAt(i);
-              if (candidate.getText().length() == 0) {
-                if (i == container.getChildCount() - 1) {
-                  // do nothing
-                } else {
-                  // It's empty. Can remove it.
-                  container.removeView(candidate);
-                  break;
-                }
-              }
-            }
-          }
-        }
-      }
-    };
-
     final Question question = new Question();
 
     AlertDialog.Builder dialogBuilder = new Builder(context);
@@ -714,6 +682,41 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
 
+    final TextWatcher removerWatcher = new TextWatcher() {
+
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+        if (s.length() == 0) {
+          for (int i = 1; i < container.getChildCount(); i++) {
+            if (container.getChildAt(i) instanceof EditText) {
+              // It's an editText, and it's not one of the first two. Let's find if it has text.
+              EditText candidate = (EditText) container.getChildAt(i);
+              if (candidate.getText().length() == 0) {
+                if (i == container.getChildCount() - 1) {
+                  // do nothing
+                } else {
+                  // It's empty. Can remove it.
+                  container.removeView(candidate);
+                  flags[1] =
+                      container.getChildCount() > 4; // Includes Title. I want at least 2 options.
+                  enablePositiveButton(dialog, flags);
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+    };
+
     final TextWatcher lastEditTextWatcher = new TextWatcher() {
       @Override
       public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -740,7 +743,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
           }
           container.addView(newEditText);
 
-          flags[1] = container.getChildCount() > 4; // Includes EditText. I want at least 2 options.
+          flags[1] = container.getChildCount() > 4; // Includes Title. I want at least 2 options.
           enablePositiveButton(dialog, flags);
 
           lastEditText.removeTextChangedListener(this);
