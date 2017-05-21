@@ -16,7 +16,7 @@ public class Question {
   @SerializedName("ops")
   private ArrayList<Option> mOptions;
   @SerializedName("id")
-  private int mKey;
+  private Integer mKey;
   @SerializedName("title")
   private String mTitle;
 
@@ -76,7 +76,7 @@ public class Question {
     return mOptions;
   }
 
-  public int getKey() {
+  public Integer getKey() {
     return mKey;
   }
 
