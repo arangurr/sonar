@@ -55,7 +55,7 @@
 <div><strong>Votos anónimos</strong>: sabrás quién ha enviado sus respuestas.</div>
 <div><strong>Votos secretas</strong>: no podrás saber quién ha enviado sus respuestas.</div></p>]]></string>
   <string name="voting_privacy_anonymous">Todas las preguntas son obligatorias. El encuestador sabrá si has votado a la encuesta, pero no tus respuestas.</string>
-  <string name="voting_privacy_public">Todas las preguntas son obligatorias. El encuestador tendrá en cuenta tus respuestas pero no sabrá si son tuyas.</string>
+  <string name="voting_privacy_public">Todas las preguntas son obligatorias. El encuestador conocerá tu identidad y tus respuestas.</string>
   <string name="voting_privacy_secret">Todas las preguntas son obligatorias. Tus respuestas se tendrán en cuenta pero tu identidad está completamente oculta.</string>
 
   <string-array name="array_privacy_intervals">
