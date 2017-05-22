@@ -55,7 +55,7 @@
 <div><strong>Votos anónimos</strong>: sabrás quién ha enviado sus respuestas.</div>
 <div><strong>Votos secretas</strong>: no podrás saber quién ha enviado sus respuestas.</div></p>]]></string>
   <string name="voting_privacy_anonymous">Todas las preguntas son obligatorias. El encuestador sabrá si has votado a la encuesta, pero no tus respuestas.</string>
-  <string name="voting_privacy_public">Todas las preguntas son obligatorias. El encuestador tendrá en cuenta tus respuestas pero no sabrá si son tuyas.</string>
+  <string name="voting_privacy_public">Todas las preguntas son obligatorias. El encuestador conocerá tu identidad y tus respuestas.</string>
   <string name="voting_privacy_secret">Todas las preguntas son obligatorias. Tus respuestas se tendrán en cuenta pero tu identidad está completamente oculta.</string>
 
   <string-array name="array_privacy_intervals">
@@ -74,7 +74,7 @@
   <string name="status_publish_expired">La encuesta ya no está disponible. Recogiendo respuestas un poco más…</string>
   <string name="status_searching">Buscando cuestionarios cercanos</string>
   <string name="status_trying_listening_votes">Empezando a buscar votos</string>
-  <string name="status_vote_sent">Voto enviado. Puedes salir ahora.</string>
+  <string name="status_vote_sent">Voto enviado. Se puede salir ahora.</string>
   <string name="understood">Entendido</string>
   <string name="voted_by">Votos de</string>
   <string name="wrong_password">Contraseña errónea</string>
@@ -84,4 +84,5 @@
   <string name="elapsed">%s transcurrido</string>
   <string name="edit_only_without_answers">Sólo se pueden editar los cuestionarios que no contienen respuestas.</string>
   <string name="do_you_really_want_to_exit">Cualquier cambio se perderá. ¿Seguro que quieres salir?</string>
+  <string name="status_trying_to_send">Intentando enviar tus respuestas</string>
 </resources>

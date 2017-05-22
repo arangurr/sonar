@@ -81,6 +81,7 @@
   <string name="elapsed">%s elapsed</string>
   <string name="edit_only_without_answers">You can only edit polls that do not have any answers yet.</string>
   <string name="do_you_really_want_to_exit">Any changes will be lost. Do you really want to exit?</string>
+  <string name="status_trying_to_send">Trying to send your answers</string>
 
   <string-array name="array_privacy_intervals">
     <item>Public</item>

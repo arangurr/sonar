@@ -7,9 +7,13 @@ import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnShowListener;
 import android.content.Intent;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
@@ -205,6 +209,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
           break;
         case RESULT_OK:
           mCurrentVote = PersistenceUtils.fetchVote(this);
+          mNearbyDevicesRecyclerView.setVisibility(View.INVISIBLE);
           publish();
           break;
       }
@@ -214,8 +219,13 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
   @Override
   public void onConnected(@Nullable Bundle bundle) {
     Log.d(TAG, "Google API connected");
+    mCurrentVote = PersistenceUtils.fetchVote(this);
     if (mSwitch.isChecked()) {
-      subscribe();
+      if (mCurrentVote == null) {
+        subscribe();
+      } else {
+        publish();
+      }
     }
   }
 
@@ -293,7 +303,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
         Constants.NAMESPACE,
         Vote.TYPE);
 
-    PublishOptions options = new PublishOptions.Builder()
+    final PublishOptions options = new PublishOptions.Builder()
         .setStrategy(
             new Strategy.Builder()
                 .setTtlSeconds(Constants.TTL_30SEC)
@@ -305,14 +315,17 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
                 super.onExpired();
                 mSwitch.setChecked(false);
                 Log.d(TAG, "Vote publication expired");
-                setStatus(getString(R.string.status_vote_sent));
+                Snackbar
+                    .make(mStatusTextView, R.string.status_vote_sent, Snackbar.LENGTH_INDEFINITE)
+                    .show();
+                setStatus(null);
                 mStatusTextView.postDelayed(new Runnable() {
                   @Override
                   public void run() {
-                    setStatus(null);
                     PersistenceUtils.deleteVote(getApplicationContext());
+                    finish();
                   }
-                }, 2000);
+                }, 10000);
               }
             })
         .build();
@@ -322,6 +335,25 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
           @Override
           public void onResult(@NonNull Status status) {
             if (status.isSuccess()) {
+              mStatusProgressBar.setIndeterminate(false);
+              mStatusProgressBar.setMax(Constants.TTL_30SEC * 100);
+              mStatusProgressBar.setProgress(0);
+
+              CountDownTimer timer = new CountDownTimer(Constants.TTL_30SEC * 1000, 100) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                  if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                    mStatusProgressBar.setProgress((int) (millisUntilFinished / 10), true);
+                  } else {
+                    mStatusProgressBar.setProgress((int) (millisUntilFinished / 10));
+                  }
+                }
+
+                @Override
+                public void onFinish() {
+                }
+              }.start();
+
               Log.d(TAG, "Vote published successfully");
               mStatusTextView.setText(R.string.status_sending_answers);
             } else {
@@ -331,7 +363,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
           }
         });
     Log.d(TAG, "Trying to publish");
-    setStatus("Trying to send your answers");
+    setStatus(getString(R.string.status_trying_to_send));
   }
 
   private void unpublish() {
@@ -421,11 +453,9 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
     if (status == null) {
       mStatusProgressBar.setVisibility(View.INVISIBLE);
       mStatusTextView.setVisibility(View.INVISIBLE);
-      mNearbyDevicesRecyclerView.setVisibility(View.INVISIBLE);
     } else {
       mStatusProgressBar.setVisibility(View.VISIBLE);
       mStatusTextView.setVisibility(View.VISIBLE);
-      mNearbyDevicesRecyclerView.setVisibility(View.VISIBLE);
     }
 
   }
