@@ -205,6 +205,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
           break;
         case RESULT_OK:
           mCurrentVote = PersistenceUtils.fetchVote(this);
+          mNearbyDevicesRecyclerView.setVisibility(View.INVISIBLE);
           publish();
           break;
       }
@@ -421,11 +422,9 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
     if (status == null) {
       mStatusProgressBar.setVisibility(View.INVISIBLE);
       mStatusTextView.setVisibility(View.INVISIBLE);
-      mNearbyDevicesRecyclerView.setVisibility(View.INVISIBLE);
     } else {
       mStatusProgressBar.setVisibility(View.VISIBLE);
       mStatusTextView.setVisibility(View.VISIBLE);
-      mNearbyDevicesRecyclerView.setVisibility(View.VISIBLE);
     }
 
   }
