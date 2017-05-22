@@ -26,6 +26,7 @@
       android:padding="8dp"
       android:background="@android:color/transparent"
       android:indeterminate="true"
+      android:keepScreenOn="true"
       android:visibility="invisible"
       tools:visibility="visible"/>
 
