@@ -7,13 +7,13 @@
     android:id="@+id/action_listen"
     android:icon="@drawable/ic_hearing_24dp"
     android:orderInCategory="100"
-    android:title="Search for new Polls"
+    android:title="@string/subscribe"
     app:showAsAction="ifRoom"/>
   <item
     android:id="@+id/action_add"
     android:icon="@drawable/ic_add_24dp"
     android:orderInCategory="101"
-    android:title="Create poll"
+    android:title="@string/create_poll"
     app:showAsAction="ifRoom"/>
   <item
     android:id="@+id/action_settings"

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:fitsSystemWindows="true"
+  tools:context="com.arangurr.sonar.ui.VotingActivity">
+  <android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+      android:id="@+id/appbarlayout_voting"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:theme="@style/AppTheme.AppBarOverlay"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+      <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_voting"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#b5000000"
+        app:popupTheme="@style/AppTheme.PopupOverlay"/>
+    </android.support.design.widget.AppBarLayout>
+
+    <TextView
+      android:id="@+id/textview_voting_privacy"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:paddingTop="8dp"
+      android:paddingBottom="8dp"
+      android:paddingStart="16dp"
+      android:paddingEnd="48dp"
+      android:background="#b5000000"
+      android:drawablePadding="8dp"
+      android:gravity="center"
+      android:textColor="@color/colorPrimaryTextDark"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/appbarlayout_voting"
+      tools:drawableStart="@drawable/ic_public_24dp"
+      tools:text="@string/voting_privacy_public"/>
+
+    <android.support.v4.view.ViewPager
+      android:id="@+id/viewpager_voting"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:paddingTop="@dimen/pager_padding_bottom"
+      android:paddingBottom="@dimen/pager_padding_bottom"
+      android:paddingStart="@dimen/pager_padding_sides"
+      android:paddingEnd="@dimen/pager_padding_sides"
+      android:clipToPadding="false"
+      android:overScrollMode="never"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toLeftOf="@+id/frameLayout"
+      app:layout_constraintTop_toBottomOf="@id/textview_voting_privacy"/>
+
+    <FrameLayout
+      android:id="@+id/frameLayout"
+      android:layout_width="wrap_content"
+      android:layout_height="0dp"
+      android:background="@color/colorPrimaryDark"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/textview_voting_privacy">
+
+      <ImageButton
+        android:id="@+id/button_voting_previous"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:padding="12dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:tint="@color/colorPrimaryTextDark"
+        app:srcCompat="@drawable/ic_chevron_left_24dp"/>
+
+      <Button
+        android:id="@+id/button_voting_send"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:enabled="false"
+        android:text="@string/send"/>
+
+      <ImageButton
+        android:id="@+id/button_voting_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="center_horizontal|top"
+        android:padding="12dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:tint="@color/colorPrimaryTextDark"
+        app:srcCompat="@drawable/ic_chevron_right_24dp"/>
+    </FrameLayout>
+  </android.support.constraint.ConstraintLayout>
+
+</android.support.design.widget.CoordinatorLayout>

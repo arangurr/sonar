@@ -6,14 +6,15 @@
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:paddingTop="8dp"
-  android:paddingBottom="8dp">
+  android:paddingBottom="8dp"
+  android:background="?android:attr/selectableItemBackground">
 
   <ImageView
     android:id="@+id/imageview_editor_item"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
-    android:tint="@color/colorAccentIntermediateDark"
+    android:tint="@color/colorAccentDark"
     app:layout_constraintBottom_toBottomOf="@+id/textview_editor_item_text2"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintTop_toTopOf="@+id/textview_editor_item_text1"
@@ -24,11 +25,11 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginStart="72dp"
-    android:layout_marginEnd="16dp"
+    android:layout_marginEnd="8dp"
     android:gravity="center_vertical"
     android:textAppearance="?android:attr/textAppearanceListItem"
     app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintRight_toLeftOf="@+id/imagebutton_editor_item_delete"
     app:layout_constraintTop_toTopOf="parent"
     tools:text="Text1"/>
 
@@ -38,11 +39,23 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="4dp"
     android:layout_marginStart="72dp"
-    android:layout_marginEnd="16dp"
+    android:layout_marginEnd="8dp"
     android:textAppearance="?android:attr/textAppearanceSmall"
     app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintRight_toLeftOf="@+id/imagebutton_editor_item_delete"
     app:layout_constraintTop_toBottomOf="@+id/textview_editor_item_text1"
     tools:text="Text2"/>
+
+  <ImageButton
+    android:id="@+id/imagebutton_editor_item_delete"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:padding="8dp"
+    android:background="?android:attr/selectableItemBackgroundBorderless"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/ic_delete_24dp"
+    />
 </android.support.constraint.ConstraintLayout>
 

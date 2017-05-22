@@ -16,10 +16,9 @@
     android:id="@+id/edittext_editor_title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:hint="Title"
+    android:hint="@string/poll_title"
     android:imeOptions="flagNoExtractUi|actionDone"
     android:inputType="text|textCapSentences|textAutoCorrect"
-    android:selectAllOnFocus="true"
     android:textColor="@color/colorPrimaryTextDark"
     tools:text="This is a very long title that should not fit in a single line. Blablabla. "/>
 </android.support.design.widget.TextInputLayout>

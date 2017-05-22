@@ -4,8 +4,10 @@
   android:id="@+id/textview_empty"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:padding="16dp"
   android:gravity="center"
   android:lineSpacingExtra="8sp"
+  android:textAppearance="?android:attr/textAppearanceMedium"
   tools:text="This is an empty recyclerview\nNow it has two lines">
 
 </TextView>

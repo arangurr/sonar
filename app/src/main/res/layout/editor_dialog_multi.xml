@@ -25,7 +25,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:minHeight="@dimen/item_height_small"
-      android:text="Can check multiple options"/>
+      android:text="@string/can_check_multiple_options"/>
     <EditText
       android:id="@+id/edittext_multi_option0"
       android:layout_width="match_parent"

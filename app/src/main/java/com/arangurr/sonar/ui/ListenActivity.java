@@ -153,7 +153,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
         .inflate(R.layout.sheet_password, null);
 
     final AlertDialog passwordDialog = new AlertDialog.Builder(view.getContext())
-        .setTitle("Unlock poll")
+        .setTitle(R.string.unlock_dialog_title)
         .setView(dialogView)
         .setPositiveButton(android.R.string.ok, null)
         .setNegativeButton(android.R.string.cancel, null)
@@ -175,7 +175,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
               startVotingForPoll(p);
               passwordDialog.dismiss();
             } else {
-              inputLayout.setError("Wrong password");
+              inputLayout.setError(getString(R.string.wrong_password));
             }
           }
         });
@@ -258,7 +258,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
             if (status.isSuccess()) {
               Log.d(TAG, "Operation successful");
               mSwitch.setEnabled(true);
-              setStatus("Searching for nearby polls...");
+              setStatus(getString(R.string.status_searching));
             } else {
               Log.d(TAG, "Operation unsuccessful due to " + status.getStatusMessage());
               Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT)
@@ -283,7 +283,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
         }
     );
     Log.d(TAG, "Unsubscribing");
-    setStatus("Cancelling");
+    setStatus(getString(R.string.cancelling));
   }
 
   private void publish() {
@@ -305,7 +305,7 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
                 super.onExpired();
                 mSwitch.setChecked(false);
                 Log.d(TAG, "Vote publication expired");
-                setStatus("Vote sent. You can exit now.");
+                setStatus(getString(R.string.status_vote_sent));
                 mStatusTextView.postDelayed(new Runnable() {
                   @Override
                   public void run() {
@@ -323,10 +323,10 @@ public class ListenActivity extends AppCompatActivity implements ConnectionCallb
           public void onResult(@NonNull Status status) {
             if (status.isSuccess()) {
               Log.d(TAG, "Vote published successfully");
-              mStatusTextView.setText("Sending answers. They might be lost if you close the app.");
+              mStatusTextView.setText(R.string.status_sending_answers);
             } else {
               Log.d(TAG, "Couldn't publish vote due to status = " + status);
-              mStatusTextView.setText("Could not send answers");
+              mStatusTextView.setText(R.string.status_could_not_send);
             }
           }
         });

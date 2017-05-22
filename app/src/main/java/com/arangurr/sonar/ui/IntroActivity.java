@@ -6,8 +6,15 @@ import static android.view.inputmethod.EditorInfo.IME_ACTION_DONE;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
+import android.graphics.drawable.Icon;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.provider.Settings.Secure;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +27,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import com.arangurr.sonar.Constants;
 import com.arangurr.sonar.R;
+import java.util.Collections;
 
 public class IntroActivity extends AppCompatActivity {
 
@@ -46,15 +54,19 @@ public class IntroActivity extends AppCompatActivity {
         } else {
           SharedPreferences preferences = getDefaultSharedPreferences
               (getApplicationContext());
-          SharedPreferences.Editor editor = preferences.edit();
+          Editor editor = preferences.edit();
 
-          @SuppressLint("HardwareIds") String uuid = Settings.Secure.getString
-              (getContentResolver(), Settings.Secure.ANDROID_ID);
+          @SuppressLint("HardwareIds") String uuid = Secure.getString
+              (getContentResolver(), Secure.ANDROID_ID);
           editor.putString(Constants.KEY_UUID, uuid);
 
           editor.putString(Constants.KEY_USERNAME, usernameEditText.getText().toString());
 
           editor.apply();
+
+          if (VERSION.SDK_INT >= VERSION_CODES.N_MR1) {
+            setupShortcuts();
+          }
 
           startActivity(new Intent(IntroActivity.this, DashboardActivity.class));
           finish();
@@ -92,5 +104,23 @@ public class IntroActivity extends AppCompatActivity {
 
       }
     });
+  }
+
+  @RequiresApi(api = VERSION_CODES.N_MR1)
+  private void setupShortcuts() {
+    ShortcutManager manager = getSystemService(ShortcutManager.class);
+
+    Intent i = new Intent(this, ListenActivity.class);
+    i.setAction(Intent.ACTION_VIEW);
+
+    ShortcutInfo shortcut = new ShortcutInfo.Builder(this, "short_listen")
+        .setShortLabel("Discover nearby")
+        .setLongLabel("Discover nearby polls")
+        .setIcon(Icon.createWithResource(this, R.drawable.ic_shortcut_listen))
+        .setIntent(i)
+        .build();
+
+    manager.setDynamicShortcuts(Collections.singletonList(shortcut));
+
   }
 }

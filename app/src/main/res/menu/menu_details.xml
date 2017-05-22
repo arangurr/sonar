@@ -6,7 +6,7 @@
 
   <item
     android:id="@+id/action_voters"
-    android:title="Voters"
+    android:title="@string/voters"
     app:actionLayout="@layout/action_counter"
     app:showAsAction="always"/>
 </menu>

@@ -7,24 +7,23 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.graphics.Color;
 import android.graphics.Path;
-import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AlertDialog.Builder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Html;
@@ -37,6 +36,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewAnimationUtils;
+import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
@@ -44,16 +44,22 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.arangurr.sonar.Constants;
+import com.arangurr.sonar.GsonUtils;
 import com.arangurr.sonar.PersistenceUtils;
 import com.arangurr.sonar.R;
+import com.arangurr.sonar.data.Option;
 import com.arangurr.sonar.data.Poll;
 import com.arangurr.sonar.data.Question;
+import java.util.List;
 import java.util.UUID;
 
 public class EditorActivity extends AppCompatActivity implements View.OnClickListener {
@@ -65,13 +71,14 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   private CardView mFabCard;
   private CardView mConfigCard;
   private EditorRecyclerAdapter mAdapter;
+  private FloatingActionButton mFab;
+
+  private Menu mMenu;
 
   private boolean mIsCardAnimating = false;
   private boolean mIsFabAnimating = false;
 
   private Poll mPoll;
-  private FloatingActionButton mFab;
-  private OnSharedPreferenceChangeListener mPreferenceChangeListener;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -80,23 +87,24 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_editor);
     setSupportActionBar(toolbar);
 
-    if (savedInstanceState == null
-        || savedInstanceState.getSerializable(Constants.EXTRA_POLL_ID) == null) {
-      mPoll = new Poll(this);
-    } else {
-      UUID possibleId = (UUID) savedInstanceState.getSerializable(Constants.EXTRA_POLL_ID);
-      if (possibleId != null) {
-        mPoll = PersistenceUtils.fetchPollWithId(this, possibleId);
+    if (savedInstanceState == null) {
+      Bundle extras = getIntent().getExtras();
+      if (extras != null) {
+        UUID pollId = (UUID) extras.getSerializable(Constants.EXTRA_POLL_ID);
+        mPoll = PersistenceUtils.fetchPollWithId(this, pollId);
+      } else {
+        mPoll = new Poll(this);
       }
-    }
-
-    if (mPoll == null) {
-      mPoll = new Poll(this);
+    } else {
+      mPoll = GsonUtils.deserializeGson(
+          (String) savedInstanceState.getSerializable(Constants.EXTRA_SERIALIZED_POLL),
+          Poll.class);
     }
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_24dp);
-    toolbar.getNavigationIcon().mutate().setColorFilter(Color.WHITE, Mode.SRC_IN);
+    Drawable clearDrawable = getDrawable(R.drawable.ic_clear_24dp);
+    clearDrawable.mutate().setTint(ContextCompat.getColor(this, R.color.colorPrimaryTextDark));
+    getSupportActionBar().setHomeAsUpIndicator(clearDrawable);
 
     mPasswordCheckbox = (CheckBox) findViewById(R.id.checkbox_card_config_password);
     mPasswordEditText = (EditText) findViewById(R.id.edittext_card_config_password);
@@ -107,7 +115,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     mConfigCard = (CardView) findViewById(R.id.card_editor_config);
     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_editor);
 
-    mAdapter = new EditorRecyclerAdapter(mPoll);
+    mAdapter = new EditorRecyclerAdapter();
     recyclerView.setAdapter(mAdapter);
 
     recyclerView.setOnTouchListener(new OnTouchListener() {
@@ -195,35 +203,12 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
       }
     });
-
     mFab.setOnClickListener(this);
-
-    mPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
-      @Override
-      public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        mAdapter.notifyDataSetChanged();
-      }
-    };
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-    getSharedPreferences(Constants.PREFS_POLLS, MODE_PRIVATE)
-        .registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
-  }
-
-  @Override
-  protected void onPause() {
-    super.onPause();
-    getSharedPreferences(Constants.PREFS_POLLS, MODE_PRIVATE)
-        .unregisterOnSharedPreferenceChangeListener(mPreferenceChangeListener);
   }
 
   @Override
   protected void onSaveInstanceState(Bundle outState) {
-    PersistenceUtils.storePollInPreferences(this, mPoll);
-    outState.putSerializable(Constants.EXTRA_POLL_ID, mPoll.getUuid());
+    outState.putSerializable(Constants.EXTRA_SERIALIZED_POLL, GsonUtils.serialize(mPoll));
     super.onSaveInstanceState(outState);
   }
 
@@ -236,19 +221,19 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         }
         break;
       case R.id.textview_card_binary:
-        showBinaryDialog(v.getContext());
+        showBinaryDialog(v.getContext(), null);
         if (!mIsFabAnimating) {
           reverseFabTransform();
         }
         break;
       case R.id.textview_card_multiple:
-        showMultiDialog(v.getContext());
+        showMultiDialog(v.getContext(), null);
         if (!mIsFabAnimating) {
           reverseFabTransform();
         }
         break;
       case R.id.textview_card_rate:
-        showRateDialog(v.getContext());
+        showRateDialog(v.getContext(), null);
         if (!mIsFabAnimating) {
           reverseFabTransform();
         }
@@ -268,6 +253,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
+    mMenu = menu;
     getMenuInflater().inflate(R.menu.menu_editor, menu);
     return super.onCreateOptionsMenu(menu);
   }
@@ -277,9 +263,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     switch (item.getItemId()) {
       case R.id.action_config:
         boolean isCardShown = mConfigCard.getVisibility() == View.VISIBLE;
-        Drawable icon = item.getIcon();
         if (!mIsCardAnimating) {
-          rotateIcon(icon, isCardShown);
           if (isCardShown) {
             reverseRevealSettingsCard();
           } else {
@@ -289,33 +273,80 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         }
         return true;
       case android.R.id.home:
-        PersistenceUtils.deletePoll(this, mPoll.getUuid());
-        finish();
-        return true;
-      case R.id.action_done:
-        if (mPoll.getQuestionList().size() == 0) {
-          PersistenceUtils.deletePoll(this, mPoll);
+        String title = mPoll.getPollTitle();
+        if (!mPoll.getQuestionList().isEmpty() || (title != null && !title.isEmpty())) {
+          showConfirmationDialog();
+          return true;
         } else {
-          if (mPoll.getPollTitle() == null) {
-            mPoll.setPollTitle("Untitled poll");
-          }
-          PersistenceUtils.storePollInPreferences(this, mPoll);
+          finish();
+          return true;
         }
-        finish();
+      case R.id.action_done:
+        String pollTitle = mPoll.getPollTitle();
+        if (pollTitle == null || pollTitle.isEmpty()) {
+          String username = PersistenceUtils.getUser(this);
+          TextInputEditText editText = (TextInputEditText) findViewById(
+              R.id.edittext_editor_title);
+          if (username != null) {
+            editText.setText(String.format(getString(R.string.poll_untitled_editor), username));
+            editText.selectAll();
+          }
+          editText.requestFocus();
+          return true;
+        } else {
+          PersistenceUtils.storePollInPreferences(this, mPoll);
+          finish();
+        }
       default:
         return super.onOptionsItemSelected(item);
     }
   }
 
   @Override
-  protected void onStop() {
-    super.onStop();
-    if (mPoll.getPollTitle() == null && mPoll.getQuestionList().size() == 0) {
-      PersistenceUtils.deletePoll(this, mPoll);
+  public void onBackPressed() {
+    if (mConfigCard.getVisibility() == View.VISIBLE) {
+      reverseRevealSettingsCard();
+      return;
     }
+    if (mFabCard.getVisibility() == View.VISIBLE) {
+      reverseFabTransform();
+      return;
+    }
+
+    if (!mPoll.getQuestionList().isEmpty() ||
+        (mPoll.getPollTitle() != null && !mPoll.getPollTitle().isEmpty())) {
+      showConfirmationDialog();
+      return;
+    }
+    super.onBackPressed();
   }
 
-  private void showBinaryDialog(Context context) {
+  private void showConfirmationDialog() {
+    AlertDialog.Builder builder = new Builder(this);
+    builder.setMessage(R.string.do_you_really_want_to_exit)
+        .setPositiveButton(R.string.save, new OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            PersistenceUtils.storePollInPreferences(EditorActivity.this, mPoll);
+            finish();
+          }
+        })
+        .setNegativeButton(R.string.discard, new OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            EditorActivity.super.onBackPressed();
+          }
+        });
+    AlertDialog dialog = builder.create();
+    dialog.show();
+  }
+
+  private void inlineAddQuestion(Question question) {
+    mPoll.addQuestion(question);
+    mAdapter.notifyItemInserted(mPoll.getQuestionList().size() + 1);
+  }
+
+  private void showBinaryDialog(Context context, @Nullable Question question) {
     final boolean[] flags = {
         false,  // Title
         true   // Custom & two options
@@ -328,42 +359,59 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     final EditText option2 = (EditText) dialogView.findViewById(R.id.edittext_binary_option2);
     final RadioGroup radiogroup = (RadioGroup) dialogView.findViewById(R.id.radiogroup_binary);
 
+    if (question != null) {
+      title.setText(question.getTitle());
+      flags[0] = !question.getTitle().isEmpty();
+      int mode = question.getQuestionMode();
+      if (mode == Constants.BINARY_MODE_YESNO) {
+        radiogroup.check(R.id.radiobutton_binary_yesno);
+      } else if (mode == Constants.BINARY_MODE_TRUEFALSE) {
+        radiogroup.check(R.id.radiobutton_binary_truefalse);
+      } else {
+        option1.setText(question.getOption(0).getOptionName());
+        option2.setText(question.getOption(1).getOptionName());
+        option1.setVisibility(View.VISIBLE);
+        option2.setVisibility(View.VISIBLE);
+        radiogroup.check(R.id.radiobutton_binary_custom);
+      }
+    } else {
+      question = new Question();
+    }
+
     AlertDialog.Builder dialogBuilder = new Builder(context);
+    final Question finalQuestion = question;
     dialogBuilder
         .setPositiveButton(android.R.string.ok, new OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            Question question;
+            finalQuestion.getAllOptions().clear();
             switch (radiogroup.getCheckedRadioButtonId()) {
               case R.id.radiobutton_binary_yesno:
-                question = new Question(
-                    title.getText().toString(),
-                    Constants.BINARY_MODE_YESNO);
+                finalQuestion.setMode(Constants.BINARY_MODE_YESNO);
                 break;
               case R.id.radiobutton_binary_truefalse:
-                question = new Question(
-                    title.getText().toString(),
-                    Constants.BINARY_MODE_TRUEFALSE);
+                finalQuestion.setMode(Constants.BINARY_MODE_TRUEFALSE);
                 break;
               default:
-                question = new Question(
-                    title.getText().toString(),
-                    Constants.BINARY_MODE_CUSTOM);
-                question.addOption(option1.getText().toString());
-                question.addOption(option2.getText().toString());
+                finalQuestion.setMode(Constants.BINARY_MODE_CUSTOM);
+                finalQuestion.addOption(option1.getText().toString());
+                finalQuestion.addOption(option2.getText().toString());
             }
-            mPoll.addQuestion(question);
-            mAdapter.notifyDataSetChanged();
+            if (finalQuestion.getKey() == null) {
+              inlineAddQuestion(finalQuestion);
+            } else {
+              substituteQuestion(finalQuestion);
+            }
           }
         })
         .setNegativeButton(android.R.string.cancel, null)
         .setView(dialogView)
-        .setTitle("Binary Question");
+        .setTitle(getString(R.string.binary));
 
     final AlertDialog dialog = dialogBuilder.create();
     dialog.show();
 
-    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+    enablePositiveButton(dialog, flags);
 
     radiogroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
       @Override
@@ -395,6 +443,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       @Override
       public void afterTextChanged(Editable s) {
         flags[0] = s.length() > 0;
+        finalQuestion.setTitle(s.toString());
         enablePositiveButton(dialog, flags);
       }
     });
@@ -434,7 +483,17 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     });
   }
 
-  private void showRateDialog(Context context) {
+  private void substituteQuestion(Question question) {
+    for (Question questionInList : mPoll.getQuestionList()) {
+      if (questionInList.getKey().equals(question.getKey())) {
+        int index = mPoll.getQuestionList().indexOf(questionInList);
+        mPoll.getQuestionList().set(index, question);
+        mAdapter.notifyItemChanged(index + 1);
+      }
+    }
+  }
+
+  private void showRateDialog(Context context, Question question) {
     final boolean[] flags = {
         false, // Has Title
         true, // Custom & min & max
@@ -448,49 +507,66 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     final EditText max = (EditText) dialogView.findViewById(R.id.edittext_rate_max);
     final RadioGroup radiogroup = (RadioGroup) dialogView.findViewById(R.id.radiogroup_rate);
 
+    if (question != null) {
+      title.setText(question.getTitle());
+      flags[0] = !question.getTitle().isEmpty();
+      int mode = question.getQuestionMode();
+      if (mode == Constants.RATE_MODE_LIKEDISLIKE) {
+        radiogroup.check(R.id.radiobutton_rate_likedislike);
+      } else if (mode == Constants.RATE_MODE_SCORE) {
+        radiogroup.check(R.id.radiobutton_rate_score);
+      } else if (mode == Constants.RATE_MODE_STARS) {
+        radiogroup.check(R.id.radiobutton_rate_stars);
+      } else {
+        min.setText(question.getOption(0).getOptionName());
+        max.setText(question.getOption(question.getAllOptions().size() - 1).getOptionName());
+        radiogroup.check(R.id.radiobutton_rate_custom);
+        min.setVisibility(View.VISIBLE);
+        max.setVisibility(View.VISIBLE);
+      }
+    } else {
+      question = new Question();
+    }
+
     AlertDialog.Builder dialogBuilder = new Builder(context);
+    final Question finalQuestion = question;
     dialogBuilder
         .setPositiveButton(android.R.string.ok, new OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            Question rateQuestion;
+            finalQuestion.getAllOptions().clear();
             switch (radiogroup.getCheckedRadioButtonId()) {
               case R.id.radiobutton_rate_stars:
-                rateQuestion = new Question(
-                    title.getText().toString(),
-                    Constants.RATE_MODE_STARS);
+                finalQuestion.setMode(Constants.RATE_MODE_STARS);
                 break;
               case R.id.radiobutton_rate_likedislike:
-                rateQuestion = new Question(
-                    title.getText().toString(),
-                    Constants.RATE_MODE_LIKEDISLIKE);
+                finalQuestion.setMode(Constants.RATE_MODE_LIKEDISLIKE);
                 break;
               case R.id.radiobutton_rate_score:
-                rateQuestion = new Question(
-                    title.getText().toString(),
-                    Constants.RATE_MODE_SCORE);
+                finalQuestion.setMode(Constants.RATE_MODE_SCORE);
                 break;
               default:
-                rateQuestion = new Question(
-                    title.getText().toString(),
-                    Constants.RATE_MODE_CUSTOM);
-                rateQuestion.setRateCustomLowHigh(
+                finalQuestion.setMode(Constants.RATE_MODE_CUSTOM);
+                finalQuestion.setRateCustomLowHigh(
                     Integer.valueOf(min.getText().toString()),
                     Integer.valueOf(max.getText().toString()));
                 break;
             }
-            mPoll.addQuestion(rateQuestion);
-            mAdapter.notifyDataSetChanged();
+            if (finalQuestion.getKey() == null) {
+              inlineAddQuestion(finalQuestion);
+            } else {
+              substituteQuestion(finalQuestion);
+            }
           }
         })
         .setNegativeButton(android.R.string.cancel, null)
         .setView(dialogView)
-        .setTitle("Rate Question");
+        .setTitle(getString(R.string.rate));
 
     final AlertDialog dialog = dialogBuilder.create();
     dialog.show();
 
-    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+    enablePositiveButton(dialog, flags);
 
     radiogroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
       @Override
@@ -520,6 +596,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       @Override
       public void afterTextChanged(Editable s) {
         flags[0] = s.length() > 0;
+        finalQuestion.setTitle(s.toString());
         enablePositiveButton(dialog, flags);
       }
     });
@@ -559,7 +636,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     });
   }
 
-  private void showMultiDialog(Context context) {
+  private void showMultiDialog(Context context, @Nullable Question question) {
     final boolean[] flags = {
         false,  // Has a title
         false   // Has at least two options
@@ -573,59 +650,98 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     final EditText title = (EditText) dialogView.findViewById(R.id.edittext_multi_title);
     final CheckBox checkBox = (CheckBox) dialogView.findViewById(R.id.checkbox_multi);
 
-//    final TextWatcher removerWatcher = new TextWatcher() {
-//
-//      @Override
-//      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//      }
-//
-//      @Override
-//      public void onTextChanged(CharSequence s, int start, int before, int count) {
-//      }
-//
-//      @Override
-//      public void afterTextChanged(Editable s) {
-//        if (s.length() == 0) {
-//          container.removeViewAt(container.getChildCount() - 1);
-//        }
-//      }
-//    };
+    if (question != null) {
+      title.setText(question.getTitle());
+      flags[0] = !question.getTitle().isEmpty();
+      checkBox.setChecked(question.getQuestionMode() == Constants.MULTI_MODE_MULTIPLE);
+      container.removeView(container.findViewById(R.id.edittext_multi_option0));
+      EditText editText = (EditText) LayoutInflater.from(context)
+          .inflate(R.layout.editor_dialog_multi_option, container, false);
+      for (Option option : question.getAllOptions()) {
+        editText.setText(option.getOptionName());
+        container.addView(editText);
+      }
+      container.addView(editText);
+      flags[1] = container.getChildCount() > 4; // Includes Title. I want at least 2 options.
+    } else {
+      question = new Question();
+    }
 
     AlertDialog.Builder dialogBuilder = new Builder(context);
+    final Question finalQuestion = question;
     dialogBuilder
         .setNegativeButton(android.R.string.cancel, null)
         .setPositiveButton(android.R.string.ok, new OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            Question question;
-            question = new Question(title.getText().toString(),
-                checkBox.isChecked()
-                    ? Constants.MULTI_MODE_MULTIPLE
-                    : Constants.MULTI_MODE_EXCLUSIVE);
-
-            for (int tag = 0; ; tag++) {
-              View child = container.findViewWithTag(tag);
-              if (child == null) {
-                break;
-              }
-              String nameText = ((EditText) child).getText().toString();
-              if (!nameText.isEmpty()) {
-                question.addOption(nameText);
+            finalQuestion.getAllOptions().clear();
+            finalQuestion.setMode(checkBox.isChecked()
+                ? Constants.MULTI_MODE_MULTIPLE
+                : Constants.MULTI_MODE_EXCLUSIVE);
+            for (int i = 1; i < container.getChildCount(); i++) {
+              View child = container.getChildAt(i);
+              if (child != null) {
+                if (child instanceof EditText) {
+                  String nameText = ((EditText) child).getText().toString();
+                  if (!nameText.isEmpty()) {
+                    finalQuestion.addOption(nameText);
+                  }
+                }
               }
             }
-            mPoll.addQuestion(question);
-            mAdapter.notifyDataSetChanged();
+            if (finalQuestion.getKey() == null) {
+              inlineAddQuestion(finalQuestion);
+            } else {
+              substituteQuestion(finalQuestion);
+            }
           }
         })
         .setView(dialogView)
-        .setTitle("Multiple Option Question");
+        .setTitle(getString(R.string.multiple_options));
+
     final AlertDialog dialog = dialogBuilder.create();
 
     dialog.show();
     dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
 
-    final TextWatcher lastEditTextWatcher = new TextWatcher() {
+    enablePositiveButton(dialog, flags);
+
+    final TextWatcher removerWatcher = new TextWatcher() {
+
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+        if (s.length() == 0) {
+          for (int i = 1; i < container.getChildCount(); i++) {
+            if (container.getChildAt(i) instanceof EditText) {
+              // It's an editText, and it's not one of the first two. Let's find if it has text.
+              EditText candidate = (EditText) container.getChildAt(i);
+              if (candidate.getText().length() == 0) {
+                if (i == container.getChildCount() - 1) {
+                  // do nothing
+                } else {
+                  // It's empty. Can remove it.
+                  container.removeView(candidate);
+                  flags[1] =
+                      container.getChildCount() > 4; // Includes Title. I want at least 2 options.
+                  enablePositiveButton(dialog, flags);
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+    };
+
+    final TextWatcher adderWatcher = new TextWatcher() {
       @Override
       public void beforeTextChanged(CharSequence s, int start, int count, int after) {
       }
@@ -638,7 +754,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       public void afterTextChanged(Editable s) {
         if (s.length() != 0 && container.getChildCount() <= 11) {
           EditText lastEditText = (EditText) container
-              .findViewWithTag(container.getChildCount() - 3);
+              .getChildAt(container.getChildCount() - 1);
 
           EditText newEditText = (EditText) inflater
               .inflate(R.layout.editor_dialog_multi_option, container, false);
@@ -651,18 +767,25 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
           }
           container.addView(newEditText);
 
-          flags[1] = container.getChildCount() > 3;
+          flags[1] = container.getChildCount() > 4; // Includes Title. I want at least 2 options.
           enablePositiveButton(dialog, flags);
 
           lastEditText.removeTextChangedListener(this);
-          //lastEditText.addTextChangedListener(removerWatcher);
+          lastEditText.addTextChangedListener(removerWatcher);
         }
       }
     };
 
-    EditText firstEditText = (EditText) container.findViewById(R.id.edittext_multi_option0);
-    firstEditText.setTag(0);
-    firstEditText.addTextChangedListener(lastEditTextWatcher);
+    for (int i = 1; i < container.getChildCount(); i++) {
+      View view = container.getChildAt(i);
+      if (view instanceof EditText) {
+        if (i == container.getChildCount() - 1) {
+          ((EditText) view).addTextChangedListener(adderWatcher);
+        } else {
+          ((EditText) view).addTextChangedListener(removerWatcher);
+        }
+      }
+    }
 
     title.addTextChangedListener(new TextWatcher() {
       @Override
@@ -676,6 +799,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       @Override
       public void afterTextChanged(Editable s) {
         flags[0] = s.length() > 0;
+        finalQuestion.setTitle(s.toString());
         enablePositiveButton(dialog, flags);
       }
     });
@@ -692,7 +816,9 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(enable);
   }
 
-  private void rotateIcon(Drawable icon, boolean reverse) {
+  private void rotateIcon(boolean reverse) {
+    Drawable icon = mMenu.findItem(R.id.action_config).getIcon();
+
     ObjectAnimator animator = ObjectAnimator.ofInt(
         icon,
         "level",
@@ -745,7 +871,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
     // Color Overlay
     ColorDrawable fabColor = new ColorDrawable(
-        ContextCompat.getColor(this, R.color.colorAccentIntermediate));
+        ContextCompat.getColor(this, R.color.colorAccent));
     fabColor.setBounds(0, 0, mFabCard.getWidth(), mFabCard.getHeight());
     mFabCard.getOverlay().add(fabColor);
 
@@ -816,7 +942,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
 
     // Color Overlay
     ColorDrawable fabColor = new ColorDrawable(
-        ContextCompat.getColor(this, R.color.colorAccentIntermediate));
+        ContextCompat.getColor(this, R.color.colorAccent));
     fabColor.setBounds(0, 0, mFabCard.getWidth(), mFabCard.getHeight());
     fabColor.setAlpha(0);
     mFabCard.getOverlay().add(fabColor);
@@ -866,6 +992,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   }
 
   private void revealSettingsCard() {
+    rotateIcon(false);
     View action = findViewById(R.id.action_config);
     int[] location = new int[2];
     action.getLocationOnScreen(location);
@@ -897,6 +1024,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
   }
 
   private void reverseRevealSettingsCard() {
+    rotateIcon(true);
     View action = findViewById(R.id.action_config);
     int[] location = new int[2];
     action.getLocationOnScreen(location);
@@ -942,15 +1070,213 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     if (VERSION.SDK_INT >= VERSION_CODES.N) {
       message = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT);
     } else {
+      //noinspection deprecation
       message = Html.fromHtml(html);
     }
 
     Builder builder = new Builder(this);
-    builder.setTitle("What's this?")
+    builder.setTitle(R.string.help_dialog_title)
         .setMessage(message)
-        .setPositiveButton("Understood", null);
+        .setPositiveButton(R.string.understood, null);
 
     AlertDialog dialog = builder.create();
     dialog.show();
+  }
+
+  private class EditorRecyclerAdapter extends
+      RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int TYPE_EMPTY = 0;
+    private static final int TYPE_TITLE = 1;
+    private static final int TYPE_QUESTION = 2;
+
+    private List<Question> mItems;
+
+    EditorRecyclerAdapter() {
+      mItems = mPoll.getQuestionList();
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+      switch (viewType) {
+        case TYPE_TITLE:
+          return new TitleHolder(LayoutInflater.from(parent.getContext())
+              .inflate(R.layout.item_editor_title, parent, false));
+        case TYPE_QUESTION:
+          return new QuestionHolder(LayoutInflater.from(parent.getContext())
+              .inflate(R.layout.item_editor, parent, false));
+        case TYPE_EMPTY:
+          return new EmptyHolder(LayoutInflater.from(parent.getContext())
+              .inflate(R.layout.recyclerview_empty, parent, false));
+      }
+      return null;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+      if (position == 0) {
+        return TYPE_TITLE;
+      } else {
+        if (mItems.size() == 0) {
+          return TYPE_EMPTY;
+        } else {
+          return TYPE_QUESTION;
+        }
+      }
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+      switch (getItemViewType(position)) {
+        case TYPE_TITLE:
+          bindTitle((TitleHolder) holder);
+          break;
+        case TYPE_QUESTION:
+          bindQuestion((QuestionHolder) holder, position);
+          break;
+        case TYPE_EMPTY:
+          EmptyHolder emptyHolder = (EmptyHolder) holder;
+          emptyHolder.text.setText(R.string.empty_editor);
+      }
+    }
+
+    private void bindTitle(final TitleHolder holder) {
+      holder.mPollTitle.setHorizontallyScrolling(false);
+      holder.mPollTitle.setMaxLines(3);
+      if (mPoll.getPollTitle() != null) {
+        holder.mPollTitle.setText(mPoll.getPollTitle());
+      } else {
+        if (holder.mPollTitle.getText().length() == 0) {
+          holder.mPollTitle.requestFocus();
+        }
+      }
+
+      holder.mPollTitle.addTextChangedListener(new TextWatcher() {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+          mPoll.setPollTitle(s.toString());
+        }
+      });
+    }
+
+    private void bindQuestion(final QuestionHolder holder, int position) {
+      Question q = mItems.get(position - 1);
+
+      holder.mQuestionTitle.setText(q.getTitle());
+
+      Drawable drawable;
+      switch (q.getQuestionMode()) {
+        case Constants.BINARY_MODE_CUSTOM:
+        case Constants.BINARY_MODE_TRUEFALSE:
+        case Constants.BINARY_MODE_YESNO:
+          drawable = ContextCompat
+              .getDrawable(holder.itemView.getContext(), R.drawable.ic_binary_24dp);
+          break;
+        case Constants.MULTI_MODE_EXCLUSIVE:
+        case Constants.MULTI_MODE_MULTIPLE:
+          drawable = ContextCompat
+              .getDrawable(holder.itemView.getContext(), R.drawable.ic_multiple_24dp);
+          break;
+        case Constants.RATE_MODE_CUSTOM:
+        case Constants.RATE_MODE_LIKEDISLIKE:
+        case Constants.RATE_MODE_SCORE:
+        case Constants.RATE_MODE_STARS:
+          drawable = ContextCompat
+              .getDrawable(holder.itemView.getContext(), R.drawable.ic_thumbs_24dp);
+          break;
+        default:
+          drawable = ContextCompat
+              .getDrawable(holder.itemView.getContext(), R.drawable.ic_circle_24dp);
+      }
+      holder.mImageView.setImageDrawable(drawable);
+
+      StringBuilder sb = new StringBuilder();
+      sb.append("Options:");
+      for (Option o : mItems.get(position - 1).getAllOptions()) {
+        sb.append("\t\t");
+        sb.append(o.getOptionName());
+      }
+      holder.mQuestionSubtitle.setText(sb.toString());
+
+      holder.mDeleteButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          int position = holder.getAdapterPosition();
+          mPoll.getQuestionList().remove(position - 1);
+          mAdapter.notifyItemRemoved(position);
+        }
+      });
+
+      holder.itemView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          Question clickedQuestion = mItems.get(holder.getAdapterPosition() - 1);
+          int questionType = clickedQuestion.getQuestionMode();
+          switch (questionType) {
+            case Constants.BINARY_MODE_CUSTOM:
+            case Constants.BINARY_MODE_TRUEFALSE:
+            case Constants.BINARY_MODE_YESNO:
+              showBinaryDialog(v.getContext(), clickedQuestion);
+              break;
+            case Constants.MULTI_MODE_EXCLUSIVE:
+            case Constants.MULTI_MODE_MULTIPLE:
+              showMultiDialog(v.getContext(), clickedQuestion);
+              break;
+            case Constants.RATE_MODE_CUSTOM:
+            case Constants.RATE_MODE_LIKEDISLIKE:
+            case Constants.RATE_MODE_SCORE:
+            case Constants.RATE_MODE_STARS:
+              showRateDialog(v.getContext(), clickedQuestion);
+              break;
+            default:
+              Toast.makeText(EditorActivity.this, clickedQuestion.getTitle(), Toast.LENGTH_SHORT)
+                  .show();
+          }
+        }
+      });
+    }
+
+    @Override
+    public int getItemCount() {
+      return mItems.size() == 0 ? 2 : mItems.size() + 1;
+    }
+
+    class QuestionHolder extends ViewHolder {
+
+      private ImageView mImageView;
+      private TextView mQuestionTitle;
+      private TextView mQuestionSubtitle;
+      private ImageButton mDeleteButton;
+
+      QuestionHolder(View itemView) {
+        super(itemView);
+        mImageView = (ImageView) itemView.findViewById(R.id.imageview_editor_item);
+        mQuestionTitle = (TextView) itemView.findViewById(R.id.textview_editor_item_text1);
+        mQuestionSubtitle = (TextView) itemView.findViewById(R.id.textview_editor_item_text2);
+        mDeleteButton = (ImageButton) itemView.findViewById(R.id.imagebutton_editor_item_delete);
+      }
+
+    }
+
+    class TitleHolder extends ViewHolder {
+
+      private EditText mPollTitle;
+
+      TitleHolder(View itemView) {
+        super(itemView);
+        mPollTitle = (EditText) itemView.findViewById(R.id.edittext_editor_title);
+      }
+    }
   }
 }

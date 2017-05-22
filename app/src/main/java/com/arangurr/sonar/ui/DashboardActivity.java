@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.text.SpannableString;
 import android.text.format.DateUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -212,15 +216,15 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public void onBindViewHolder(ViewHolder holder, int i) {
       if (getItemViewType(i) == TYPE_EMPTY) {
         EmptyHolder emptyHolder = (EmptyHolder) holder;
-        emptyHolder.text.setText(
-            "Welcome!\n\nYou can start by creating a new poll\nor by listening for nearby ones");
+        emptyHolder.text.setText(R.string.dashboard_welcome);
       } else {
         final Poll poll = mPolls.get(i);
         final PollHolder pollHolder = (PollHolder) holder;
 
         pollHolder.mTitle.setText(poll.getPollTitle());
-        pollHolder.mSubtitle
-            .setText(String.format("%d questions", poll.getQuestionList().size()));
+        pollHolder.mSubtitle.setText(String
+            .format(getString(R.string.dashboard_question_counter), poll.getQuestionList().size()));
+        // TODO: 19/05/2017 plural
         Date date = new Date(poll.getStartDate());
         pollHolder.mDate.setText(DateUtils.getRelativeTimeSpanString(
             date.getTime(),
@@ -228,7 +232,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             DateUtils.MINUTE_IN_MILLIS,
             DateUtils.FORMAT_ABBREV_ALL));
         pollHolder.mCircle.setText(String.valueOf(poll.getNumberOfVotes()));
-        //pollHolder.mCircle.getBackground().setAlpha(96);
 
         int[] rainbow = getResources().getIntArray(R.array.rainbow);
         int index = Math.abs(poll.getUuid().hashCode()) % rainbow.length;
@@ -246,10 +249,19 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
         pollHolder.mPopupButton.setOnClickListener(new OnClickListener() {
           @Override
-          public void onClick(View v) {
+          public void onClick(final View v) {
             PopupMenu popup = new PopupMenu(v.getContext(), v);
             MenuInflater menuInflater = popup.getMenuInflater();
             menuInflater.inflate(R.menu.popup_dashboard, popup.getMenu());
+
+            if (poll.getNumberOfVotes() != 0) {
+              MenuItem editItem = popup.getMenu().findItem(R.id.action_popup_edit);
+              SpannableString s = new SpannableString(editItem.getTitle().toString());
+              s.setSpan(new ForegroundColorSpan(
+                      ContextCompat.getColor(v.getContext(), R.color.colorDisabledText)),
+                  0, s.length(), 0);
+              editItem.setTitle(s);
+            }
 
             popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
               @Override
@@ -258,6 +270,23 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                   case R.id.action_popup_delete:
                     UUID pollToRemove = poll.getUuid();
                     PersistenceUtils.deletePoll(getApplicationContext(), pollToRemove);
+                    return true;
+                  case R.id.action_popup_activate:
+                    Intent activate = new Intent(DashboardActivity.this, DetailsActivity.class);
+                    activate.putExtra(Constants.EXTRA_POLL_ID, poll.getUuid());
+                    activate.putExtra(Constants.EXTRA_ACTIVATE, 0b1);
+                    startActivity(activate);
+                    return true;
+                  case R.id.action_popup_edit:
+                    if (poll.getNumberOfVotes() > 0) {
+                      Snackbar.make(v, R.string.edit_only_without_answers,
+                          Snackbar.LENGTH_LONG).show();
+                    } else {
+                      Intent editIntent = new Intent(DashboardActivity.this, EditorActivity.class);
+                      editIntent
+                          .putExtra(Constants.EXTRA_POLL_ID, poll.getUuid());
+                      startActivity(editIntent);
+                    }
                     return true;
                   default:
                     return false;
@@ -297,16 +326,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         mSubtitle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_subtitle);
         mCircle = (TextView) itemView.findViewById(R.id.textview_dashboard_item_circle);
         mPopupButton = (ImageButton) itemView.findViewById(R.id.button_dashboard_item_popup);
-      }
-    }
-
-    class EmptyHolder extends RecyclerView.ViewHolder {
-
-      TextView text;
-
-      public EmptyHolder(View itemView) {
-        super(itemView);
-        text = (TextView) itemView.findViewById(R.id.textview_empty);
       }
     }
   }

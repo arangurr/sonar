@@ -61,6 +61,7 @@ import com.google.android.gms.nearby.messages.PublishOptions;
 import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeCallback;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
+import com.google.android.gms.nearby.messages.SubscribeOptions.Builder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -115,6 +116,10 @@ public class DetailsActivity extends AppCompatActivity implements
     LinearLayout bottomSheet = (LinearLayout) findViewById(R.id.bottomsheet_details);
     mChronometer = (Chronometer) findViewById(R.id.chronometer_details);
     mCounterTextView = (TextView) findViewById(R.id.textview_details_counter);
+
+    if (extras != null && extras.containsKey(Constants.EXTRA_ACTIVATE)) {
+      mToggleButton.setChecked(true);
+    }
 
     final BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
     behavior.setBottomSheetCallback(new BottomSheetCallback() {
@@ -186,7 +191,8 @@ public class DetailsActivity extends AppCompatActivity implements
               case Constants.PRIVACY_PUBLIC:
               case Constants.PRIVACY_PRIVATE:
                 mStatusTextView.setText(
-                    String.format("Got vote from %s", v.getVoterIdPair().getUserName()));
+                    String.format(getString(R.string.received_vote_from),
+                        v.getVoterIdPair().getUserName()));
                 break;
               case Constants.PRIVACY_SECRET:
                 // Do nothing
@@ -194,7 +200,8 @@ public class DetailsActivity extends AppCompatActivity implements
             }
             mCurrentPoll.updateWithVote(v);
             mVoteCount++;
-            mCounterTextView.setText(String.format("%d votes in this session", mVoteCount));
+            mCounterTextView
+                .setText(String.format(getString(R.string.received_votes_counter), mVoteCount));
             PersistenceUtils.storePollInPreferences(getBaseContext(), mCurrentPoll);
             mAdapter.notifyDataSetChanged();
             supportInvalidateOptionsMenu();
@@ -284,7 +291,7 @@ public class DetailsActivity extends AppCompatActivity implements
   }
 
   private void subscribe() {
-    SubscribeOptions subscribeOptions = new SubscribeOptions.Builder()
+    SubscribeOptions subscribeOptions = new Builder()
         .setStrategy(new Strategy.Builder()
             .setTtlSeconds(Constants.TTL_10MIN)
             .setDistanceType(Strategy.DISTANCE_TYPE_EARSHOT)
@@ -295,7 +302,7 @@ public class DetailsActivity extends AppCompatActivity implements
             super.onExpired();
             Log.d(TAG, "Subscription expired");
             mStatusProgressBar.setVisibility(View.INVISIBLE);
-            mStatusTextView.setText("Stopping...");
+            mStatusTextView.setText(R.string.status_stopping);
             mToggleButton.postDelayed(new Runnable() {
               @Override
               public void run() {
@@ -315,7 +322,7 @@ public class DetailsActivity extends AppCompatActivity implements
           public void onResult(@NonNull Status status) {
             if (status.isSuccess()) {
               Log.d(TAG, "Subscribed successfully");
-              mStatusTextView.append("\nNow listening for votes");
+              mStatusTextView.append(getString(R.string.status_listening_votes));
             } else {
               Log.d(TAG, "Couldn't subscribe due to status = " + status);
             }
@@ -323,7 +330,7 @@ public class DetailsActivity extends AppCompatActivity implements
         });
 
     Log.d(TAG, "Trying to subscribe");
-    mStatusTextView.append("\nStarting to listen for votes");
+    mStatusTextView.append(getString(R.string.status_trying_listening_votes));
   }
 
   private void publish() {
@@ -342,7 +349,7 @@ public class DetailsActivity extends AppCompatActivity implements
           public void onExpired() {
             Log.d(TAG, "Publish expired");
             mStatusTextView
-                .setText("Poll no longer available.\nWaiting for votes a little longer...");
+                .setText(R.string.status_publish_expired);
             super.onExpired();
           }
         })
@@ -354,7 +361,7 @@ public class DetailsActivity extends AppCompatActivity implements
           public void onResult(@NonNull Status status) {
             if (status.isSuccess()) {
               Log.d(TAG, "Published successfully");
-              mStatusTextView.setText("Poll is available");
+              mStatusTextView.setText(R.string.status_poll_available);
             } else {
               Log.d(TAG, "Couldn't publish due to status = " + status);
             }
@@ -362,7 +369,7 @@ public class DetailsActivity extends AppCompatActivity implements
         });
     Log.d(TAG, "Trying to publish");
     mStatusProgressBar.setVisibility(View.VISIBLE);
-    mStatusTextView.setText("Trying to make poll available");
+    mStatusTextView.setText(R.string.status_trying_poll_available);
   }
 
   private void unsubscribe() {
@@ -420,7 +427,7 @@ public class DetailsActivity extends AppCompatActivity implements
     }
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle("Voted by")
+    builder.setTitle(R.string.voted_by)
         .setMessage(stringBuilder.toString())
         .show();
   }
@@ -585,7 +592,7 @@ public class DetailsActivity extends AppCompatActivity implements
         ProgressBar progressBar = (ProgressBar) rowView
             .findViewById(R.id.progressbar_item_card_option_progress);
 
-        name.setText("Rating: " + o.getOptionName());
+        name.setText(String.format(getString(R.string.details_rate_name), o.getOptionName()));
         counter.setText(String.valueOf(o.getNumberOfVotes()));
 
         counter.setOnClickListener(new OnClickListener() {
@@ -606,7 +613,8 @@ public class DetailsActivity extends AppCompatActivity implements
 
       float average = voters > 0 ? ((float) sum / voters) : 0;
 
-      holder.summary.setText("Average rating: " + String.valueOf(average));
+      holder.summary.setText(
+          String.format(getString(R.string.rating_details_average), String.valueOf(average)));
     }
 
     private void expandOrCollapseWithAnimation(TextView header, ViewSwitcher switcher) {
@@ -651,8 +659,6 @@ public class DetailsActivity extends AppCompatActivity implements
           && mCurrentPoll.getPrivacySetting() == Constants.PRIVACY_PUBLIC);
       holder.like.setClickable(voteLike > 0
           && mCurrentPoll.getPrivacySetting() == Constants.PRIVACY_PUBLIC);
-
-      // TODO: 18/05/2017 disable click if poll is private
 
       if (voteDislike + voteLike > 0) {
         int[] progressColors = getResources().getIntArray(R.array.progress_like_dislike);
@@ -748,8 +754,8 @@ public class DetailsActivity extends AppCompatActivity implements
 
       if (voters > 0) {
         List<Option> mostVoted = q.getMostVotedOptions();
+        StringBuilder summary = new StringBuilder(getString(R.string.summary_most_voted));
         if (mostVoted.size() != 1) {
-          StringBuilder summary = new StringBuilder("Most voted options: ");
           for (Option o : mostVoted) {
             summary.append(o.getOptionName());
             summary.append(", ");
@@ -758,10 +764,11 @@ public class DetailsActivity extends AppCompatActivity implements
           summary.deleteCharAt(summary.length() - 1);  // This deletes last ", "
           holder.summary.setText(summary.toString());
         } else {
-          holder.summary.setText("Most voted option: " + mostVoted.get(0).getOptionName());
+          summary.append(mostVoted.get(0).getOptionName());
+          holder.summary.setText(summary.toString());
         }
       } else {
-        holder.summary.setText("No votes yet");
+        holder.summary.setText(R.string.summary_no_votes);
       }
     }
 

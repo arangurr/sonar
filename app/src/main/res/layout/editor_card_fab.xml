@@ -32,7 +32,7 @@
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
         android:onClick="onClick"
-        android:text="Binary"
+        android:text="@string/binary"
         android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Menu"/>
 
       <TextView
@@ -46,7 +46,7 @@
         android:drawableStart="@drawable/ic_multiple_24dp"
         android:gravity="center_vertical"
         android:onClick="onClick"
-        android:text="Multiple options"
+        android:text="@string/multiple_options"
         android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Menu"/>
 
       <TextView
@@ -60,13 +60,13 @@
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
         android:onClick="onClick"
-        android:text="Rate"
+        android:text="@string/rate"
         android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Menu"/>
 
       <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccentIntermediate"
+        android:background="@color/colorAccent"
         android:clipToPadding="false">
         <TextView
           android:id="@+id/textview_card_close"
@@ -79,11 +79,11 @@
           android:drawableStart="@drawable/ic_clear_24dp"
           android:gravity="center_vertical"
           android:onClick="onClick"
-          android:text="Close"
+          android:text="@android:string/cancel"
           android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionBar.Menu"
           android:textColor="@color/colorPrimaryText"/>
       </FrameLayout>
-      
+
     </LinearLayout>
   </ScrollView>
 </android.support.v7.widget.CardView>

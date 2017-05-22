@@ -32,32 +32,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/item_height_small"
-        android:text="1 to 5 stars"/>
+        android:text="@string/option_stars"/>
       <RadioButton
         android:id="@+id/radiobutton_rate_likedislike"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/item_height_small"
-        android:text="Like/Dislike"/>
+        android:text="@string/option_like_dislike"/>
       <RadioButton
         android:id="@+id/radiobutton_rate_score"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/item_height_small"
-        android:text="0 to 10"/>
+        android:text="@string/option_zero_ten"/>
       <RadioButton
         android:id="@+id/radiobutton_rate_custom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/item_height_small"
-        android:text="Custom range"/>
+        android:text="@string/customize"/>
     </RadioGroup>
 
     <EditText
       android:id="@+id/edittext_rate_min"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:hint="Minimum"
+      android:hint="@string/minimum"
       android:imeOptions="flagNoExtractUi|actionNext"
       android:inputType="number|numberSigned"
       android:visibility="gone"
@@ -67,7 +67,7 @@
       android:id="@+id/edittext_rate_max"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:hint="Maximum"
+      android:hint="@string/maximum"
       android:imeOptions="flagNoExtractUi|actionDone"
       android:inputType="number|numberSigned"
       android:visibility="gone"

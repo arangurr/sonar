@@ -39,8 +39,8 @@
       android:paddingEnd="16dp"
       android:textAlignment="viewEnd"
       android:textColor="@color/colorPrimaryTextDark"
-      android:textOff="Activate"
-      android:textOn="Deactivate"/>
+      android:textOff="@string/activate"
+      android:textOn="@string/deactivate"/>
   </FrameLayout>
 
   <LinearLayout
@@ -56,7 +56,7 @@
       android:padding="8dp"
       android:drawablePadding="8dp"
       android:drawableTop="@drawable/ic_person_add"
-      android:text="No votes received in this session"
+      android:text="@string/status_no_votes_received"
       android:textAlignment="center"
       android:textAppearance="@android:style/TextAppearance.Material.Small"
       android:textColor="@color/colorPrimaryDark"/>
@@ -68,7 +68,7 @@
       android:padding="8dp"
       android:drawablePadding="8dp"
       android:drawableTop="@drawable/ic_timer_24dp"
-      android:format="%s elapsed"
+      android:format="@string/elapsed"
       android:textAlignment="center"
       android:textAppearance="@android:style/TextAppearance.Material.Small"
       android:textColor="@color/colorPrimaryDark"/>
