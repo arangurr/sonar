@@ -728,6 +728,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
                   // do nothing
                 } else {
                   // It's empty. Can remove it.
+                  container.requestFocus();
                   container.removeView(candidate);
                   flags[1] =
                       container.getChildCount() > 4; // Includes Title. I want at least 2 options.
