@@ -73,7 +73,7 @@
   <string name="status_listening_votes">Buscando respuestas</string>
   <string name="status_publish_expired">La encuesta ya no está disponible. Recogiendo respuestas un poco más…</string>
   <string name="status_searching">Buscando cuestionarios cercanos</string>
-  <string name="status_trying_listening_votes">Empezando a buscar votos</string>
+  <string name="status_trying_listening_votes">\nEmpezando a buscar votos</string>
   <string name="status_vote_sent">Voto enviado. Se puede salir ahora.</string>
   <string name="understood">Entendido</string>
   <string name="voted_by">Votos de</string>
