@@ -3,7 +3,13 @@ package com.arangurr.sonar.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
+import android.graphics.drawable.Icon;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +36,7 @@ import com.arangurr.sonar.R;
 import com.arangurr.sonar.data.Poll;
 import com.arangurr.sonar.data.Question;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -53,7 +60,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
           // Has been added or changed
           if (mAdapter.containsWithId(p.getUuid())) {
             // Has changed
-            // TODO: 27/04/2017 update polls 
+            // TODO: 27/04/2017 update polls
             //mAdapter.updatePoll(p);
           }
           // It's a new one.
@@ -69,6 +76,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     if (BuildConfig.DEBUG) {
       findViewById(R.id.fab_dashboard_add_debug).setVisibility(View.VISIBLE);
+    }
+
+    if (VERSION.SDK_INT >= VERSION_CODES.N_MR1) {
+      setupShortcuts();
     }
 
     mAdapter = new DashboardRecyclerAdapter(PersistenceUtils.fetchAllPolls(this));
@@ -88,6 +99,30 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     super.onPause();
     getSharedPreferences(Constants.PREFS_POLLS, MODE_PRIVATE)
         .unregisterOnSharedPreferenceChangeListener(mPreferenceChangeListener);
+  }
+
+  @RequiresApi(api = VERSION_CODES.N_MR1)
+  private void setupShortcuts() {
+    ShortcutManager manager = getSystemService(ShortcutManager.class);
+
+    Intent i = new Intent(this, ListenActivity.class);
+    i.setAction(Intent.ACTION_VIEW);
+
+    List<ShortcutInfo> shortcuts = manager.getDynamicShortcuts();
+
+    for (ShortcutInfo shortcutInList : shortcuts) {
+      if (shortcutInList.getId().equals("short_listen")) {
+        return;
+      }
+    }
+
+    ShortcutInfo shortcut = new ShortcutInfo.Builder(this, "short_listen")
+        .setShortLabel(getString(R.string.subscribe))
+        .setIcon(Icon.createWithResource(this, R.drawable.ic_shortcut_listen))
+        .setIntent(i)
+        .build();
+
+    manager.setDynamicShortcuts(Collections.singletonList(shortcut));
   }
 
   @Override
