@@ -85,4 +85,5 @@
   <string name="edit_only_without_answers">Sólo se pueden editar los cuestionarios que no contienen respuestas.</string>
   <string name="do_you_really_want_to_exit">Cualquier cambio se perderá. ¿Seguro que quieres salir?</string>
   <string name="status_trying_to_send">Intentando enviar tus respuestas</string>
+  <string name="discover">Descubrir</string>
 </resources>
