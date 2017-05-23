@@ -110,17 +110,19 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     List<ShortcutInfo> shortcuts = manager.getDynamicShortcuts();
 
-    for (ShortcutInfo shortcutInList : shortcuts) {
-      if (shortcutInList.getId().equals("short_listen")) {
-        return;
-      }
-    }
-
     ShortcutInfo shortcut = new ShortcutInfo.Builder(this, "short_listen")
-        .setShortLabel(getString(R.string.subscribe))
+        .setShortLabel(getString(R.string.discover))
+        .setLongLabel(getString(R.string.subscribe))
         .setIcon(Icon.createWithResource(this, R.drawable.ic_shortcut_listen))
         .setIntent(i)
         .build();
+
+    for (ShortcutInfo shortcutInList : shortcuts) {
+      if (shortcutInList.getId().equals("short_listen")) {
+        manager.updateShortcuts(Collections.singletonList(shortcut));
+        return;
+      }
+    }
 
     manager.setDynamicShortcuts(Collections.singletonList(shortcut));
   }
