@@ -26,7 +26,7 @@
   <string name="status_sending_answers">Enviando respuestas. No se recibirán si se cierra la aplicación.</string>
   <string name="status_trying_poll_available">Intentando poner disponible</string>
   <string name="subscribe">Descubrir encuestas cercanas</string>
-  <string name="summary_most_voted">Con más votos:</string>
+  <string name="summary_most_voted">Con más votos: </string>
   <string name="summary_no_votes">Sin respuestas aún</string>
   <string name="poll_title">Título del cuestionario</string>
   <string name="title_activity_editor">Editor</string>
