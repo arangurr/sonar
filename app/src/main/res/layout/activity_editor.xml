@@ -32,7 +32,7 @@
     android:layout_margin="@dimen/fab_margin"
     android:layout_gravity="bottom|end"
     android:tint="@color/colorPrimaryText"
-    app:srcCompat="@drawable/ic_add_24dp"/>
+    app:srcCompat="@drawable/ic_add"/>
 
   <include
     android:id="@+id/card_editor_config"

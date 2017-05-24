@@ -24,7 +24,7 @@
     android:layout_margin="@dimen/fab_margin"
     android:layout_gravity="bottom|end"
     android:onClick="onClick"
-    android:src="@drawable/ic_add_24dp"
+    android:src="@drawable/ic_add"
     android:tint="@color/colorPrimaryText"/>
 
   <android.support.design.widget.FloatingActionButton
@@ -34,7 +34,7 @@
     android:layout_margin="@dimen/fab_margin"
     android:layout_gravity="bottom|start"
     android:onClick="onClick"
-    android:src="@drawable/ic_bug_report_24dp"
+    android:src="@drawable/ic_debug"
     android:tint="@color/colorPrimaryText"
     android:visibility="gone"
     app:backgroundTint="@color/colorDislike"

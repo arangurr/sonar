@@ -3,12 +3,12 @@
 
   <item
     android:id="@+id/expanded"
-    android:drawable="@drawable/ic_arrow_up_24dp"
+    android:drawable="@drawable/ic_arrow_up"
     android:state_selected="true"/>
 
   <item
     android:id="@+id/collapsed"
-    android:drawable="@drawable/ic_arrow_down_24dp"/>
+    android:drawable="@drawable/ic_arrow_down"/>
 
   <transition
     android:drawable="@drawable/avd_collapse_to_expand"

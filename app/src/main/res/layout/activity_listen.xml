@@ -44,7 +44,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
     android:backgroundTint="@color/colorDislike"
-    android:drawableStart="@drawable/ic_bug_report_24dp"
+    android:drawableStart="@drawable/ic_debug"
     android:onClick="launchVotingUi"
     android:text="@string/debug_voting_ui"
     android:visibility="gone"

@@ -19,7 +19,7 @@
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
-    app:srcCompat="@drawable/ic_done_24dp"/>
+    app:srcCompat="@drawable/ic_done"/>
 
   <ScrollView
     android:layout_width="match_parent"

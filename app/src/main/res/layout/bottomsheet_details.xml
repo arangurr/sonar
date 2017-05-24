@@ -68,7 +68,7 @@
       android:layout_weight="1"
       android:padding="8dp"
       android:drawablePadding="8dp"
-      android:drawableTop="@drawable/ic_timer_24dp"
+      android:drawableTop="@drawable/ic_timer"
       android:format="@string/elapsed"
       android:textAlignment="center"
       android:textAppearance="@android:style/TextAppearance.Material.Small"

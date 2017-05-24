@@ -33,7 +33,7 @@
       android:background="@android:color/transparent"
       android:scaleType="fitCenter"
       android:stateListAnimator="@animator/selected"
-      app:srcCompat="@drawable/ic_thumb_down_24dp"/>
+      app:srcCompat="@drawable/ic_thumb_down"/>
 
     <ImageButton
       android:id="@+id/button_card_vote_like"
@@ -44,6 +44,6 @@
       android:background="@android:color/transparent"
       android:scaleType="fitCenter"
       android:stateListAnimator="@animator/selected"
-      app:srcCompat="@drawable/ic_thumb_up_24dp"/>
+      app:srcCompat="@drawable/ic_thumb_up"/>
   </LinearLayout>
 </android.support.v7.widget.CardView>

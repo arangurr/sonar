@@ -102,7 +102,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    Drawable clearDrawable = getDrawable(R.drawable.ic_clear_24dp);
+    Drawable clearDrawable = getDrawable(R.drawable.ic_clear);
     clearDrawable.mutate().setTint(ContextCompat.getColor(this, R.color.colorPrimaryTextDark));
     getSupportActionBar().setHomeAsUpIndicator(clearDrawable);
 
@@ -176,8 +176,8 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
         int[] privacyDrawables = {
-            R.drawable.ic_public_24dp,
-            R.drawable.ic_visibility_off_24dp,
+            R.drawable.ic_public,
+            R.drawable.ic_visibility_off,
             R.drawable.ic_incognito,
         };
 
@@ -877,7 +877,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     mFabCard.getOverlay().add(fabColor);
 
     // Icon Overlay
-    Drawable fabIcon = ContextCompat.getDrawable(this, R.drawable.ic_add_24dp).mutate();
+    Drawable fabIcon = ContextCompat.getDrawable(this, R.drawable.ic_add).mutate();
     fabIcon.setTint(ContextCompat.getColor(this, R.color.colorPrimaryText));
     int iconLeft = (mFabCard.getWidth() - fabIcon.getIntrinsicWidth()) / 2;
     int iconTop = (mFabCard.getHeight() - fabIcon.getIntrinsicHeight()) / 2;
@@ -949,7 +949,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
     mFabCard.getOverlay().add(fabColor);
 
     // Icon Overlay
-    Drawable fabIcon = ContextCompat.getDrawable(this, R.drawable.ic_add_24dp).mutate();
+    Drawable fabIcon = ContextCompat.getDrawable(this, R.drawable.ic_add).mutate();
     fabIcon.setTint(ContextCompat.getColor(this, R.color.colorPrimaryText));
     int iconLeft = (mFabCard.getWidth() - fabIcon.getIntrinsicWidth()) / 2;
     int iconTop = (mFabCard.getHeight() - fabIcon.getIntrinsicHeight()) / 2;
@@ -1182,23 +1182,23 @@ public class EditorActivity extends AppCompatActivity implements View.OnClickLis
         case Constants.BINARY_MODE_TRUEFALSE:
         case Constants.BINARY_MODE_YESNO:
           drawable = ContextCompat
-              .getDrawable(holder.itemView.getContext(), R.drawable.ic_binary_24dp);
+              .getDrawable(holder.itemView.getContext(), R.drawable.ic_binary);
           break;
         case Constants.MULTI_MODE_EXCLUSIVE:
         case Constants.MULTI_MODE_MULTIPLE:
           drawable = ContextCompat
-              .getDrawable(holder.itemView.getContext(), R.drawable.ic_multiple_24dp);
+              .getDrawable(holder.itemView.getContext(), R.drawable.ic_multiple);
           break;
         case Constants.RATE_MODE_CUSTOM:
         case Constants.RATE_MODE_LIKEDISLIKE:
         case Constants.RATE_MODE_SCORE:
         case Constants.RATE_MODE_STARS:
           drawable = ContextCompat
-              .getDrawable(holder.itemView.getContext(), R.drawable.ic_thumbs_24dp);
+              .getDrawable(holder.itemView.getContext(), R.drawable.ic_thumbs);
           break;
         default:
           drawable = ContextCompat
-              .getDrawable(holder.itemView.getContext(), R.drawable.ic_circle_24dp);
+              .getDrawable(holder.itemView.getContext(), R.drawable.ic_circle);
       }
       holder.mImageView.setImageDrawable(drawable);
 

@@ -822,7 +822,7 @@ public class DetailsActivity extends AppCompatActivity implements
             .findViewById(R.id.progressbar_item_card_option_progress);
 
         name.setText(option.getOptionName());
-        Drawable star = getDrawable(R.drawable.ic_star_24dp);
+        Drawable star = getDrawable(R.drawable.ic_star);
         star.setTint(ContextCompat.getColor(name.getContext(), R.color.colorRatePrimary));
         name.setCompoundDrawablePadding(8);
         name.setCompoundDrawablesWithIntrinsicBounds(star, null, null, null);

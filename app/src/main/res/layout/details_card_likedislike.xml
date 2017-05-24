@@ -39,7 +39,7 @@
         android:layout_gravity="start"
         android:padding="12dp"
         android:scaleType="fitStart"
-        app:srcCompat="@drawable/ic_thumb_down_24dp"/>
+        app:srcCompat="@drawable/ic_thumb_down"/>
 
       <TextView
         android:id="@+id/textview_details_item_count1"
@@ -65,7 +65,7 @@
         android:layout_gravity="start"
         android:padding="12dp"
         android:scaleType="fitStart"
-        app:srcCompat="@drawable/ic_thumb_up_24dp"/>
+        app:srcCompat="@drawable/ic_thumb_up"/>
 
       <TextView
         android:id="@+id/textview_details_item_count2"

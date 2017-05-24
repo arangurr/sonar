@@ -83,12 +83,12 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
         break;
       case Constants.PRIVACY_PRIVATE:
         mPrivacyTextView
-            .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_visibility_off_24dp, 0, 0, 0);
+            .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_visibility_off, 0, 0, 0);
         mPrivacyTextView.setText(R.string.voting_privacy_anonymous);
         break;
       case Constants.PRIVACY_PUBLIC:
         mPrivacyTextView
-            .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_public_24dp, 0, 0, 0);
+            .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_public, 0, 0, 0);
         mPrivacyTextView.setText(R.string.voting_privacy_public);
         break;
     }
@@ -103,7 +103,7 @@ public class VotingActivity extends AppCompatActivity implements OnClickListener
     mSendButton.setOnClickListener(this);
 
     setSupportActionBar(toolbar);
-    Drawable cancelDrawable = getDrawable(R.drawable.ic_clear_24dp);
+    Drawable cancelDrawable = getDrawable(R.drawable.ic_clear);
     cancelDrawable.setTint(ContextCompat.getColor(this, R.color.colorPrimaryTextDark));
     getSupportActionBar().setHomeAsUpIndicator(cancelDrawable);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
