@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -92,6 +93,7 @@ public class DetailsActivity extends AppCompatActivity implements
 
   private Poll mCurrentPoll;
   private int mVoteCount;
+  private BottomSheetBehavior mBottomSheetBehavior;
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -121,12 +123,12 @@ public class DetailsActivity extends AppCompatActivity implements
       mToggleButton.setChecked(true);
     }
 
-    final BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
-    behavior.setBottomSheetCallback(new BottomSheetCallback() {
+    mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+    mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetCallback() {
       @Override
       public void onStateChanged(@NonNull View bottomSheet, int newState) {
         if (newState == BottomSheetBehavior.STATE_DRAGGING && !mToggleButton.isChecked()) {
-          behavior.setState(BottomSheetBehavior.STATE_COLLAPSED); // Prevent expanding
+          mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED); // Prevent expanding
         }
       }
 
@@ -142,9 +144,9 @@ public class DetailsActivity extends AppCompatActivity implements
       @Override
       public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-          if (behavior.getState() == BottomSheetBehavior.STATE_DRAGGING
-              || behavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-            behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+          if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_DRAGGING
+              || mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             return true;
           }
         }
@@ -159,10 +161,10 @@ public class DetailsActivity extends AppCompatActivity implements
           mVoteCount = 0;
           mChronometer.setBase(SystemClock.elapsedRealtime());
           mChronometer.start();
-          behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+          mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
           //setStatusView();
         } else {
-          behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+          mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
           //setDetailsView();
         }
 
@@ -325,6 +327,14 @@ public class DetailsActivity extends AppCompatActivity implements
               mStatusTextView.append(getString(R.string.status_listening_votes));
             } else {
               Log.d(TAG, "Couldn't subscribe due to status = " + status);
+              Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT)
+                  .show();
+              mToggleButton.setEnabled(false);
+              mToggleButton.setChecked(false);
+              @ColorInt int disabledTextColor = ContextCompat
+                  .getColor(DetailsActivity.this, R.color.colorDisabledTextDark);
+              mToggleButton.setTextColor(disabledTextColor);
+              mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
           }
         });
@@ -364,6 +374,14 @@ public class DetailsActivity extends AppCompatActivity implements
               mStatusTextView.setText(R.string.status_poll_available);
             } else {
               Log.d(TAG, "Couldn't publish due to status = " + status);
+              Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT)
+                  .show();
+              mToggleButton.setEnabled(false);
+              mToggleButton.setChecked(false);
+              @ColorInt int disabledTextColor = ContextCompat
+                  .getColor(DetailsActivity.this, R.color.colorDisabledTextDark);
+              mToggleButton.setTextColor(disabledTextColor);
+              mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
           }
         });
