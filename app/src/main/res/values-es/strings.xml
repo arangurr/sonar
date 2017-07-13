@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="intro_need_username">In order to use this app you need a username</string>
+  <string name="intro_need_username">Para usar esta aplicación necesitarás un nombre de usuario</string>
   <string name="action_settings">Ajustes</string>
   <string name="activate">Activar</string>
   <string name="binary">Pregunta binaria</string>
@@ -36,7 +36,7 @@
   <string name="received_vote_from">Recibidas las respuestas de %s</string>
   <string name="rate">Pregunta de valoración</string>
   <string name="question_title">Título de la pregunta</string>
-  <string name="password_unlock">Este cuestionario está protegido por una contraseña. Introdúcela para desbloquearla.</string>
+  <string name="password_unlock">Este cuestionario está protegido por una contraseña. Introdúcela para desbloquearlo.</string>
   <string name="option_like_dislike">Me gusta/No me gusta</string>
   <string name="details_rate_name">Puntuación: %s</string>
   <string name="intro_error_empty_name">Es necesario introducir un nombre</string>
